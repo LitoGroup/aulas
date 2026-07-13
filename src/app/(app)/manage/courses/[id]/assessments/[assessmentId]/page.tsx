@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { requireRole } from "@/server/auth/rbac";
 import { getAssessmentForEditing, AssessmentForbiddenError } from "@/server/services/assessment";
 import { QuestionForm } from "@/app/(app)/manage/assessment-forms";
+import { DeleteQuestionButton } from "@/app/(app)/manage/content-edit-forms";
 
 export default async function EditAssessmentPage({
   params,
@@ -39,9 +40,16 @@ export default async function EditAssessmentPage({
         <ol className="space-y-3">
           {assessment.questions.map((q, i) => (
             <li key={q.id} className="rounded-xl border border-slate-200 bg-white p-4">
-              <p className="font-medium text-slate-800">
-                {i + 1}. {q.statement}
-              </p>
+              <div className="flex items-start justify-between gap-3">
+                <p className="font-medium text-slate-800">
+                  {i + 1}. {q.statement}
+                </p>
+                <DeleteQuestionButton
+                  courseId={id}
+                  assessmentId={assessmentId}
+                  questionId={q.id}
+                />
+              </div>
               <ul className="mt-2 space-y-1 text-sm">
                 {q.options.map((o) => (
                   <li
