@@ -1,0 +1,261 @@
+// LMS "Aulas" - schema de dados
+// Docs: docs/superpowers/specs/2026-07-13-lms-aulas-design.md
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ----------------------------- Enums -----------------------------
+
+enum Role {
+  ADMIN
+  TEACHER
+  STUDENT
+}
+
+enum ContentType {
+  VIDEO
+  TEXT
+  FILE
+}
+
+enum VideoProvider {
+  VIMEO
+  YOUTUBE
+  S3
+}
+
+enum ProgressStatus {
+  NOT_STARTED
+  COMPLETED
+}
+
+enum QuestionType {
+  MULTIPLE_CHOICE
+  TRUE_FALSE
+}
+
+// ------------------------- Usuarios / Auth -----------------------
+
+model User {
+  id              String    @id @default(uuid())
+  name            String
+  email           String    @unique
+  passwordHash    String    @map("password_hash")
+  role            Role      @default(STUDENT)
+  emailVerifiedAt DateTime? @map("email_verified_at")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  ownedCourses Course[]              @relation("CourseOwner")
+  enrollments  Enrollment[]
+  resetTokens  PasswordResetToken[]
+  attempts     AssessmentAttempt[]
+
+  @@map("users")
+}
+
+model PasswordResetToken {
+  id        String    @id @default(uuid())
+  userId    String    @map("user_id")
+  tokenHash String    @map("token_hash")
+  expiresAt DateTime  @map("expires_at")
+  usedAt    DateTime? @map("used_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("password_reset_tokens")
+}
+
+// ---------------------- Conteudo hierarquico ---------------------
+
+model Course {
+  id          String   @id @default(uuid())
+  title       String
+  slug        String   @unique
+  description String?
+  coverUrl    String?  @map("cover_url")
+  ownerId     String   @map("owner_id")
+  isPublished Boolean  @default(false) @map("is_published")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  owner       User         @relation("CourseOwner", fields: [ownerId], references: [id])
+  modules     Module[]
+  enrollments Enrollment[]
+  assessments Assessment[]
+
+  @@index([ownerId])
+  @@map("courses")
+}
+
+model Module {
+  id        String   @id @default(uuid())
+  courseId  String   @map("course_id")
+  title     String
+  order     Int
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  course      Course       @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  lessons     Lesson[]
+  assessments Assessment[]
+
+  @@index([courseId])
+  @@map("modules")
+}
+
+model Lesson {
+  id              String         @id @default(uuid())
+  moduleId        String         @map("module_id")
+  title           String
+  order           Int
+  contentType     ContentType    @default(VIDEO) @map("content_type")
+  videoProvider   VideoProvider? @map("video_provider")
+  videoRef        String?        @map("video_ref")
+  textBody        String?        @map("text_body")
+  requiresPrevious Boolean       @default(false) @map("requires_previous")
+  createdAt       DateTime       @default(now()) @map("created_at")
+  updatedAt       DateTime       @updatedAt @map("updated_at")
+
+  module      Module           @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  attachments Attachment[]
+  progress    LessonProgress[]
+
+  @@index([moduleId])
+  @@map("lessons")
+}
+
+model Attachment {
+  id        String   @id @default(uuid())
+  lessonId  String   @map("lesson_id")
+  fileName  String   @map("file_name")
+  storageKey String  @map("storage_key")
+  mimeType  String   @map("mime_type")
+  sizeBytes Int      @map("size_bytes")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  lesson Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@index([lessonId])
+  @@map("attachments")
+}
+
+// ---------------------- Matricula / Progresso --------------------
+
+model Enrollment {
+  id         String   @id @default(uuid())
+  userId     String   @map("user_id")
+  courseId   String   @map("course_id")
+  enrolledAt DateTime @default(now()) @map("enrolled_at")
+
+  user     User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course   Course           @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  progress LessonProgress[]
+
+  @@unique([userId, courseId])
+  @@index([courseId])
+  @@map("enrollments")
+}
+
+model LessonProgress {
+  id           String         @id @default(uuid())
+  enrollmentId String         @map("enrollment_id")
+  lessonId     String         @map("lesson_id")
+  status       ProgressStatus @default(NOT_STARTED)
+  completedAt  DateTime?      @map("completed_at")
+
+  enrollment Enrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+  lesson     Lesson     @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@unique([enrollmentId, lessonId])
+  @@index([lessonId])
+  @@map("lesson_progress")
+}
+
+// ----------------------------- Avaliacao -------------------------
+
+model Assessment {
+  id           String   @id @default(uuid())
+  courseId     String   @map("course_id")
+  moduleId     String?  @map("module_id")
+  title        String
+  passingScore Int      @default(70) @map("passing_score")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  course    Course              @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  module    Module?             @relation(fields: [moduleId], references: [id], onDelete: SetNull)
+  questions Question[]
+  attempts  AssessmentAttempt[]
+
+  @@index([courseId])
+  @@map("assessments")
+}
+
+model Question {
+  id           String       @id @default(uuid())
+  assessmentId String       @map("assessment_id")
+  statement    String
+  type         QuestionType @default(MULTIPLE_CHOICE)
+  order        Int
+
+  assessment Assessment      @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  options    AnswerOption[]
+  answers    AttemptAnswer[]
+
+  @@index([assessmentId])
+  @@map("questions")
+}
+
+model AnswerOption {
+  id         String  @id @default(uuid())
+  questionId String  @map("question_id")
+  text       String
+  isCorrect  Boolean @default(false) @map("is_correct")
+
+  question Question        @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  answers  AttemptAnswer[]
+
+  @@index([questionId])
+  @@map("answer_options")
+}
+
+model AssessmentAttempt {
+  id           String   @id @default(uuid())
+  assessmentId String   @map("assessment_id")
+  userId       String   @map("user_id")
+  score        Int
+  passed       Boolean
+  submittedAt  DateTime @default(now()) @map("submitted_at")
+
+  assessment Assessment      @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  user       User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  answers    AttemptAnswer[]
+
+  @@index([assessmentId])
+  @@index([userId])
+  @@map("assessment_attempts")
+}
+
+model AttemptAnswer {
+  id               String @id @default(uuid())
+  attemptId        String @map("attempt_id")
+  questionId       String @map("question_id")
+  selectedOptionId String @map("selected_option_id")
+
+  attempt        AssessmentAttempt @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  question       Question          @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  selectedOption AnswerOption      @relation(fields: [selectedOptionId], references: [id], onDelete: Cascade)
+
+  @@index([attemptId])
+  @@map("attempt_answers")
+}
