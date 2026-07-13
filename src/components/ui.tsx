@@ -134,7 +134,7 @@ export function ProgressBar({ percent }: { percent: number }) {
   return (
     <div className="h-2 w-full overflow-hidden rounded-full bg-[color:var(--canvas)]">
       <div
-        className={`h-full rounded-full transition-all ${done ? "bg-[color:var(--success)]" : "bg-[color:var(--accent)]"}`}
+        className={`h-full rounded-full transition-all ${done ? "bg-[color:var(--success)]" : "bg-[color:var(--ink)]"}`}
         style={{ width: `${Math.max(percent, 3)}%` }}
       />
     </div>

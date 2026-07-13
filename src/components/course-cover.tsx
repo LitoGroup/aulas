@@ -1,12 +1,5 @@
-// Capa de curso gerada por gradiente deterministico (sem precisar de upload).
-const GRADIENTS = [
-  ["#4f3ff0", "#6d28d9"],
-  ["#0ea5e9", "#4f3ff0"],
-  ["#f5a623", "#e5484d"],
-  ["#10b981", "#0ea5e9"],
-  ["#8b5cf6", "#ec4899"],
-  ["#f59e0b", "#6d28d9"],
-];
+// Capa de curso sóbria: tom escuro neutro com leve variação por curso.
+const SHADES = ["#1b1b1f", "#202028", "#1e2226", "#232026", "#1c2024", "#26232a"];
 
 function hash(str: string): number {
   let h = 0;
@@ -34,24 +27,33 @@ export function CourseCover({
   className?: string;
   size?: "card" | "thumb";
 }) {
-  const [from, to] = GRADIENTS[hash(seed ?? title) % GRADIENTS.length];
+  const shade = SHADES[hash(seed ?? title) % SHADES.length];
   return (
     <div
       className={`relative flex items-center justify-center overflow-hidden ${className}`}
-      style={{ backgroundImage: `linear-gradient(135deg, ${from}, ${to})` }}
+      style={{ backgroundColor: shade }}
     >
-      {/* textura sutil */}
+      {/* grade sutil + brilho discreto, tudo em tons neutros */}
       <div
         aria-hidden
-        className="absolute inset-0 opacity-20"
+        className="absolute inset-0 opacity-[0.06]"
         style={{
           backgroundImage:
-            "radial-gradient(circle at 80% 20%, rgba(255,255,255,.5) 0, transparent 40%)",
+            "linear-gradient(to right, #fff 1px, transparent 1px), linear-gradient(to bottom, #fff 1px, transparent 1px)",
+          backgroundSize: "22px 22px",
+        }}
+      />
+      <div
+        aria-hidden
+        className="absolute inset-0"
+        style={{
+          backgroundImage:
+            "radial-gradient(120% 80% at 85% 15%, rgba(255,255,255,0.10), transparent 55%)",
         }}
       />
       <span
-        className={`relative font-display font-bold text-white/95 ${
-          size === "card" ? "text-3xl" : "text-lg"
+        className={`relative font-display font-semibold tracking-tight text-white/85 ${
+          size === "card" ? "text-2xl" : "text-base"
         }`}
       >
         {initials(title)}

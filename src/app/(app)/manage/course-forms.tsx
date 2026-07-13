@@ -146,9 +146,9 @@ export function LessonForm({ courseId, moduleId }: { courseId: string; moduleId:
       )}
 
       {type === "FILE" && (
-        <p className="rounded-xl border border-[color:var(--accent)]/25 bg-[color:var(--accent)]/8 px-3.5 py-2.5 text-xs text-[#9a5b00]">
-          Crie a aula e depois use <strong>“+ Anexar apostila”</strong> abaixo dela para
-          enviar o PDF, DOCX ou ZIP. O aluno verá o arquivo para download nesta aula.
+        <p className="rounded-xl border border-[color:var(--border)] bg-[color:var(--canvas)] px-3.5 py-2.5 text-xs text-[color:var(--muted)]">
+          Crie a aula e depois use <strong className="text-[color:var(--ink-soft)]">“+ Anexar apostila”</strong> abaixo
+          dela para enviar o PDF, DOCX ou ZIP. O aluno verá o arquivo nesta aula.
         </p>
       )}
 

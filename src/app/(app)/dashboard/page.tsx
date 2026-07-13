@@ -30,7 +30,7 @@ export default async function DashboardPage() {
         >
           <CourseCover title={featured.course.title} seed={featured.course.id} className="min-h-40" />
           <div className="flex flex-col justify-center gap-3 p-6">
-            <span className="text-xs font-semibold uppercase tracking-wide text-[color:var(--accent)]">
+            <span className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted)]">
               {featured.progress.percent > 0 ? "Continue de onde parou" : "Comece agora"}
             </span>
             <h2 className="text-xl font-bold text-[color:var(--ink)]">{featured.course.title}</h2>
@@ -82,7 +82,7 @@ export default async function DashboardPage() {
                   <div className="flex items-center gap-2 text-xs text-[color:var(--muted)]">
                     <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-[color:var(--canvas)]">
                       <div
-                        className={`h-full rounded-full ${progress.percent >= 100 ? "bg-[color:var(--success)]" : "bg-[color:var(--accent)]"}`}
+                        className={`h-full rounded-full ${progress.percent >= 100 ? "bg-[color:var(--success)]" : "bg-[color:var(--ink)]"}`}
                         style={{ width: `${Math.max(progress.percent, 3)}%` }}
                       />
                     </div>
