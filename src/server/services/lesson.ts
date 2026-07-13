@@ -79,6 +79,34 @@ export function getLessonForViewer(lessonId: string) {
   });
 }
 
+export async function moveLesson(
+  actor: Actor,
+  lessonId: string,
+  direction: "up" | "down",
+): Promise<void> {
+  const lesson = await prisma.lesson.findUnique({
+    where: { id: lessonId },
+    select: { moduleId: true, order: true },
+  });
+  if (!lesson) return;
+  await assertCanEdit(actor, await courseIdOfModule(lesson.moduleId));
+
+  const neighbor = await prisma.lesson.findFirst({
+    where:
+      direction === "up"
+        ? { moduleId: lesson.moduleId, order: { lt: lesson.order } }
+        : { moduleId: lesson.moduleId, order: { gt: lesson.order } },
+    orderBy: { order: direction === "up" ? "desc" : "asc" },
+    select: { id: true, order: true },
+  });
+  if (!neighbor) return;
+
+  await prisma.$transaction([
+    prisma.lesson.update({ where: { id: lessonId }, data: { order: neighbor.order } }),
+    prisma.lesson.update({ where: { id: neighbor.id }, data: { order: lesson.order } }),
+  ]);
+}
+
 export async function deleteLesson(actor: Actor, lessonId: string): Promise<void> {
   const lesson = await prisma.lesson.findUnique({
     where: { id: lessonId },
