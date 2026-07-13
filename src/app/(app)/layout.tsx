@@ -13,9 +13,19 @@ export default async function AppLayout({ children }: { children: React.ReactNod
     <div className="min-h-screen bg-slate-50">
       <header className="border-b border-slate-200 bg-white">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
-          <Link href="/dashboard" className="text-lg font-bold text-indigo-600">
-            School
-          </Link>
+          <div className="flex items-center gap-5">
+            <Link href="/dashboard" className="text-lg font-bold text-indigo-600">
+              School
+            </Link>
+            <Link href="/courses" className="text-sm text-slate-600 hover:text-slate-900">
+              Cursos
+            </Link>
+            {(role === "TEACHER" || role === "ADMIN") && (
+              <Link href="/manage" className="text-sm text-slate-600 hover:text-slate-900">
+                Gerenciar
+              </Link>
+            )}
+          </div>
           <div className="flex items-center gap-4">
             <span className="hidden text-sm text-slate-500 sm:inline">
               {session.user.name}{" "}

@@ -100,4 +100,26 @@ export function getCourseBySlug(slug: string) {
   });
 }
 
+/** Carrega curso com modulos/aulas para a area de gestao, validando permissao. */
+export async function getManageCourse(actor: Actor, courseId: string) {
+  await assertCanEdit(actor, courseId);
+  return prisma.course.findUnique({
+    where: { id: courseId },
+    include: {
+      modules: {
+        orderBy: { order: "asc" },
+        include: { lessons: { orderBy: { order: "asc" } } },
+      },
+    },
+  });
+}
+
+export function listPublishedCourses() {
+  return prisma.course.findMany({
+    where: { isPublished: true },
+    orderBy: { createdAt: "desc" },
+    include: { owner: { select: { name: true } } },
+  });
+}
+
 export { assertCanEdit };

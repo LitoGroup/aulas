@@ -68,6 +68,17 @@ export async function updateLesson(
   });
 }
 
+/** Carrega a aula com o curso e as apostilas, para a tela de visualizacao. */
+export function getLessonForViewer(lessonId: string) {
+  return prisma.lesson.findUnique({
+    where: { id: lessonId },
+    include: {
+      attachments: true,
+      module: { include: { course: { select: { id: true, slug: true, ownerId: true, title: true } } } },
+    },
+  });
+}
+
 export async function deleteLesson(actor: Actor, lessonId: string): Promise<void> {
   const lesson = await prisma.lesson.findUnique({
     where: { id: lessonId },

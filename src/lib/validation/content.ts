@@ -12,7 +12,7 @@ export const lessonInputSchema = z
     videoProvider: z.enum(["VIMEO", "YOUTUBE", "S3"]).optional().nullable(),
     videoRef: z.string().trim().max(500).optional().nullable(),
     textBody: z.string().trim().max(20000).optional().nullable(),
-    requiresPrevious: z.boolean().optional().default(false),
+    requiresPrevious: z.boolean().optional(),
   })
   .superRefine((data, ctx) => {
     if (data.contentType === "VIDEO") {
