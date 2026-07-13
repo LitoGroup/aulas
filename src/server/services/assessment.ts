@@ -109,6 +109,16 @@ export async function getAssessmentForEditing(actor: Actor, assessmentId: string
   });
 }
 
+export async function deleteQuestion(actor: Actor, questionId: string): Promise<void> {
+  const q = await prisma.question.findUnique({
+    where: { id: questionId },
+    select: { assessmentId: true },
+  });
+  if (!q) return;
+  await assertCanEditAssessment(actor, q.assessmentId);
+  await prisma.question.delete({ where: { id: questionId } });
+}
+
 export function listAssessmentsByCourse(courseId: string) {
   return prisma.assessment.findMany({
     where: { courseId },
