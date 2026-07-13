@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { requireRole } from "@/server/auth/rbac";
 import { getManageCourse, NotOwnerError } from "@/server/services/course";
 import { CourseEditForm, ModuleForm, LessonForm } from "../../course-forms";
+import { AttachmentUpload } from "../../attachment-upload";
 
 export default async function ManageCoursePage({
   params,
@@ -58,11 +59,21 @@ export default async function ManageCoursePage({
             {m.lessons.length > 0 && (
               <ul className="mb-3 space-y-1 text-sm text-slate-600">
                 {m.lessons.map((l) => (
-                  <li key={l.id} className="flex items-center gap-2">
-                    <span className="rounded bg-slate-100 px-1.5 py-0.5 text-xs">
-                      {l.contentType}
-                    </span>
-                    {l.title}
+                  <li key={l.id} className="border-b border-slate-100 pb-2 last:border-0">
+                    <div className="flex items-center gap-2">
+                      <span className="rounded bg-slate-100 px-1.5 py-0.5 text-xs">
+                        {l.contentType}
+                      </span>
+                      {l.title}
+                    </div>
+                    {l.attachments.length > 0 && (
+                      <ul className="ml-6 mt-1 list-disc text-xs text-slate-500">
+                        {l.attachments.map((a) => (
+                          <li key={a.id}>{a.fileName}</li>
+                        ))}
+                      </ul>
+                    )}
+                    <AttachmentUpload courseId={course.id} lessonId={l.id} />
                   </li>
                 ))}
               </ul>

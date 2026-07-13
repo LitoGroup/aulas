@@ -45,8 +45,13 @@ export default async function LessonViewerPage({
           <h2 className="mb-3 font-medium text-slate-800">Apostilas</h2>
           <ul className="space-y-2 text-sm">
             {lesson.attachments.map((a) => (
-              <li key={a.id} className="text-slate-600">
-                {a.fileName}
+              <li key={a.id}>
+                <a
+                  href={`/api/attachments/${a.id}/download`}
+                  className="text-indigo-600 hover:underline"
+                >
+                  {a.fileName}
+                </a>
               </li>
             ))}
           </ul>

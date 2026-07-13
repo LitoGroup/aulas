@@ -108,7 +108,12 @@ export async function getManageCourse(actor: Actor, courseId: string) {
     include: {
       modules: {
         orderBy: { order: "asc" },
-        include: { lessons: { orderBy: { order: "asc" } } },
+        include: {
+          lessons: {
+            orderBy: { order: "asc" },
+            include: { attachments: true },
+          },
+        },
       },
     },
   });
