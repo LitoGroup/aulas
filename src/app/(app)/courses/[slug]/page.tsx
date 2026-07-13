@@ -5,6 +5,7 @@ import { getCourseBySlug } from "@/server/services/course";
 import { isEnrolled } from "@/server/services/enrollment";
 import { getCourseProgress } from "@/server/services/progress";
 import { computeLessonLocks } from "@/server/services/lesson-access";
+import { listAssessmentsByCourse } from "@/server/services/assessment";
 import { EnrollButton } from "../enroll-button";
 
 export default async function CourseDetailPage({
@@ -29,6 +30,7 @@ export default async function CourseDetailPage({
     : { total: ordered.length, completed: 0, percent: 0, completedLessonIds: [] as string[] };
   const completedSet = new Set(progress.completedLessonIds);
   const locks = computeLessonLocks(ordered, completedSet);
+  const assessments = enrolled ? await listAssessmentsByCourse(course.id) : [];
 
   return (
     <div className="space-y-6">
@@ -106,6 +108,27 @@ export default async function CourseDetailPage({
           </div>
         ))}
       </div>
+
+      {enrolled && assessments.length > 0 && (
+        <div className="space-y-3">
+          <h2 className="text-lg font-semibold text-slate-900">Avaliacoes</h2>
+          <ul className="divide-y divide-slate-200 rounded-xl border border-slate-200 bg-white">
+            {assessments.map((a) => (
+              <li key={a.id}>
+                <Link
+                  href={`/assessments/${a.id}`}
+                  className="flex items-center justify-between px-4 py-3 text-sm hover:bg-slate-50"
+                >
+                  <span className="font-medium text-indigo-600">{a.title}</span>
+                  <span className="text-xs text-slate-500">
+                    {a._count.questions} questao(oes) · corte {a.passingScore}%
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 }

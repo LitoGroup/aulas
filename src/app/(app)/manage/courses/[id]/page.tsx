@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireRole } from "@/server/auth/rbac";
 import { getManageCourse, NotOwnerError } from "@/server/services/course";
+import { listAssessmentsByCourse } from "@/server/services/assessment";
 import { CourseEditForm, ModuleForm, LessonForm } from "../../course-forms";
 import { AttachmentUpload } from "../../attachment-upload";
 
@@ -21,6 +22,8 @@ export default async function ManageCoursePage({
     throw e;
   }
   if (!course) notFound();
+
+  const assessments = await listAssessmentsByCourse(course.id);
 
   return (
     <div className="space-y-8">
@@ -81,6 +84,37 @@ export default async function ManageCoursePage({
             <LessonForm courseId={course.id} moduleId={m.id} />
           </div>
         ))}
+      </section>
+
+      <section className="space-y-3">
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-semibold text-slate-900">Avaliacoes</h2>
+          <Link
+            href={`/manage/courses/${course.id}/assessments/new`}
+            className="rounded-lg bg-indigo-600 px-3 py-1.5 text-sm font-semibold text-white hover:bg-indigo-700"
+          >
+            Nova avaliacao
+          </Link>
+        </div>
+        {assessments.length === 0 ? (
+          <p className="text-sm text-slate-500">Nenhuma avaliacao ainda.</p>
+        ) : (
+          <ul className="divide-y divide-slate-200 rounded-xl border border-slate-200 bg-white">
+            {assessments.map((a) => (
+              <li key={a.id}>
+                <Link
+                  href={`/manage/courses/${course.id}/assessments/${a.id}`}
+                  className="flex items-center justify-between px-4 py-3 hover:bg-slate-50"
+                >
+                  <span className="font-medium text-slate-800">{a.title}</span>
+                  <span className="text-xs text-slate-500">
+                    {a._count.questions} questao(oes) · corte {a.passingScore}%
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
       </section>
     </div>
   );

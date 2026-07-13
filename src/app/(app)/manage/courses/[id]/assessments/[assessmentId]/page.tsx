@@ -1,0 +1,67 @@
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { requireRole } from "@/server/auth/rbac";
+import { getAssessmentForEditing, AssessmentForbiddenError } from "@/server/services/assessment";
+import { QuestionForm } from "@/app/(app)/manage/assessment-forms";
+
+export default async function EditAssessmentPage({
+  params,
+}: {
+  params: Promise<{ id: string; assessmentId: string }>;
+}) {
+  const { id, assessmentId } = await params;
+  const actor = await requireRole(["TEACHER", "ADMIN"]);
+
+  let assessment;
+  try {
+    assessment = await getAssessmentForEditing(actor, assessmentId);
+  } catch (e) {
+    if (e instanceof AssessmentForbiddenError) notFound();
+    throw e;
+  }
+  if (!assessment) notFound();
+
+  return (
+    <div className="space-y-6">
+      <Link href={`/manage/courses/${id}`} className="text-sm text-indigo-600 hover:underline">
+        &larr; Voltar ao curso
+      </Link>
+
+      <div>
+        <h1 className="text-2xl font-semibold text-slate-900">{assessment.title}</h1>
+        <p className="mt-1 text-sm text-slate-500">
+          Nota de corte: <strong>{assessment.passingScore}%</strong> ·{" "}
+          {assessment.questions.length} questao(oes)
+        </p>
+      </div>
+
+      {assessment.questions.length > 0 && (
+        <ol className="space-y-3">
+          {assessment.questions.map((q, i) => (
+            <li key={q.id} className="rounded-xl border border-slate-200 bg-white p-4">
+              <p className="font-medium text-slate-800">
+                {i + 1}. {q.statement}
+              </p>
+              <ul className="mt-2 space-y-1 text-sm">
+                {q.options.map((o) => (
+                  <li
+                    key={o.id}
+                    className={o.isCorrect ? "font-medium text-emerald-700" : "text-slate-600"}
+                  >
+                    {o.isCorrect ? "✓ " : "• "}
+                    {o.text}
+                  </li>
+                ))}
+              </ul>
+            </li>
+          ))}
+        </ol>
+      )}
+
+      <div>
+        <h2 className="mb-2 text-lg font-medium text-slate-900">Nova questao</h2>
+        <QuestionForm courseId={id} assessmentId={assessmentId} />
+      </div>
+    </div>
+  );
+}
