@@ -2,6 +2,8 @@ import Link from "next/link";
 import { requireRole } from "@/server/auth/rbac";
 import { listEnrollments } from "@/server/services/enrollment";
 import { getCourseProgress } from "@/server/services/progress";
+import { CourseCover } from "@/components/course-cover";
+import { ProgressRing } from "@/components/progress-ring";
 
 export default async function DashboardPage() {
   const user = await requireRole(["STUDENT", "TEACHER", "ADMIN"]);
@@ -15,72 +17,98 @@ export default async function DashboardPage() {
     })),
   );
 
-  return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-semibold text-slate-900">Painel</h1>
-        <p className="mt-1 text-sm text-slate-500">
-          Bem-vindo(a) de volta. Voce esta logado como <strong>{user.role}</strong>.
-        </p>
-      </div>
+  const inProgress = courses.filter((c) => c.progress.percent < 100);
+  const featured = inProgress[0] ?? courses[0];
 
-      <section className="space-y-3">
-        <div className="flex items-center justify-between">
-          <h2 className="text-lg font-medium text-slate-900">Meus cursos</h2>
-          <Link href="/courses" className="text-sm text-indigo-600 hover:underline">
-            Explorar catalogo
+  return (
+    <div className="space-y-8">
+      {/* Hero: continue de onde parou */}
+      {featured ? (
+        <Link
+          href={`/courses/${featured.course.slug}`}
+          className="group grid overflow-hidden rounded-3xl border border-[color:var(--border)] bg-[var(--surface)] shadow-[var(--shadow-md)] sm:grid-cols-[240px_1fr]"
+        >
+          <CourseCover title={featured.course.title} seed={featured.course.id} className="min-h-40" />
+          <div className="flex flex-col justify-center gap-3 p-6">
+            <span className="text-xs font-semibold uppercase tracking-wide text-[color:var(--accent)]">
+              {featured.progress.percent > 0 ? "Continue de onde parou" : "Comece agora"}
+            </span>
+            <h2 className="text-xl font-bold text-[color:var(--ink)]">{featured.course.title}</h2>
+            <div className="flex items-center gap-3">
+              <ProgressRing percent={featured.progress.percent} />
+              <span className="text-sm text-[color:var(--muted)]">
+                {featured.progress.completed} de {featured.progress.total} aulas concluídas
+              </span>
+            </div>
+            <span className="mt-1 inline-flex w-fit items-center gap-1 rounded-xl brand-gradient px-4 py-2 text-sm font-semibold text-white shadow-[var(--shadow-md)] transition group-hover:-translate-y-px">
+              Continuar estudando →
+            </span>
+          </div>
+        </Link>
+      ) : (
+        <div className="rounded-3xl border border-dashed border-[color:var(--border)] bg-[var(--surface)] p-10 text-center">
+          <h2 className="text-lg font-bold text-[color:var(--ink)]">Bem-vindo(a) à School</h2>
+          <p className="mt-1 text-sm text-[color:var(--muted)]">
+            Você ainda não está matriculado em nenhum curso.
+          </p>
+          <Link
+            href="/courses"
+            className="mt-4 inline-block rounded-xl brand-gradient px-5 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-md)]"
+          >
+            Explorar cursos
           </Link>
         </div>
+      )}
 
-        {courses.length === 0 ? (
-          <div className="rounded-xl border border-slate-200 bg-white p-5 text-sm text-slate-500">
-            Voce ainda nao esta matriculado em nenhum curso.{" "}
-            <Link href="/courses" className="text-indigo-600 hover:underline">
-              Ver cursos disponiveis
+      {/* Meus cursos */}
+      {courses.length > 0 && (
+        <section className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-bold text-[color:var(--ink)]">Meus cursos</h2>
+            <Link href="/courses" className="text-sm font-medium text-[color:var(--brand-ink)] hover:underline">
+              Explorar catálogo
             </Link>
-            .
           </div>
-        ) : (
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {courses.map(({ course, progress }) => (
               <Link
                 key={course.id}
                 href={`/courses/${course.slug}`}
-                className="rounded-xl border border-slate-200 bg-white p-5 transition hover:border-indigo-300 hover:shadow-sm"
+                className="group overflow-hidden rounded-2xl border border-[color:var(--border)] bg-[var(--surface)] shadow-[var(--shadow-sm)] transition hover:-translate-y-0.5 hover:shadow-[var(--shadow-md)]"
               >
-                <h3 className="font-semibold text-slate-900">{course.title}</h3>
-                <div className="mt-3 flex items-center justify-between text-xs text-slate-500">
-                  <span>
-                    {progress.completed}/{progress.total} aulas
-                  </span>
-                  <span>{progress.percent}%</span>
-                </div>
-                <div className="mt-1 h-2 w-full overflow-hidden rounded-full bg-slate-100">
-                  <div
-                    className="h-full rounded-full bg-emerald-500"
-                    style={{ width: `${progress.percent}%` }}
-                  />
+                <CourseCover title={course.title} seed={course.id} className="aspect-[16/9]" />
+                <div className="space-y-3 p-4">
+                  <h3 className="font-semibold text-[color:var(--ink)]">{course.title}</h3>
+                  <div className="flex items-center gap-2 text-xs text-[color:var(--muted)]">
+                    <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-[color:var(--canvas)]">
+                      <div
+                        className={`h-full rounded-full ${progress.percent >= 100 ? "bg-[color:var(--success)]" : "bg-[color:var(--accent)]"}`}
+                        style={{ width: `${Math.max(progress.percent, 3)}%` }}
+                      />
+                    </div>
+                    <span className="font-semibold text-[color:var(--ink-soft)]">{progress.percent}%</span>
+                  </div>
                 </div>
               </Link>
             ))}
           </div>
-        )}
-      </section>
+        </section>
+      )}
 
       {isTeacher && (
-        <section>
-          <div className="rounded-xl border border-slate-200 bg-white p-5">
-            <h2 className="font-medium text-slate-900">Gerenciar conteudo</h2>
-            <p className="mt-1 text-sm text-slate-500">
-              Crie e edite cursos, modulos, aulas e avaliacoes.
+        <section className="flex items-center justify-between rounded-2xl border border-[color:var(--border)] bg-[var(--surface)] p-5">
+          <div>
+            <h2 className="font-bold text-[color:var(--ink)]">Área do professor</h2>
+            <p className="mt-0.5 text-sm text-[color:var(--muted)]">
+              Crie e edite cursos, aulas e avaliações.
             </p>
-            <Link
-              href="/manage"
-              className="mt-3 inline-block rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700"
-            >
-              Ir para Gerenciar
-            </Link>
           </div>
+          <Link
+            href="/manage"
+            className="rounded-xl brand-gradient px-4 py-2 text-sm font-semibold text-white shadow-[var(--shadow-md)]"
+          >
+            Gerenciar
+          </Link>
         </section>
       )}
     </div>

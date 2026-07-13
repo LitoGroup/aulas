@@ -1,40 +1,66 @@
 "use client";
 
-import { useActionState } from "react";
-import { markCompleteAction, type ActionState } from "@/server/actions/progress";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { markCompleteAction } from "@/server/actions/progress";
 import { Button, Alert } from "@/components/ui";
 
 export function CompleteButton({
   lessonId,
   slug,
   done,
+  nextHref,
 }: {
   lessonId: string;
   slug: string;
   done: boolean;
+  nextHref: string | null;
 }) {
-  const [state, action, pending] = useActionState<ActionState | null, FormData>(
-    markCompleteAction,
-    null,
-  );
+  const router = useRouter();
+  const [error, setError] = useState<string | null>(null);
+  const [pending, setPending] = useState(false);
 
-  if (done) {
-    return (
-      <span className="inline-flex items-center gap-2 rounded-lg bg-emerald-50 px-4 py-2 text-sm font-medium text-emerald-700">
-        ✓ Aula concluida
-      </span>
-    );
+  async function complete(advance: boolean) {
+    setError(null);
+    setPending(true);
+    const fd = new FormData();
+    fd.set("lessonId", lessonId);
+    fd.set("slug", slug);
+    const res = await markCompleteAction(null, fd);
+    setPending(false);
+    if (res?.error) {
+      setError(res.error);
+      return;
+    }
+    if (advance && nextHref) router.push(nextHref);
+    else router.refresh();
   }
 
   return (
-    <form action={action} className="space-y-2">
-      {state?.success && <Alert kind="success">{state.success}</Alert>}
-      {state?.error && <Alert kind="error">{state.error}</Alert>}
-      <input type="hidden" name="lessonId" value={lessonId} />
-      <input type="hidden" name="slug" value={slug} />
-      <Button type="submit" disabled={pending} className="w-auto px-6">
-        {pending ? "Salvando..." : "Marcar como concluida"}
-      </Button>
-    </form>
+    <div className="space-y-2">
+      {error && <Alert kind="error">{error}</Alert>}
+      <div className="flex flex-wrap items-center gap-3">
+        {done ? (
+          <span className="inline-flex items-center gap-2 rounded-xl bg-[color:var(--success)]/12 px-4 py-2.5 text-sm font-semibold text-[color:var(--success)]">
+            ✓ Aula concluída
+          </span>
+        ) : (
+          <Button
+            onClick={() => complete(false)}
+            disabled={pending}
+            variant="ghost"
+            className="w-auto px-5"
+          >
+            {pending ? "Salvando..." : "Marcar como concluída"}
+          </Button>
+        )}
+
+        {nextHref && (
+          <Button onClick={() => complete(true)} disabled={pending} className="w-auto px-5">
+            {done ? "Próxima aula →" : "Concluir e avançar →"}
+          </Button>
+        )}
+      </div>
+    </div>
   );
 }

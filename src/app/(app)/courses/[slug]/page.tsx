@@ -6,6 +6,8 @@ import { isEnrolled } from "@/server/services/enrollment";
 import { getCourseProgress } from "@/server/services/progress";
 import { computeLessonLocks } from "@/server/services/lesson-access";
 import { listAssessmentsByCourse } from "@/server/services/assessment";
+import { CourseCover } from "@/components/course-cover";
+import { ProgressBar } from "@/components/ui";
 import { EnrollButton } from "../enroll-button";
 
 export default async function CourseDetailPage({
@@ -38,28 +40,26 @@ export default async function CourseDetailPage({
         &larr; Catalogo
       </Link>
 
-      <div className="rounded-xl border border-slate-200 bg-white p-6">
-        <h1 className="text-2xl font-semibold text-slate-900">{course.title}</h1>
-        <p className="mt-2 text-sm text-slate-600">{course.description}</p>
-        <div className="mt-4">
-          {enrolled ? (
-            <div className="space-y-2">
-              <div className="flex items-center justify-between text-sm">
-                <span className="font-medium text-slate-700">Seu progresso</span>
-                <span className="text-slate-500">
-                  {progress.completed}/{progress.total} ({progress.percent}%)
-                </span>
+      <div className="overflow-hidden rounded-2xl border border-[color:var(--border)] bg-[var(--surface)] shadow-[var(--shadow-sm)]">
+        <CourseCover title={course.title} seed={course.id} className="h-40 sm:h-52" />
+        <div className="p-6">
+          <h1 className="text-2xl font-bold text-[color:var(--ink)]">{course.title}</h1>
+          <p className="mt-2 text-sm text-[color:var(--ink-soft)]">{course.description}</p>
+          <div className="mt-4">
+            {enrolled ? (
+              <div className="space-y-2">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="font-medium text-[color:var(--ink-soft)]">Seu progresso</span>
+                  <span className="text-[color:var(--muted)]">
+                    {progress.completed}/{progress.total} ({progress.percent}%)
+                  </span>
+                </div>
+                <ProgressBar percent={progress.percent} />
               </div>
-              <div className="h-2 w-full overflow-hidden rounded-full bg-slate-100">
-                <div
-                  className="h-full rounded-full bg-emerald-500 transition-all"
-                  style={{ width: `${progress.percent}%` }}
-                />
-              </div>
-            </div>
-          ) : (
-            <EnrollButton courseId={course.id} slug={course.slug} />
-          )}
+            ) : (
+              <EnrollButton courseId={course.id} slug={course.slug} />
+            )}
+          </div>
         </div>
       </div>
 

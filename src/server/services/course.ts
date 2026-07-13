@@ -119,6 +119,30 @@ export async function getManageCourse(actor: Actor, courseId: string) {
   });
 }
 
+/** Estrutura enxuta do curso para o player (sidebar de aulas). */
+export function getCourseOutline(courseId: string) {
+  return prisma.course.findUnique({
+    where: { id: courseId },
+    select: {
+      id: true,
+      title: true,
+      slug: true,
+      modules: {
+        orderBy: { order: "asc" },
+        select: {
+          id: true,
+          title: true,
+          order: true,
+          lessons: {
+            orderBy: { order: "asc" },
+            select: { id: true, title: true, order: true, contentType: true, requiresPrevious: true },
+          },
+        },
+      },
+    },
+  });
+}
+
 export function listPublishedCourses() {
   return prisma.course.findMany({
     where: { isPublished: true },
