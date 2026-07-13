@@ -57,12 +57,13 @@ export async function addAttachment(
 export async function getAttachmentForDownload(
   actor: Actor,
   attachmentId: string,
-): Promise<{ storageKey: string; fileName: string }> {
+): Promise<{ storageKey: string; fileName: string; mimeType: string }> {
   const att = await prisma.attachment.findUnique({
     where: { id: attachmentId },
     select: {
       storageKey: true,
       fileName: true,
+      mimeType: true,
       lesson: { select: { module: { select: { course: { select: { id: true, ownerId: true } } } } } },
     },
   });
@@ -72,5 +73,12 @@ export async function getAttachmentForDownload(
   const allowed = canEdit(actor, course.ownerId) || (await isEnrolled(actor.id, course.id));
   if (!allowed) throw new AttachmentForbiddenError();
 
-  return { storageKey: att.storageKey, fileName: att.fileName };
+  return { storageKey: att.storageKey, fileName: att.fileName, mimeType: att.mimeType };
+}
+
+/** Tipos que o navegador consegue exibir inline (abrir em nova guia). */
+export function isInlineViewable(mimeType: string, fileName: string): boolean {
+  const mt = (mimeType || "").toLowerCase();
+  if (mt === "application/pdf" || mt.startsWith("image/")) return true;
+  return /\.(pdf|png|jpe?g|gif|webp|svg)$/i.test(fileName);
 }

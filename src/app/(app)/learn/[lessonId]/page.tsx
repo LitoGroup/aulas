@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { requireRole } from "@/server/auth/rbac";
 import { getLessonForViewer } from "@/server/services/lesson";
+import { isInlineViewable } from "@/server/services/attachment";
 import { isEnrolled } from "@/server/services/enrollment";
 import { getCourseProgress } from "@/server/services/progress";
 import { isLessonUnlocked } from "@/server/services/lesson-access";
@@ -56,16 +57,22 @@ export default async function LessonViewerPage({
         <div className="rounded-xl border border-slate-200 bg-white p-5">
           <h2 className="mb-3 font-medium text-slate-800">Apostilas</h2>
           <ul className="space-y-2 text-sm">
-            {lesson.attachments.map((a) => (
-              <li key={a.id}>
-                <a
-                  href={`/api/attachments/${a.id}/download`}
-                  className="text-indigo-600 hover:underline"
-                >
-                  {a.fileName}
-                </a>
-              </li>
-            ))}
+            {lesson.attachments.map((a) => {
+              const inline = isInlineViewable(a.mimeType, a.fileName);
+              return (
+                <li key={a.id} className="flex items-center justify-between gap-3">
+                  <span className="text-[color:var(--ink-soft)]">{a.fileName}</span>
+                  <a
+                    href={`/api/attachments/${a.id}/download`}
+                    target={inline ? "_blank" : undefined}
+                    rel={inline ? "noopener noreferrer" : undefined}
+                    className="shrink-0 font-medium text-[color:var(--brand-ink)] hover:underline"
+                  >
+                    {inline ? "Abrir em nova guia ↗" : "Baixar"}
+                  </a>
+                </li>
+              );
+            })}
           </ul>
         </div>
       )}

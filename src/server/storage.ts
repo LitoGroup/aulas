@@ -35,16 +35,20 @@ export async function createUploadUrl(storageKey: string) {
   return { path: data.path, token: data.token, signedUrl: data.signedUrl };
 }
 
-/** URL assinada temporaria para DOWNLOAD (padrao 60s). */
-export async function createDownloadUrl(
+/**
+ * URL assinada temporaria (padrao 60s).
+ * inline=true -> abre no navegador (ex.: PDF em nova guia);
+ * inline=false -> forca download (ex.: DOCX, ZIP).
+ */
+export async function createSignedFileUrl(
   storageKey: string,
-  expiresIn = 60,
+  { expiresIn = 60, inline = false }: { expiresIn?: number; inline?: boolean } = {},
 ): Promise<string> {
   const s = admin();
   const { data, error } = await s.storage
     .from(ATTACHMENTS_BUCKET)
-    .createSignedUrl(storageKey, expiresIn, { download: true });
-  if (error || !data) throw new Error(error?.message ?? "Falha ao gerar URL de download");
+    .createSignedUrl(storageKey, expiresIn, { download: !inline });
+  if (error || !data) throw new Error(error?.message ?? "Falha ao gerar URL do arquivo");
   return data.signedUrl;
 }
 
