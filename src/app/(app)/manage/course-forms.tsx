@@ -8,7 +8,7 @@ import {
   createLessonAction,
   type ActionState,
 } from "@/server/actions/course";
-import { Input, Label, Button, Alert } from "@/components/ui";
+import { Input, Label, Button, Alert, Select, Textarea } from "@/components/ui";
 import { useState } from "react";
 
 export function NewCourseForm() {
@@ -24,13 +24,8 @@ export function NewCourseForm() {
         <Input id="title" name="title" required minLength={3} />
       </div>
       <div>
-        <Label htmlFor="description">Descricao</Label>
-        <textarea
-          id="description"
-          name="description"
-          rows={3}
-          className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
-        />
+        <Label htmlFor="description">Descrição</Label>
+        <Textarea id="description" name="description" rows={3} />
       </div>
       <Button type="submit" disabled={pending}>
         {pending ? "Criando..." : "Criar curso"}
@@ -58,12 +53,11 @@ export function CourseEditForm({
       </div>
       <div>
         <Label htmlFor="description">Descricao</Label>
-        <textarea
+        <Textarea
           id="description"
           name="description"
           rows={3}
           defaultValue={course.description ?? ""}
-          className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
         />
       </div>
       <label className="flex items-center gap-2 text-sm text-slate-700">
@@ -115,16 +109,16 @@ export function LessonForm({ courseId, moduleId }: { courseId: string; moduleId:
         </div>
         <div>
           <Label htmlFor={`ct-${moduleId}`}>Tipo</Label>
-          <select
+          <Select
             id={`ct-${moduleId}`}
             name="contentType"
             value={type}
             onChange={(e) => setType(e.target.value)}
-            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
           >
-            <option value="VIDEO">Video</option>
-            <option value="TEXT">Texto</option>
-          </select>
+            <option value="VIDEO">Vídeo</option>
+            <option value="TEXT">Texto de apoio</option>
+            <option value="FILE">Apostila / PDF</option>
+          </Select>
         </div>
       </div>
 
@@ -132,17 +126,13 @@ export function LessonForm({ courseId, moduleId }: { courseId: string; moduleId:
         <div className="grid gap-3 sm:grid-cols-2">
           <div>
             <Label htmlFor={`vp-${moduleId}`}>Provedor</Label>
-            <select
-              id={`vp-${moduleId}`}
-              name="videoProvider"
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
-            >
+            <Select id={`vp-${moduleId}`} name="videoProvider">
               <option value="YOUTUBE">YouTube</option>
               <option value="VIMEO">Vimeo</option>
-            </select>
+            </Select>
           </div>
           <div>
-            <Label htmlFor={`vr-${moduleId}`}>ID do video</Label>
+            <Label htmlFor={`vr-${moduleId}`}>ID do vídeo</Label>
             <Input id={`vr-${moduleId}`} name="videoRef" placeholder="ex: dQw4w9WgXcQ" />
           </div>
         </div>
@@ -150,14 +140,16 @@ export function LessonForm({ courseId, moduleId }: { courseId: string; moduleId:
 
       {type === "TEXT" && (
         <div>
-          <Label htmlFor={`tb-${moduleId}`}>Conteudo</Label>
-          <textarea
-            id={`tb-${moduleId}`}
-            name="textBody"
-            rows={3}
-            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
-          />
+          <Label htmlFor={`tb-${moduleId}`}>Conteúdo</Label>
+          <Textarea id={`tb-${moduleId}`} name="textBody" rows={3} />
         </div>
+      )}
+
+      {type === "FILE" && (
+        <p className="rounded-xl border border-[color:var(--accent)]/25 bg-[color:var(--accent)]/8 px-3.5 py-2.5 text-xs text-[#9a5b00]">
+          Crie a aula e depois use <strong>“+ Anexar apostila”</strong> abaixo dela para
+          enviar o PDF, DOCX ou ZIP. O aluno verá o arquivo para download nesta aula.
+        </p>
       )}
 
       <label className="flex items-center gap-2 text-sm text-slate-600">

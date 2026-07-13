@@ -6,7 +6,7 @@ import {
   addQuestionAction,
   type ActionState,
 } from "@/server/actions/assessment";
-import { Input, Label, Button, Alert } from "@/components/ui";
+import { Input, Label, Button, Alert, Select } from "@/components/ui";
 
 export function NewAssessmentForm({ courseId }: { courseId: string }) {
   const [state, action, pending] = useActionState<ActionState | null, FormData>(
@@ -66,16 +66,15 @@ export function QuestionForm({
         </div>
         <div>
           <Label htmlFor="qtype">Tipo</Label>
-          <select
+          <Select
             id="qtype"
             name="type"
             value={type}
             onChange={(e) => setType(e.target.value)}
-            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
           >
-            <option value="MULTIPLE_CHOICE">Multipla escolha</option>
+            <option value="MULTIPLE_CHOICE">Múltipla escolha</option>
             <option value="TRUE_FALSE">Verdadeiro/Falso</option>
-          </select>
+          </Select>
         </div>
       </div>
 

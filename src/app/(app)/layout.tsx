@@ -2,41 +2,54 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { auth } from "@/server/auth/config";
 import { SignOutButton } from "@/components/sign-out-button";
+import { NavLinks } from "@/components/nav-links";
+import { Badge } from "@/components/ui";
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const session = await auth();
   if (!session?.user) redirect("/login");
 
   const role = session.user.role;
+  const isTeacher = role === "TEACHER" || role === "ADMIN";
+
+  const links = [
+    { href: "/dashboard", label: "Painel" },
+    { href: "/courses", label: "Cursos" },
+    ...(isTeacher ? [{ href: "/manage", label: "Gerenciar" }] : []),
+  ];
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <header className="border-b border-slate-200 bg-white">
-        <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
-          <div className="flex items-center gap-5">
-            <Link href="/dashboard" className="text-lg font-bold text-indigo-600">
+    <div className="min-h-screen">
+      <header className="sticky top-0 z-20 border-b border-[color:var(--border)] bg-[var(--surface)]/85 backdrop-blur">
+        <div className="mx-auto flex max-w-5xl items-center gap-4 px-4 py-3">
+          <Link href="/dashboard" className="flex items-center gap-2">
+            <span className="brand-gradient flex h-8 w-8 items-center justify-center rounded-lg text-sm font-bold text-white shadow-[var(--shadow-md)]">
+              S
+            </span>
+            <span className="font-display text-lg font-bold text-[color:var(--ink)]">
               School
-            </Link>
-            <Link href="/courses" className="text-sm text-slate-600 hover:text-slate-900">
-              Cursos
-            </Link>
-            {(role === "TEACHER" || role === "ADMIN") && (
-              <Link href="/manage" className="text-sm text-slate-600 hover:text-slate-900">
-                Gerenciar
-              </Link>
-            )}
+            </span>
+          </Link>
+
+          <div className="ml-2 hidden sm:block">
+            <NavLinks items={links} />
           </div>
-          <div className="flex items-center gap-4">
-            <span className="hidden text-sm text-slate-500 sm:inline">
-              {session.user.name}{" "}
-              <span className="rounded bg-slate-100 px-1.5 py-0.5 text-xs font-medium text-slate-600">
-                {role}
-              </span>
+
+          <div className="ml-auto flex items-center gap-3">
+            <span className="hidden items-center gap-2 text-sm text-[color:var(--ink-soft)] sm:flex">
+              {session.user.name}
+              <Badge tone="brand">{role}</Badge>
             </span>
             <SignOutButton />
           </div>
         </div>
+
+        {/* Nav em telas pequenas */}
+        <div className="border-t border-[color:var(--border)] px-4 py-2 sm:hidden">
+          <NavLinks items={links} />
+        </div>
       </header>
+
       <main className="mx-auto max-w-5xl px-4 py-8">{children}</main>
     </div>
   );
