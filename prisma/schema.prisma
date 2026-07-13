@@ -58,7 +58,7 @@ model User {
   resetTokens  PasswordResetToken[]
   attempts     AssessmentAttempt[]
 
-  @@map("users")
+  @@map("school_users")
 }
 
 model PasswordResetToken {
@@ -72,7 +72,7 @@ model PasswordResetToken {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
-  @@map("password_reset_tokens")
+  @@map("school_password_reset_tokens")
 }
 
 // ---------------------- Conteudo hierarquico ---------------------
@@ -94,7 +94,7 @@ model Course {
   assessments Assessment[]
 
   @@index([ownerId])
-  @@map("courses")
+  @@map("school_courses")
 }
 
 model Module {
@@ -110,7 +110,7 @@ model Module {
   assessments Assessment[]
 
   @@index([courseId])
-  @@map("modules")
+  @@map("school_modules")
 }
 
 model Lesson {
@@ -131,7 +131,7 @@ model Lesson {
   progress    LessonProgress[]
 
   @@index([moduleId])
-  @@map("lessons")
+  @@map("school_lessons")
 }
 
 model Attachment {
@@ -146,7 +146,7 @@ model Attachment {
   lesson Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
 
   @@index([lessonId])
-  @@map("attachments")
+  @@map("school_attachments")
 }
 
 // ---------------------- Matricula / Progresso --------------------
@@ -163,7 +163,7 @@ model Enrollment {
 
   @@unique([userId, courseId])
   @@index([courseId])
-  @@map("enrollments")
+  @@map("school_enrollments")
 }
 
 model LessonProgress {
@@ -178,7 +178,7 @@ model LessonProgress {
 
   @@unique([enrollmentId, lessonId])
   @@index([lessonId])
-  @@map("lesson_progress")
+  @@map("school_lesson_progress")
 }
 
 // ----------------------------- Avaliacao -------------------------
@@ -198,7 +198,7 @@ model Assessment {
   attempts  AssessmentAttempt[]
 
   @@index([courseId])
-  @@map("assessments")
+  @@map("school_assessments")
 }
 
 model Question {
@@ -213,7 +213,7 @@ model Question {
   answers    AttemptAnswer[]
 
   @@index([assessmentId])
-  @@map("questions")
+  @@map("school_questions")
 }
 
 model AnswerOption {
@@ -226,7 +226,7 @@ model AnswerOption {
   answers  AttemptAnswer[]
 
   @@index([questionId])
-  @@map("answer_options")
+  @@map("school_answer_options")
 }
 
 model AssessmentAttempt {
@@ -243,7 +243,7 @@ model AssessmentAttempt {
 
   @@index([assessmentId])
   @@index([userId])
-  @@map("assessment_attempts")
+  @@map("school_assessment_attempts")
 }
 
 model AttemptAnswer {
@@ -257,5 +257,5 @@ model AttemptAnswer {
   selectedOption AnswerOption      @relation(fields: [selectedOptionId], references: [id], onDelete: Cascade)
 
   @@index([attemptId])
-  @@map("attempt_answers")
+  @@map("school_attempt_answers")
 }
