@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { requireRole } from "@/server/auth/rbac";
 import { getCourseBySlug } from "@/server/services/course";
 import { isEnrolled } from "@/server/services/enrollment";
+import { getCourseProgress } from "@/server/services/progress";
+import { computeLessonLocks } from "@/server/services/lesson-access";
 import { EnrollButton } from "../enroll-button";
 
 export default async function CourseDetailPage({
@@ -18,6 +20,16 @@ export default async function CourseDetailPage({
 
   const enrolled = await isEnrolled(actor.id, course.id);
 
+  // Ordem global das aulas + progresso + cadeados (so faz sentido se matriculado).
+  const ordered = course.modules.flatMap((m) =>
+    m.lessons.map((l) => ({ id: l.id, requiresPrevious: l.requiresPrevious })),
+  );
+  const progress = enrolled
+    ? await getCourseProgress(actor.id, course.id)
+    : { total: ordered.length, completed: 0, percent: 0, completedLessonIds: [] as string[] };
+  const completedSet = new Set(progress.completedLessonIds);
+  const locks = computeLessonLocks(ordered, completedSet);
+
   return (
     <div className="space-y-6">
       <Link href="/courses" className="text-sm text-indigo-600 hover:underline">
@@ -29,9 +41,20 @@ export default async function CourseDetailPage({
         <p className="mt-2 text-sm text-slate-600">{course.description}</p>
         <div className="mt-4">
           {enrolled ? (
-            <span className="rounded bg-emerald-100 px-3 py-1 text-sm font-medium text-emerald-700">
-              Voce esta matriculado
-            </span>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-sm">
+                <span className="font-medium text-slate-700">Seu progresso</span>
+                <span className="text-slate-500">
+                  {progress.completed}/{progress.total} ({progress.percent}%)
+                </span>
+              </div>
+              <div className="h-2 w-full overflow-hidden rounded-full bg-slate-100">
+                <div
+                  className="h-full rounded-full bg-emerald-500 transition-all"
+                  style={{ width: `${progress.percent}%` }}
+                />
+              </div>
+            </div>
           ) : (
             <EnrollButton courseId={course.id} slug={course.slug} />
           )}
@@ -45,28 +68,40 @@ export default async function CourseDetailPage({
               {m.order + 1}. {m.title}
             </h2>
             <ul className="space-y-2">
-              {m.lessons.map((l) => (
-                <li key={l.id}>
-                  {enrolled ? (
-                    <Link
-                      href={`/learn/${l.id}`}
-                      className="flex items-center gap-2 text-sm text-indigo-600 hover:underline"
-                    >
-                      <span className="rounded bg-slate-100 px-1.5 py-0.5 text-xs text-slate-500">
-                        {l.contentType}
-                      </span>
-                      {l.title}
-                    </Link>
-                  ) : (
+              {m.lessons.map((l) => {
+                const isDone = completedSet.has(l.id);
+                const isLocked = locks.get(l.id) === true;
+                const badge = (
+                  <span className="rounded bg-slate-100 px-1.5 py-0.5 text-xs text-slate-500">
+                    {l.contentType}
+                  </span>
+                );
+
+                if (enrolled && !isLocked) {
+                  return (
+                    <li key={l.id}>
+                      <Link
+                        href={`/learn/${l.id}`}
+                        className="flex items-center gap-2 text-sm text-indigo-600 hover:underline"
+                      >
+                        {badge}
+                        {l.title}
+                        {isDone && <span className="text-emerald-600">✓</span>}
+                      </Link>
+                    </li>
+                  );
+                }
+
+                return (
+                  <li key={l.id}>
                     <span className="flex items-center gap-2 text-sm text-slate-400">
-                      <span className="rounded bg-slate-100 px-1.5 py-0.5 text-xs">
-                        {l.contentType}
-                      </span>
+                      {badge}
                       {l.title}
+                      {enrolled && isLocked && <span title="Conclua a aula anterior">🔒</span>}
                     </span>
-                  )}
-                </li>
-              ))}
+                  </li>
+                );
+              })}
             </ul>
           </div>
         ))}

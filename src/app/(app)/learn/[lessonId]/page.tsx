@@ -3,7 +3,10 @@ import { notFound, redirect } from "next/navigation";
 import { requireRole } from "@/server/auth/rbac";
 import { getLessonForViewer } from "@/server/services/lesson";
 import { isEnrolled } from "@/server/services/enrollment";
+import { getCourseProgress } from "@/server/services/progress";
+import { isLessonUnlocked } from "@/server/services/lesson-access";
 import { VideoEmbed } from "@/components/video-embed";
+import { CompleteButton } from "./complete-button";
 
 export default async function LessonViewerPage({
   params,
@@ -21,6 +24,15 @@ export default async function LessonViewerPage({
 
   // Guard: so matriculados (ou dono/admin) acessam a aula.
   if (!enrolled) redirect(`/courses/${course.slug}`);
+
+  // Guard de liberacao (requiresPrevious): dono/admin ignora o cadeado.
+  if (!isOwner) {
+    const unlocked = await isLessonUnlocked(actor.id, course.id, lessonId);
+    if (!unlocked) redirect(`/courses/${course.slug}`);
+  }
+
+  const progress = await getCourseProgress(actor.id, course.id);
+  const done = progress.completedLessonIds.includes(lessonId);
 
   return (
     <div className="mx-auto max-w-3xl space-y-6">
@@ -55,6 +67,12 @@ export default async function LessonViewerPage({
               </li>
             ))}
           </ul>
+        </div>
+      )}
+
+      {!isOwner && (
+        <div className="border-t border-slate-200 pt-5">
+          <CompleteButton lessonId={lessonId} slug={course.slug} done={done} />
         </div>
       )}
     </div>
