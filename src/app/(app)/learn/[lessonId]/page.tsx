@@ -153,7 +153,7 @@ export default async function LessonViewerPage({
       </div>
 
       {/* Sidebar do curso */}
-      <aside className="lg:sticky lg:top-20 lg:h-[calc(100vh-6rem)]">
+      <aside className="lg:sticky lg:top-8 lg:h-[calc(100vh-4rem)]">
         <div className="h-full overflow-hidden rounded-2xl border border-[color:var(--border)] bg-[var(--surface)] shadow-[var(--shadow-sm)]">
           <LessonSidebar
             courseTitle={outline.title}

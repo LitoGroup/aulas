@@ -97,7 +97,7 @@ export function Badge({
     neutral: "bg-[color:var(--canvas)] text-[color:var(--muted)]",
     brand: "bg-[color:var(--brand)]/10 text-[color:var(--brand-ink)]",
     success: "bg-[color:var(--success)]/12 text-[color:var(--success)]",
-    warning: "bg-[color:var(--accent)]/18 text-[#9a5b00]",
+    warning: "bg-[color:var(--danger)]/10 text-[color:var(--danger)]",
   } as const;
   return (
     <span

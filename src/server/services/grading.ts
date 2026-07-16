@@ -124,3 +124,80 @@ export function listAttempts(userId: string, assessmentId: string) {
     orderBy: { submittedAt: "desc" },
   });
 }
+
+export interface StudentAssessmentRow {
+  id: string;
+  title: string;
+  passingScore: number;
+  questionCount: number;
+  attempts: number;
+  best: number | null;
+  passed: boolean;
+}
+
+export interface StudentAssessmentsByCourse {
+  courseId: string;
+  courseTitle: string;
+  courseSlug: string;
+  assessments: StudentAssessmentRow[];
+}
+
+/** Todas as avaliacoes dos cursos em que o aluno esta matriculado, com o resumo dele. */
+export async function listStudentAssessments(
+  userId: string,
+): Promise<StudentAssessmentsByCourse[]> {
+  const enrollments = await prisma.enrollment.findMany({
+    where: { userId },
+    orderBy: { enrolledAt: "desc" },
+    select: {
+      course: {
+        select: {
+          id: true,
+          title: true,
+          slug: true,
+          assessments: {
+            orderBy: { createdAt: "asc" },
+            select: {
+              id: true,
+              title: true,
+              passingScore: true,
+              _count: { select: { questions: true } },
+            },
+          },
+        },
+      },
+    },
+  });
+
+  const attempts = await prisma.assessmentAttempt.findMany({
+    where: { userId },
+    select: { assessmentId: true, score: true, passed: true },
+  });
+  const byAssessment = new Map<string, { attempts: number; best: number; passed: boolean }>();
+  for (const a of attempts) {
+    const cur = byAssessment.get(a.assessmentId);
+    byAssessment.set(a.assessmentId, {
+      attempts: (cur?.attempts ?? 0) + 1,
+      best: Math.max(cur?.best ?? 0, a.score),
+      passed: (cur?.passed ?? false) || a.passed,
+    });
+  }
+
+  return enrollments.map((e) => ({
+    courseId: e.course.id,
+    courseTitle: e.course.title,
+    courseSlug: e.course.slug,
+    assessments: e.course.assessments.map((a) => {
+      const s = byAssessment.get(a.id);
+      return {
+        id: a.id,
+        title: a.title,
+        passingScore: a.passingScore,
+        questionCount: a._count.questions,
+        attempts: s?.attempts ?? 0,
+        best: s ? s.best : null,
+        passed: s?.passed ?? false,
+      };
+    }),
+  }));
+}
