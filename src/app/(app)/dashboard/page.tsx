@@ -69,7 +69,7 @@ export default async function DashboardPage() {
               Explorar catálogo
             </Link>
           </div>
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
             {courses.map(({ course, progress }) => (
               <Link
                 key={course.id}
