@@ -98,7 +98,7 @@ export function LessonForm({ courseId, moduleId }: { courseId: string; moduleId:
     null,
   );
   const [type, setType] = useState("VIDEO");
-  const [provider, setProvider] = useState("S3");
+  const [provider, setProvider] = useState("YOUTUBE");
   return (
     <form action={action} className="space-y-3 rounded-lg bg-slate-50 p-3">
       {state?.error && <Alert kind="error">{state.error}</Alert>}
@@ -135,9 +135,9 @@ export function LessonForm({ courseId, moduleId }: { courseId: string; moduleId:
                 value={provider}
                 onChange={(e) => setProvider(e.target.value)}
               >
-                <option value="S3">Upload (plataforma)</option>
                 <option value="YOUTUBE">YouTube</option>
                 <option value="VIMEO">Vimeo</option>
+                <option value="S3">Upload (plataforma, até 50 MB)</option>
               </Select>
             </div>
             {provider !== "S3" && (

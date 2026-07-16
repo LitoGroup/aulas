@@ -151,7 +151,7 @@ export function LessonControls({
 }) {
   const [editing, setEditing] = useState(false);
   const [type, setType] = useState(lesson.contentType);
-  const [provider, setProvider] = useState(lesson.videoProvider ?? "S3");
+  const [provider, setProvider] = useState(lesson.videoProvider ?? "YOUTUBE");
   const [state, action, pending] = useActionState<ActionState | null, FormData>(
     updateLessonAction,
     null,
@@ -202,9 +202,9 @@ export function LessonControls({
                     value={provider}
                     onChange={(e) => setProvider(e.target.value)}
                   >
-                    <option value="S3">Upload (plataforma)</option>
                     <option value="YOUTUBE">YouTube</option>
                     <option value="VIMEO">Vimeo</option>
+                    <option value="S3">Upload (plataforma, até 50 MB)</option>
                   </Select>
                 </div>
                 {provider !== "S3" && (
