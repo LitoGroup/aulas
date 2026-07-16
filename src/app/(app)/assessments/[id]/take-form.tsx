@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { submitAttemptAction } from "@/server/actions/assessment";
 import type { AttemptResult } from "@/server/services/grading";
 import { Button, Alert } from "@/components/ui";
@@ -19,6 +20,8 @@ export function TakeForm({
   assessmentId: string;
   questions: Question[];
 }) {
+  const router = useRouter();
+  const [started, setStarted] = useState(false);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [result, setResult] = useState<AttemptResult | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -28,7 +31,7 @@ export function TakeForm({
     e.preventDefault();
     setError(null);
     if (Object.keys(answers).length < questions.length) {
-      setError("Responda todas as questoes antes de enviar.");
+      setError("Responda todas as questões antes de enviar.");
       return;
     }
     setPending(true);
@@ -39,61 +42,89 @@ export function TakeForm({
     const res = await submitAttemptAction(assessmentId, payload);
     setPending(false);
     if ("error" in res) setError(res.error);
-    else setResult(res.result);
+    else {
+      setResult(res.result);
+      router.refresh(); // atualiza as estatísticas da página
+    }
   }
 
   if (result) {
     return (
       <div className="space-y-4">
         <div
-          className={`rounded-xl border p-6 text-center ${
+          className={`rounded-2xl border p-8 text-center shadow-[var(--shadow-sm)] ${
             result.passed
-              ? "border-emerald-200 bg-emerald-50"
-              : "border-red-200 bg-red-50"
+              ? "border-[color:var(--success)]/30 bg-[color:var(--success)]/5"
+              : "border-[color:var(--danger)]/30 bg-[color:var(--danger)]/5"
           }`}
         >
-          <p className="text-4xl font-bold text-slate-900">{result.score}%</p>
+          <p className="text-5xl font-bold text-[color:var(--ink)]">{result.score}%</p>
           <p
-            className={`mt-2 text-lg font-semibold ${
-              result.passed ? "text-emerald-700" : "text-red-700"
+            className={`mt-2 text-lg font-bold ${
+              result.passed ? "text-[color:var(--success)]" : "text-[color:var(--danger)]"
             }`}
           >
             {result.passed ? "Aprovado!" : "Reprovado"}
           </p>
-          <p className="mt-1 text-sm text-slate-500">
-            {result.correct} de {result.total} corretas
+          <p className="mt-1 text-sm text-[color:var(--muted)]">
+            Você acertou {result.correct} de {result.total} questões
           </p>
+          <button
+            onClick={() => {
+              setResult(null);
+              setAnswers({});
+              setStarted(false);
+            }}
+            className="mt-5 rounded-xl border border-[color:var(--border)] bg-[var(--surface)] px-5 py-2.5 text-sm font-semibold text-[color:var(--ink)] transition hover:bg-[color:var(--canvas)]"
+          >
+            {result.passed ? "Voltar às estatísticas" : "Tentar novamente"}
+          </button>
         </div>
-        <button
-          onClick={() => {
-            setResult(null);
-            setAnswers({});
-          }}
-          className="text-sm text-indigo-600 hover:underline"
-        >
-          Refazer a prova
-        </button>
+      </div>
+    );
+  }
+
+  if (!started) {
+    return (
+      <div className="flex justify-center">
+        <Button onClick={() => setStarted(true)} className="w-auto px-8 py-3">
+          Iniciar Nova Tentativa
+        </Button>
       </div>
     );
   }
 
   return (
-    <form onSubmit={onSubmit} className="space-y-6">
+    <form onSubmit={onSubmit} className="space-y-5">
       {error && <Alert kind="error">{error}</Alert>}
       {questions.map((q, i) => (
-        <div key={q.id} className="rounded-xl border border-slate-200 bg-white p-5">
-          <p className="mb-3 font-medium text-slate-800">
-            {i + 1}. {q.statement}
+        <div
+          key={q.id}
+          className="rounded-2xl border border-[color:var(--border)] bg-[var(--surface)] p-5 shadow-[var(--shadow-sm)]"
+        >
+          <p className="mb-3 font-semibold text-[color:var(--ink)]">
+            <span className="mr-2 inline-flex h-6 w-6 items-center justify-center rounded-lg bg-[color:var(--ink)] text-xs font-bold text-white">
+              {i + 1}
+            </span>
+            {q.statement}
           </p>
-          <div className="space-y-2">
+          <div className="space-y-1.5">
             {q.options.map((o) => (
-              <label key={o.id} className="flex items-center gap-2 text-sm text-slate-700">
+              <label
+                key={o.id}
+                className={`flex cursor-pointer items-center gap-3 rounded-xl border px-3.5 py-2.5 text-sm transition ${
+                  answers[q.id] === o.id
+                    ? "border-[color:var(--ink)] bg-[color:var(--ink)]/5 font-medium text-[color:var(--ink)]"
+                    : "border-[color:var(--border)] text-[color:var(--ink-soft)] hover:bg-[color:var(--canvas)]"
+                }`}
+              >
                 <input
                   type="radio"
                   name={q.id}
                   value={o.id}
                   checked={answers[q.id] === o.id}
                   onChange={() => setAnswers((a) => ({ ...a, [q.id]: o.id }))}
+                  className="accent-[#18181b]"
                 />
                 {o.text}
               </label>
@@ -101,9 +132,14 @@ export function TakeForm({
           </div>
         </div>
       ))}
-      <Button type="submit" disabled={pending} className="w-auto px-6">
-        {pending ? "Enviando..." : "Enviar respostas"}
-      </Button>
+      <div className="flex items-center justify-between">
+        <span className="text-xs text-[color:var(--muted)]">
+          {Object.keys(answers).length}/{questions.length} respondidas
+        </span>
+        <Button type="submit" disabled={pending} className="w-auto px-8">
+          {pending ? "Enviando..." : "Enviar respostas"}
+        </Button>
+      </div>
     </form>
   );
 }

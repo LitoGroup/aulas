@@ -1,10 +1,9 @@
 import Link from "next/link";
 import { ProgressRing } from "@/components/progress-ring";
+import { StatusCircle, typeLabel } from "@/components/status-circle";
 
 type Lesson = { id: string; title: string; contentType: string };
 type ModuleOutline = { id: string; title: string; order: number; lessons: Lesson[] };
-
-const typeIcon: Record<string, string> = { VIDEO: "▶", TEXT: "¶", FILE: "PDF" };
 
 export function LessonSidebar({
   courseTitle,
@@ -31,63 +30,87 @@ export function LessonSidebar({
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-2">
-        {modules.map((m) => (
-          <div key={m.id} className="mb-2">
-            <p className="px-2 py-2 text-xs font-semibold uppercase tracking-wide text-[color:var(--muted)]">
-              {m.order + 1}. {m.title}
-            </p>
-            <ul className="space-y-0.5">
-              {m.lessons.map((l) => {
-                const isCurrent = l.id === currentId;
-                const isDone = completed.has(l.id);
-                const isLocked = locks.get(l.id) === true;
-
-                const marker = isDone ? (
-                  <span className="text-[color:var(--success)]">✓</span>
-                ) : isLocked ? (
-                  <span className="text-[color:var(--muted)]">🔒</span>
-                ) : (
-                  <span className="text-[10px] font-semibold text-[color:var(--brand-ink)]">
-                    {typeIcon[l.contentType] ?? "•"}
+      <div className="flex-1 overflow-y-auto">
+        {modules.map((m) => {
+          const hasCurrent = m.lessons.some((l) => l.id === currentId);
+          const doneInModule = m.lessons.filter((l) => completed.has(l.id)).length;
+          return (
+            <details key={m.id} open={hasCurrent} className="group border-b border-[color:var(--border)] last:border-0">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-4 py-3 transition hover:bg-[color:var(--canvas)]">
+                <span className="flex min-w-0 items-center gap-2">
+                  <svg
+                    viewBox="0 0 12 12"
+                    className="h-2.5 w-2.5 shrink-0 text-[color:var(--muted)] transition-transform group-open:rotate-90"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                  >
+                    <path d="M4 2.5L8 6l-4 3.5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                  <span className="truncate text-sm font-semibold text-[color:var(--ink)]">
+                    {m.order + 1}. {m.title}
                   </span>
-                );
+                </span>
+                <span className="shrink-0 text-xs font-medium text-[color:var(--muted)]">
+                  {doneInModule}/{m.lessons.length}
+                </span>
+              </summary>
 
-                const inner = (
-                  <span className="flex items-center gap-2.5">
-                    <span className="flex h-5 w-6 shrink-0 items-center justify-center">{marker}</span>
-                    <span className="truncate">{l.title}</span>
-                  </span>
-                );
+              <ul className="pb-1">
+                {m.lessons.map((l) => {
+                  const isCurrent = l.id === currentId;
+                  const isDone = completed.has(l.id);
+                  const isLocked = locks.get(l.id) === true;
+                  const state = isCurrent ? "current" : isDone ? "done" : isLocked ? "locked" : "pending";
 
-                const base = "block rounded-lg px-2 py-2 text-sm transition";
-                if (isLocked) {
+                  const inner = (
+                    <span className="flex items-center gap-2.5 px-4 py-2">
+                      <StatusCircle state={state} />
+                      <span className="min-w-0">
+                        <span
+                          className={`block truncate text-sm ${
+                            isCurrent
+                              ? "font-semibold text-[color:var(--ink)]"
+                              : isLocked
+                                ? "text-[color:var(--muted)]"
+                                : "text-[color:var(--ink-soft)]"
+                          }`}
+                        >
+                          {l.title}
+                        </span>
+                        <span className="text-[11px] text-[color:var(--muted)]">
+                          {typeLabel(l.contentType)}
+                        </span>
+                      </span>
+                    </span>
+                  );
+
+                  if (isLocked) {
+                    return (
+                      <li key={l.id} className="cursor-not-allowed opacity-70">
+                        {inner}
+                      </li>
+                    );
+                  }
                   return (
                     <li key={l.id}>
-                      <span className={`${base} cursor-not-allowed text-[color:var(--muted)]`}>
+                      <Link
+                        href={`/learn/${l.id}`}
+                        className={`block transition ${
+                          isCurrent
+                            ? "bg-[color:var(--ink)]/5"
+                            : "hover:bg-[color:var(--canvas)]"
+                        }`}
+                      >
                         {inner}
-                      </span>
+                      </Link>
                     </li>
                   );
-                }
-                return (
-                  <li key={l.id}>
-                    <Link
-                      href={`/learn/${l.id}`}
-                      className={`${base} ${
-                        isCurrent
-                          ? "bg-[color:var(--brand)]/10 font-semibold text-[color:var(--brand-ink)]"
-                          : "text-[color:var(--ink-soft)] hover:bg-[color:var(--canvas)]"
-                      }`}
-                    >
-                      {inner}
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-        ))}
+                })}
+              </ul>
+            </details>
+          );
+        })}
       </div>
     </div>
   );
