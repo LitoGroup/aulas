@@ -24,13 +24,13 @@ export default async function EditAssessmentPage({
 
   return (
     <div className="space-y-6">
-      <Link href={`/manage/courses/${id}`} className="text-sm text-indigo-600 hover:underline">
+      <Link href={`/manage/courses/${id}`} className="text-sm text-[color:var(--brand-ink)] hover:underline">
         &larr; Voltar ao curso
       </Link>
 
       <div>
-        <h1 className="text-2xl font-semibold text-slate-900">{assessment.title}</h1>
-        <p className="mt-1 text-sm text-slate-500">
+        <h1 className="text-2xl font-semibold text-[color:var(--ink)]">{assessment.title}</h1>
+        <p className="mt-1 text-sm text-[color:var(--muted)]">
           Nota de corte: <strong>{assessment.passingScore}%</strong> ·{" "}
           {assessment.questions.length} questao(oes)
         </p>
@@ -39,9 +39,9 @@ export default async function EditAssessmentPage({
       {assessment.questions.length > 0 && (
         <ol className="space-y-3">
           {assessment.questions.map((q, i) => (
-            <li key={q.id} className="rounded-xl border border-slate-200 bg-white p-4">
+            <li key={q.id} className="rounded-xl border border-[color:var(--border)] bg-[var(--surface)] p-4">
               <div className="flex items-start justify-between gap-3">
-                <p className="font-medium text-slate-800">
+                <p className="font-medium text-[color:var(--ink)]">
                   {i + 1}. {q.statement}
                 </p>
                 <DeleteQuestionButton
@@ -54,7 +54,7 @@ export default async function EditAssessmentPage({
                 {q.options.map((o) => (
                   <li
                     key={o.id}
-                    className={o.isCorrect ? "font-medium text-emerald-700" : "text-slate-600"}
+                    className={o.isCorrect ? "font-medium text-[color:var(--success)]" : "text-[color:var(--ink-soft)]"}
                   >
                     {o.isCorrect ? "✓ " : "• "}
                     {o.text}
@@ -67,7 +67,7 @@ export default async function EditAssessmentPage({
       )}
 
       <div>
-        <h2 className="mb-2 text-lg font-medium text-slate-900">Nova questao</h2>
+        <h2 className="mb-2 text-lg font-medium text-[color:var(--ink)]">Nova questao</h2>
         <QuestionForm courseId={id} assessmentId={assessmentId} />
       </div>
     </div>

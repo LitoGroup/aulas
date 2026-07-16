@@ -21,11 +21,11 @@ export default async function NewAssessmentPage({
 
   return (
     <div className="mx-auto max-w-xl space-y-6">
-      <Link href={`/manage/courses/${id}`} className="text-sm text-indigo-600 hover:underline">
+      <Link href={`/manage/courses/${id}`} className="text-sm text-[color:var(--brand-ink)] hover:underline">
         &larr; Voltar ao curso
       </Link>
-      <h1 className="text-2xl font-semibold text-slate-900">Nova avaliacao</h1>
-      <div className="rounded-xl border border-slate-200 bg-white p-6">
+      <h1 className="text-2xl font-semibold text-[color:var(--ink)]">Nova avaliacao</h1>
+      <div className="rounded-xl border border-[color:var(--border)] bg-[var(--surface)] p-6">
         <NewAssessmentForm courseId={id} />
       </div>
     </div>

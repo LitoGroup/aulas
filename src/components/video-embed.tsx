@@ -9,7 +9,7 @@ export function VideoEmbed({
 }) {
   if (!provider || !videoRef) {
     return (
-      <div className="flex aspect-video items-center justify-center rounded-lg bg-slate-100 text-sm text-slate-400">
+      <div className="flex aspect-video items-center justify-center rounded-lg bg-[color:var(--canvas)] text-sm text-[color:var(--muted)]">
         Video nao configurado
       </div>
     );

@@ -10,8 +10,8 @@ export default async function ResetPasswordPage({
   return (
     <div className="space-y-5">
       <div>
-        <h1 className="text-xl font-semibold text-slate-900">Nova senha</h1>
-        <p className="mt-1 text-sm text-slate-500">Defina uma nova senha para sua conta.</p>
+        <h1 className="text-xl font-semibold text-[color:var(--ink)]">Nova senha</h1>
+        <p className="mt-1 text-sm text-[color:var(--muted)]">Defina uma nova senha para sua conta.</p>
       </div>
       <ResetForm token={token ?? ""} />
     </div>

@@ -14,8 +14,8 @@ export default function ForgotPasswordPage() {
   return (
     <div className="space-y-5">
       <div>
-        <h1 className="text-xl font-semibold text-slate-900">Esqueci minha senha</h1>
-        <p className="mt-1 text-sm text-slate-500">
+        <h1 className="text-xl font-semibold text-[color:var(--ink)]">Esqueci minha senha</h1>
+        <p className="mt-1 text-sm text-[color:var(--muted)]">
           Informe seu e-mail e enviaremos um link de redefinicao.
         </p>
       </div>
@@ -32,8 +32,8 @@ export default function ForgotPasswordPage() {
         </Button>
       </form>
 
-      <p className="text-center text-sm text-slate-500">
-        <Link href="/login" className="font-medium text-indigo-600 hover:underline">
+      <p className="text-center text-sm text-[color:var(--muted)]">
+        <Link href="/login" className="font-medium text-[color:var(--brand-ink)] hover:underline">
           Voltar para o login
         </Link>
       </p>

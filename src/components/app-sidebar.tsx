@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { signOut } from "next-auth/react";
 import { Badge } from "@/components/ui";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 interface NavItem {
   href: string;
@@ -104,7 +105,7 @@ export function AppSidebar({
           collapsed ? "justify-center px-0" : "px-3"
         } ${
           active
-            ? "bg-[color:var(--ink)] text-white shadow-[var(--shadow-sm)]"
+            ? "bg-[color:var(--navy-fill)] text-white shadow-[var(--shadow-sm)]"
             : "text-[color:var(--ink-soft)] hover:bg-[color:var(--canvas)] hover:text-[color:var(--ink)]"
         }`}
       >
@@ -156,13 +157,13 @@ export function AppSidebar({
       {/* Perfil */}
       {collapsed ? (
         <div className="mb-4 flex justify-center" title={`${name} (${role})`}>
-          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[color:var(--ink)] text-sm font-bold text-white">
+          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[color:var(--navy-fill)] text-sm font-bold text-white">
             {initials(name)}
           </span>
         </div>
       ) : (
         <div className="mx-4 mb-4 flex items-center gap-3 rounded-2xl border border-[color:var(--border)] bg-[color:var(--canvas)] p-3">
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[color:var(--ink)] text-sm font-bold text-white">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[color:var(--navy-fill)] text-sm font-bold text-white">
             {initials(name)}
           </span>
           <span className="min-w-0">
@@ -200,7 +201,8 @@ export function AppSidebar({
       </nav>
 
       {/* Rodapé */}
-      <div className={`border-t border-[color:var(--border)] ${collapsed ? "p-3" : "p-4"}`}>
+      <div className={`space-y-1 border-t border-[color:var(--border)] ${collapsed ? "p-3" : "p-4"}`}>
+        <ThemeToggle collapsed={collapsed} />
         <button
           onClick={() => signOut({ redirectTo: "/login" })}
           title={collapsed ? "Sair" : undefined}

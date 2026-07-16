@@ -103,7 +103,7 @@ export function TakeForm({
           className="rounded-2xl border border-[color:var(--border)] bg-[var(--surface)] p-5 shadow-[var(--shadow-sm)]"
         >
           <p className="mb-3 font-semibold text-[color:var(--ink)]">
-            <span className="mr-2 inline-flex h-6 w-6 items-center justify-center rounded-lg bg-[color:var(--ink)] text-xs font-bold text-white">
+            <span className="mr-2 inline-flex h-6 w-6 items-center justify-center rounded-lg bg-[color:var(--navy-fill)] text-xs font-bold text-white">
               {i + 1}
             </span>
             {q.statement}

@@ -24,10 +24,37 @@
   --brand: var(--ink);
   --brand-ink: var(--ink);
 
+  /* preenchimento navy solido (avatares, chips, item ativo) — sempre com texto branco */
+  --navy-fill: #0e2440;
+  color-scheme: light;
+
   --radius: 12px;
   --shadow-sm: 0 1px 2px rgba(24, 24, 27, 0.05);
   --shadow-md: 0 4px 16px -6px rgba(24, 24, 27, 0.12);
   --shadow-lg: 0 12px 32px -12px rgba(24, 24, 27, 0.18);
+}
+
+/* ------------------------------- Tema escuro ------------------------------ */
+[data-theme="dark"] {
+  --canvas: #0a1420;
+  --surface: #10202f;
+  --ink: #e7eef7;
+  --ink-soft: #c1cedd;
+  --muted: #8296ac;
+  --border: #223850;
+  --border-strong: #33496a;
+
+  --accent: #7ed957;
+  --accent-ink: #8ade52;
+  --success: #82d95b;
+  --danger: #f8716f;
+
+  --navy-fill: #1c5a99;
+  color-scheme: dark;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 16px -6px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 12px 32px -12px rgba(0, 0, 0, 0.6);
 }
 
 @theme inline {

@@ -14,8 +14,8 @@ export default function RegisterPage() {
   return (
     <div className="space-y-5">
       <div>
-        <h1 className="text-xl font-semibold text-slate-900">Criar conta</h1>
-        <p className="mt-1 text-sm text-slate-500">Cadastre-se para acessar os cursos.</p>
+        <h1 className="text-xl font-semibold text-[color:var(--ink)]">Criar conta</h1>
+        <p className="mt-1 text-sm text-[color:var(--muted)]">Cadastre-se para acessar os cursos.</p>
       </div>
 
       {state?.error && <Alert kind="error">{state.error}</Alert>}
@@ -39,16 +39,16 @@ export default function RegisterPage() {
             minLength={8}
             required
           />
-          <p className="mt-1 text-xs text-slate-400">Minimo de 8 caracteres.</p>
+          <p className="mt-1 text-xs text-[color:var(--muted)]">Minimo de 8 caracteres.</p>
         </div>
         <Button type="submit" disabled={pending}>
           {pending ? "Criando..." : "Criar conta"}
         </Button>
       </form>
 
-      <p className="text-center text-sm text-slate-500">
+      <p className="text-center text-sm text-[color:var(--muted)]">
         Ja tem conta?{" "}
-        <Link href="/login" className="font-medium text-indigo-600 hover:underline">
+        <Link href="/login" className="font-medium text-[color:var(--brand-ink)] hover:underline">
           Entrar
         </Link>
       </p>

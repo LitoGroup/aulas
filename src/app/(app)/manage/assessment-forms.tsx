@@ -54,7 +54,7 @@ export function QuestionForm({
   const [type, setType] = useState("MULTIPLE_CHOICE");
 
   return (
-    <form action={action} className="space-y-4 rounded-lg bg-slate-50 p-4">
+    <form action={action} className="space-y-4 rounded-lg bg-[color:var(--canvas)] p-4">
       {state?.error && <Alert kind="error">{state.error}</Alert>}
       <input type="hidden" name="courseId" value={courseId} />
       <input type="hidden" name="assessmentId" value={assessmentId} />
@@ -80,7 +80,7 @@ export function QuestionForm({
 
       {type === "MULTIPLE_CHOICE" ? (
         <div className="space-y-2">
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-[color:var(--muted)]">
             Marque o circulo da alternativa correta. Deixe em branco as opcoes que nao usar.
           </p>
           {[0, 1, 2, 3].map((i) => (

@@ -175,7 +175,7 @@ export default async function CourseDetailPage({
                   className="flex items-center justify-between gap-3 px-5 py-4 transition hover:bg-[color:var(--canvas)]"
                 >
                   <span className="flex items-center gap-3">
-                    <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[color:var(--ink)] text-sm font-bold text-white">
+                    <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[color:var(--navy-fill)] text-sm font-bold text-white">
                       ✓
                     </span>
                     <span>

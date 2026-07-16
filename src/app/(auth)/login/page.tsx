@@ -13,8 +13,8 @@ export default async function LoginPage({
   return (
     <div className="space-y-5">
       <div>
-        <h1 className="text-xl font-semibold text-slate-900">Entrar</h1>
-        <p className="mt-1 text-sm text-slate-500">Acesse sua conta para continuar.</p>
+        <h1 className="text-xl font-semibold text-[color:var(--ink)]">Entrar</h1>
+        <p className="mt-1 text-sm text-[color:var(--muted)]">Acesse sua conta para continuar.</p>
       </div>
 
       {sp.registered && <Alert kind="success">Conta criada! Faca login para continuar.</Alert>}
@@ -23,10 +23,10 @@ export default async function LoginPage({
       <LoginForm callbackUrl={callbackUrl} />
 
       <div className="flex items-center justify-between text-sm">
-        <Link href="/forgot-password" className="text-indigo-600 hover:underline">
+        <Link href="/forgot-password" className="text-[color:var(--brand-ink)] hover:underline">
           Esqueci minha senha
         </Link>
-        <Link href="/register" className="font-medium text-indigo-600 hover:underline">
+        <Link href="/register" className="font-medium text-[color:var(--brand-ink)] hover:underline">
           Criar conta
         </Link>
       </div>

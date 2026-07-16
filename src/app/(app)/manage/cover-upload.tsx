@@ -77,7 +77,7 @@ export function CoverUpload({
             accept="image/jpeg,image/png,image/webp"
             onChange={onChange}
             disabled={busy}
-            className="block w-full text-sm text-[color:var(--ink-soft)] file:mr-3 file:rounded-lg file:border-0 file:bg-[color:var(--ink)] file:px-3.5 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:opacity-90"
+            className="block w-full text-sm text-[color:var(--ink-soft)] file:mr-3 file:rounded-lg file:border-0 file:bg-[color:var(--navy-fill)] file:px-3.5 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:opacity-90"
           />
           <p className="mt-1 text-xs text-[color:var(--muted)]">
             JPG, PNG ou WebP · até 5 MB · ideal 1280×720 (16:9)

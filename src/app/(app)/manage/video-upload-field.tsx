@@ -76,13 +76,13 @@ export function VideoUploadField({
         accept="video/mp4,video/webm"
         onChange={onChange}
         disabled={progress !== null}
-        className="block w-full text-sm text-[color:var(--ink-soft)] file:mr-3 file:rounded-lg file:border-0 file:bg-[color:var(--ink)] file:px-3.5 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:opacity-90"
+        className="block w-full text-sm text-[color:var(--ink-soft)] file:mr-3 file:rounded-lg file:border-0 file:bg-[color:var(--navy-fill)] file:px-3.5 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:opacity-90"
       />
       {progress !== null && (
         <div className="mt-2 flex items-center gap-2">
           <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-[color:var(--canvas)]">
             <div
-              className="h-full rounded-full bg-[color:var(--ink)] transition-all"
+              className="h-full rounded-full bg-[color:var(--navy-fill)] transition-all"
               style={{ width: `${progress}%` }}
             />
           </div>

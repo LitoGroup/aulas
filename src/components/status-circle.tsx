@@ -23,7 +23,7 @@ export function StatusCircle({ state }: { state: LessonState }) {
   }
   if (state === "current") {
     return (
-      <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[color:var(--ink)]">
+      <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[color:var(--navy-fill)]">
         <svg viewBox="0 0 12 12" className="h-2.5 w-2.5" fill="white">
           <path d="M4 2.5v7l5.5-3.5z" />
         </svg>

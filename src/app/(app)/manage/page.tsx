@@ -9,31 +9,31 @@ export default async function ManagePage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold text-slate-900">Meus cursos</h1>
+        <h1 className="text-2xl font-semibold text-[color:var(--ink)]">Meus cursos</h1>
         <Link
           href="/manage/courses/new"
-          className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700"
+          className="rounded-lg brand-gradient px-4 py-2 text-sm font-semibold text-white "
         >
           Novo curso
         </Link>
       </div>
 
       {courses.length === 0 ? (
-        <p className="text-sm text-slate-500">Voce ainda nao criou cursos.</p>
+        <p className="text-sm text-[color:var(--muted)]">Voce ainda nao criou cursos.</p>
       ) : (
-        <ul className="divide-y divide-slate-200 rounded-xl border border-slate-200 bg-white">
+        <ul className="divide-y divide-[color:var(--border)] rounded-xl border border-[color:var(--border)] bg-[var(--surface)]">
           {courses.map((c) => (
             <li key={c.id}>
               <Link
                 href={`/manage/courses/${c.id}`}
-                className="flex items-center justify-between px-4 py-3 hover:bg-slate-50"
+                className="flex items-center justify-between px-4 py-3 hover:bg-[color:var(--canvas)]"
               >
-                <span className="font-medium text-slate-800">{c.title}</span>
+                <span className="font-medium text-[color:var(--ink)]">{c.title}</span>
                 <span
                   className={`rounded px-2 py-0.5 text-xs font-medium ${
                     c.isPublished
-                      ? "bg-emerald-100 text-emerald-700"
-                      : "bg-slate-100 text-slate-500"
+                      ? "bg-[color:var(--success)]/15 text-[color:var(--success)]"
+                      : "bg-[color:var(--canvas)] text-[color:var(--muted)]"
                   }`}
                 >
                   {c.isPublished ? "Publicado" : "Rascunho"}

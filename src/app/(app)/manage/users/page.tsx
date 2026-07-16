@@ -43,7 +43,7 @@ export default async function UsersPage() {
                 <tr key={u.id} className="border-b border-[color:var(--border)] last:border-0">
                   <td className="px-5 py-3">
                     <div className="flex items-center gap-3">
-                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[color:var(--ink)] text-xs font-bold text-white">
+                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[color:var(--navy-fill)] text-xs font-bold text-white">
                         {u.name
                           .split(/\s+/)
                           .slice(0, 2)

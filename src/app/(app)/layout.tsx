@@ -4,6 +4,7 @@ import { auth } from "@/server/auth/config";
 import { SignOutButton } from "@/components/sign-out-button";
 import { NavLinks } from "@/components/nav-links";
 import { AppSidebar } from "@/components/app-sidebar";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { Badge } from "@/components/ui";
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
@@ -42,6 +43,9 @@ export default async function AppLayout({ children }: { children: React.ReactNod
                 {name}
                 <Badge tone="brand">{role}</Badge>
               </span>
+              <div className="w-10">
+                <ThemeToggle collapsed />
+              </div>
               <SignOutButton />
             </div>
           </div>

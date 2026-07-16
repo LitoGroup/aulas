@@ -61,7 +61,7 @@ export function CourseEditForm({
           defaultValue={course.description ?? ""}
         />
       </div>
-      <label className="flex items-center gap-2 text-sm text-slate-700">
+      <label className="flex items-center gap-2 text-sm text-[color:var(--ink-soft)]">
         <input type="checkbox" name="isPublished" defaultChecked={course.isPublished} />
         Publicado (visivel para alunos)
       </label>
@@ -100,7 +100,7 @@ export function LessonForm({ courseId, moduleId }: { courseId: string; moduleId:
   const [type, setType] = useState("VIDEO");
   const [provider, setProvider] = useState("YOUTUBE");
   return (
-    <form action={action} className="space-y-3 rounded-lg bg-slate-50 p-3">
+    <form action={action} className="space-y-3 rounded-lg bg-[color:var(--canvas)] p-3">
       {state?.error && <Alert kind="error">{state.error}</Alert>}
       <input type="hidden" name="courseId" value={courseId} />
       <input type="hidden" name="moduleId" value={moduleId} />
@@ -165,7 +165,7 @@ export function LessonForm({ courseId, moduleId }: { courseId: string; moduleId:
         </p>
       )}
 
-      <label className="flex items-center gap-2 text-sm text-slate-600">
+      <label className="flex items-center gap-2 text-sm text-[color:var(--ink-soft)]">
         <input type="checkbox" name="requiresPrevious" />
         Exige concluir a aula anterior
       </label>

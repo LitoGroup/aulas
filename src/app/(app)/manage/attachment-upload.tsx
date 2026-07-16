@@ -63,7 +63,7 @@ export function AttachmentUpload({
 
   return (
     <div className="mt-2 text-sm">
-      <label className="inline-flex cursor-pointer items-center gap-2 text-indigo-600 hover:underline">
+      <label className="inline-flex cursor-pointer items-center gap-2 text-[color:var(--brand-ink)] hover:underline">
         <input
           ref={inputRef}
           type="file"
@@ -74,7 +74,7 @@ export function AttachmentUpload({
         />
         + Anexar apostila
       </label>
-      {status && <span className="ml-2 text-xs text-slate-500">{status}</span>}
+      {status && <span className="ml-2 text-xs text-[color:var(--muted)]">{status}</span>}
     </div>
   );
 }
