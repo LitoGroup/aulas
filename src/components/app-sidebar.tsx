@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import { signOut } from "next-auth/react";
 import { Badge } from "@/components/ui";
 
@@ -66,6 +67,17 @@ export function AppSidebar({
   const pathname = usePathname();
   const isAdmin = role === "ADMIN";
 
+  const [collapsed, setCollapsed] = useState(false);
+  useEffect(() => {
+    setCollapsed(localStorage.getItem("sidebar-collapsed") === "1");
+  }, []);
+  function toggle() {
+    setCollapsed((c) => {
+      localStorage.setItem("sidebar-collapsed", c ? "0" : "1");
+      return !c;
+    });
+  }
+
   const learn: NavItem[] = [
     { href: "/dashboard", label: "Painel", icon: icon.panel },
     { href: "/courses", label: "Catálogo de cursos", icon: icon.catalog },
@@ -87,55 +99,99 @@ export function AppSidebar({
     return (
       <Link
         href={item.href}
-        className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition ${
+        title={collapsed ? item.label : undefined}
+        className={`flex items-center gap-3 rounded-xl py-2.5 text-sm font-medium transition ${
+          collapsed ? "justify-center px-0" : "px-3"
+        } ${
           active
             ? "bg-[color:var(--ink)] text-white shadow-[var(--shadow-sm)]"
             : "text-[color:var(--ink-soft)] hover:bg-[color:var(--canvas)] hover:text-[color:var(--ink)]"
         }`}
       >
         {item.icon}
-        {item.label}
+        {!collapsed && item.label}
       </Link>
     );
   }
 
   return (
-    <aside className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col border-r border-[color:var(--border)] bg-[var(--surface)] lg:flex">
-      {/* Marca */}
-      <div className="flex items-center gap-2 px-5 py-5">
-        <span className="brand-gradient flex h-8 w-8 items-center justify-center rounded-lg text-sm font-bold text-white">
+    <aside
+      className={`sticky top-0 hidden h-screen shrink-0 flex-col border-r border-[color:var(--border)] bg-[var(--surface)] transition-all lg:flex ${
+        collapsed ? "w-[76px]" : "w-64"
+      }`}
+    >
+      {/* Marca + minimizar */}
+      <div className={`flex items-center py-5 ${collapsed ? "justify-center px-0" : "gap-2 px-5"}`}>
+        <span className="brand-gradient flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-sm font-bold text-white">
           S
         </span>
-        <span className="font-display text-lg font-bold text-[color:var(--ink)]">School</span>
+        {!collapsed && (
+          <span className="font-display text-lg font-bold text-[color:var(--ink)]">School</span>
+        )}
+        {!collapsed && (
+          <button
+            onClick={toggle}
+            title="Minimizar menu"
+            className="ml-auto flex h-7 w-7 items-center justify-center rounded-lg text-[color:var(--muted)] transition hover:bg-[color:var(--canvas)] hover:text-[color:var(--ink)]"
+          >
+            <svg viewBox="0 0 16 16" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <path d="M9.5 4L5.5 8l4 4M13 4v8" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
+        )}
       </div>
+
+      {collapsed && (
+        <button
+          onClick={toggle}
+          title="Expandir menu"
+          className="mx-auto mb-3 flex h-7 w-7 items-center justify-center rounded-lg text-[color:var(--muted)] transition hover:bg-[color:var(--canvas)] hover:text-[color:var(--ink)]"
+        >
+          <svg viewBox="0 0 16 16" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.5">
+            <path d="M6.5 4l4 4-4 4M3 4v8" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </button>
+      )}
 
       {/* Perfil */}
-      <div className="mx-4 mb-4 flex items-center gap-3 rounded-2xl border border-[color:var(--border)] bg-[color:var(--canvas)] p-3">
-        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[color:var(--ink)] text-sm font-bold text-white">
-          {initials(name)}
-        </span>
-        <span className="min-w-0">
-          <span className="block truncate text-sm font-semibold text-[color:var(--ink)]">{name}</span>
-          <Badge tone="brand">{role}</Badge>
-        </span>
-      </div>
+      {collapsed ? (
+        <div className="mb-4 flex justify-center" title={`${name} (${role})`}>
+          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[color:var(--ink)] text-sm font-bold text-white">
+            {initials(name)}
+          </span>
+        </div>
+      ) : (
+        <div className="mx-4 mb-4 flex items-center gap-3 rounded-2xl border border-[color:var(--border)] bg-[color:var(--canvas)] p-3">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[color:var(--ink)] text-sm font-bold text-white">
+            {initials(name)}
+          </span>
+          <span className="min-w-0">
+            <span className="block truncate text-sm font-semibold text-[color:var(--ink)]">{name}</span>
+            <Badge tone="brand">{role}</Badge>
+          </span>
+        </div>
+      )}
 
       {/* Navegação */}
-      <nav className="flex-1 space-y-6 overflow-y-auto px-4">
+      <nav className={`flex-1 space-y-6 overflow-y-auto ${collapsed ? "px-3" : "px-4"}`}>
         <div className="space-y-1">
-          <p className="px-3 pb-1 text-[11px] font-semibold uppercase tracking-wider text-[color:var(--muted)]">
-            Aprender
-          </p>
+          {!collapsed && (
+            <p className="px-3 pb-1 text-[11px] font-semibold uppercase tracking-wider text-[color:var(--muted)]">
+              Aprender
+            </p>
+          )}
           {learn.map((i) => (
             <NavLink key={i.href} item={i} />
           ))}
         </div>
 
         {isTeacher && (
-          <div className="space-y-1">
-            <p className="px-3 pb-1 text-[11px] font-semibold uppercase tracking-wider text-[color:var(--muted)]">
-              Professor
-            </p>
+          <div className={`space-y-1 ${collapsed ? "border-t border-[color:var(--border)] pt-4" : ""}`}>
+            {!collapsed && (
+              <p className="px-3 pb-1 text-[11px] font-semibold uppercase tracking-wider text-[color:var(--muted)]">
+                Professor
+              </p>
+            )}
             {teach.map((i) => (
               <NavLink key={i.href} item={i} />
             ))}
@@ -144,15 +200,18 @@ export function AppSidebar({
       </nav>
 
       {/* Rodapé */}
-      <div className="border-t border-[color:var(--border)] p-4">
+      <div className={`border-t border-[color:var(--border)] ${collapsed ? "p-3" : "p-4"}`}>
         <button
           onClick={() => signOut({ redirectTo: "/login" })}
-          className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-[color:var(--ink-soft)] transition hover:bg-[color:var(--canvas)] hover:text-[color:var(--ink)]"
+          title={collapsed ? "Sair" : undefined}
+          className={`flex w-full items-center gap-3 rounded-xl py-2.5 text-sm font-medium text-[color:var(--ink-soft)] transition hover:bg-[color:var(--canvas)] hover:text-[color:var(--ink)] ${
+            collapsed ? "justify-center px-0" : "px-3"
+          }`}
         >
-          <svg viewBox="0 0 16 16" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.4">
+          <svg viewBox="0 0 16 16" className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" strokeWidth="1.4">
             <path d="M6 2H3.5A1.5 1.5 0 0 0 2 3.5v9A1.5 1.5 0 0 0 3.5 14H6M10.5 11.5L14 8l-3.5-3.5M14 8H6" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
-          Sair
+          {!collapsed && "Sair"}
         </button>
       </div>
     </aside>
