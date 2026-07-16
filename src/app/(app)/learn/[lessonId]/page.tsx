@@ -8,6 +8,7 @@ import { isEnrolled } from "@/server/services/enrollment";
 import { getCourseProgress } from "@/server/services/progress";
 import { computeLessonLocks } from "@/server/services/lesson-access";
 import { VideoEmbed } from "@/components/video-embed";
+import { createVideoPlaybackUrl } from "@/server/storage";
 import { Badge } from "@/components/ui";
 import { CompleteButton } from "./complete-button";
 import { LessonSidebar } from "./lesson-sidebar";
@@ -47,6 +48,13 @@ export default async function LessonViewerPage({
   const done = completed.has(lessonId);
   const position = index + 1;
 
+  // Vídeo hospedado na plataforma: URL assinada temporária (2h), gerada
+  // somente após os guards de matrícula/cadeado acima.
+  const playbackUrl =
+    lesson.contentType === "VIDEO" && lesson.videoProvider === "S3" && lesson.videoRef
+      ? await createVideoPlaybackUrl(lesson.videoRef)
+      : null;
+
   return (
     <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
       {/* Player principal */}
@@ -70,7 +78,19 @@ export default async function LessonViewerPage({
 
         {lesson.contentType === "VIDEO" && (
           <div className="overflow-hidden rounded-2xl shadow-[var(--shadow-lg)]">
-            <VideoEmbed provider={lesson.videoProvider} videoRef={lesson.videoRef} title={lesson.title} />
+            {playbackUrl ? (
+              <video
+                controls
+                controlsList="nodownload"
+                preload="metadata"
+                playsInline
+                className="aspect-video w-full bg-black"
+                src={playbackUrl}
+                title={lesson.title}
+              />
+            ) : (
+              <VideoEmbed provider={lesson.videoProvider} videoRef={lesson.videoRef} title={lesson.title} />
+            )}
           </div>
         )}
 

@@ -12,6 +12,7 @@ import {
   type ActionState,
 } from "@/server/actions/content-edit";
 import { Input, Label, Button, Select, Textarea, Alert } from "@/components/ui";
+import { VideoUploadField } from "./video-upload-field";
 
 const iconBtn =
   "inline-flex h-7 w-7 items-center justify-center rounded-lg border border-[color:var(--border)] text-[color:var(--ink-soft)] transition hover:bg-[color:var(--canvas)] disabled:opacity-40";
@@ -132,6 +133,7 @@ export function ModuleControls({
 
 interface LessonData {
   id: string;
+  moduleId: string;
   title: string;
   contentType: string;
   videoProvider: string | null;
@@ -149,6 +151,7 @@ export function LessonControls({
 }) {
   const [editing, setEditing] = useState(false);
   const [type, setType] = useState(lesson.contentType);
+  const [provider, setProvider] = useState(lesson.videoProvider ?? "S3");
   const [state, action, pending] = useActionState<ActionState | null, FormData>(
     updateLessonAction,
     null,
@@ -190,18 +193,33 @@ export function LessonControls({
             </div>
           </div>
           {type === "VIDEO" && (
-            <div className="grid gap-3 sm:grid-cols-2">
-              <div>
-                <Label>Provedor</Label>
-                <Select name="videoProvider" defaultValue={lesson.videoProvider ?? "YOUTUBE"}>
-                  <option value="YOUTUBE">YouTube</option>
-                  <option value="VIMEO">Vimeo</option>
-                </Select>
+            <div className="space-y-3">
+              <div className="grid gap-3 sm:grid-cols-2">
+                <div>
+                  <Label>Origem do vídeo</Label>
+                  <Select
+                    name="videoProvider"
+                    value={provider}
+                    onChange={(e) => setProvider(e.target.value)}
+                  >
+                    <option value="S3">Upload (plataforma)</option>
+                    <option value="YOUTUBE">YouTube</option>
+                    <option value="VIMEO">Vimeo</option>
+                  </Select>
+                </div>
+                {provider !== "S3" && (
+                  <div>
+                    <Label>ID do vídeo</Label>
+                    <Input name="videoRef" defaultValue={lesson.videoRef ?? ""} />
+                  </div>
+                )}
               </div>
-              <div>
-                <Label>ID do vídeo</Label>
-                <Input name="videoRef" defaultValue={lesson.videoRef ?? ""} />
-              </div>
+              {provider === "S3" && (
+                <VideoUploadField
+                  moduleId={lesson.moduleId}
+                  defaultRef={lesson.videoProvider === "S3" ? lesson.videoRef : null}
+                />
+              )}
             </div>
           )}
           {type === "TEXT" && (

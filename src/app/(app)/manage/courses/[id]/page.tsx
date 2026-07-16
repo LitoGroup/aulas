@@ -96,6 +96,7 @@ export default async function ManageCoursePage({
                       courseId={course.id}
                       lesson={{
                         id: l.id,
+                        moduleId: l.moduleId,
                         title: l.title,
                         contentType: l.contentType,
                         videoProvider: l.videoProvider,

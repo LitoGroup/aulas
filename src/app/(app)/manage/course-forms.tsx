@@ -9,6 +9,7 @@ import {
   type ActionState,
 } from "@/server/actions/course";
 import { Input, Label, Button, Alert, Select, Textarea } from "@/components/ui";
+import { VideoUploadField } from "./video-upload-field";
 import { useState } from "react";
 
 export function NewCourseForm() {
@@ -97,6 +98,7 @@ export function LessonForm({ courseId, moduleId }: { courseId: string; moduleId:
     null,
   );
   const [type, setType] = useState("VIDEO");
+  const [provider, setProvider] = useState("S3");
   return (
     <form action={action} className="space-y-3 rounded-lg bg-slate-50 p-3">
       {state?.error && <Alert kind="error">{state.error}</Alert>}
@@ -123,18 +125,29 @@ export function LessonForm({ courseId, moduleId }: { courseId: string; moduleId:
       </div>
 
       {type === "VIDEO" && (
-        <div className="grid gap-3 sm:grid-cols-2">
-          <div>
-            <Label htmlFor={`vp-${moduleId}`}>Provedor</Label>
-            <Select id={`vp-${moduleId}`} name="videoProvider">
-              <option value="YOUTUBE">YouTube</option>
-              <option value="VIMEO">Vimeo</option>
-            </Select>
+        <div className="space-y-3">
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div>
+              <Label htmlFor={`vp-${moduleId}`}>Origem do vídeo</Label>
+              <Select
+                id={`vp-${moduleId}`}
+                name="videoProvider"
+                value={provider}
+                onChange={(e) => setProvider(e.target.value)}
+              >
+                <option value="S3">Upload (plataforma)</option>
+                <option value="YOUTUBE">YouTube</option>
+                <option value="VIMEO">Vimeo</option>
+              </Select>
+            </div>
+            {provider !== "S3" && (
+              <div>
+                <Label htmlFor={`vr-${moduleId}`}>ID do vídeo</Label>
+                <Input id={`vr-${moduleId}`} name="videoRef" placeholder="ex: dQw4w9WgXcQ" />
+              </div>
+            )}
           </div>
-          <div>
-            <Label htmlFor={`vr-${moduleId}`}>ID do vídeo</Label>
-            <Input id={`vr-${moduleId}`} name="videoRef" placeholder="ex: dQw4w9WgXcQ" />
-          </div>
+          {provider === "S3" && <VideoUploadField moduleId={moduleId} />}
         </div>
       )}
 
