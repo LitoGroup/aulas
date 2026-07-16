@@ -27,7 +27,7 @@ export default async function CatalogPage() {
               href={`/courses/${c.slug}`}
               className="group overflow-hidden rounded-2xl border border-[color:var(--border)] bg-[var(--surface)] shadow-[var(--shadow-sm)] transition hover:-translate-y-0.5 hover:shadow-[var(--shadow-md)]"
             >
-              <CourseCover title={c.title} seed={c.id} className="aspect-[16/9]" />
+              <CourseCover title={c.title} seed={c.id} src={c.coverUrl} className="aspect-[16/9]" />
               <div className="space-y-2 p-4">
                 <h2 className="font-semibold text-[color:var(--ink)] group-hover:text-[color:var(--brand-ink)]">
                   {c.title}

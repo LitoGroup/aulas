@@ -2,6 +2,7 @@ import { createClient } from "@supabase/supabase-js";
 
 export const ATTACHMENTS_BUCKET = "school-attachments";
 export const VIDEOS_BUCKET = "school-videos";
+export const COVERS_BUCKET = "school-covers";
 
 /**
  * Cliente admin (service_role) — SOMENTE server-side. Bypassa RLS, entao
@@ -106,4 +107,36 @@ export async function createVideoPlaybackUrl(
 export async function removeVideo(storageKey: string): Promise<void> {
   const s = admin();
   await s.storage.from(VIDEOS_BUCKET).remove([storageKey]);
+}
+
+// ---------------------------- Capas (thumbs) ----------------------------
+
+/**
+ * Bucket PUBLICO de capas de curso: thumbs nao sao conteudo sensivel e a
+ * URL publica permite <img> direto e cache no navegador/CDN.
+ */
+export async function ensureCoversBucket(): Promise<void> {
+  const s = admin();
+  const { data } = await s.storage.getBucket(COVERS_BUCKET);
+  if (!data) {
+    await s.storage.createBucket(COVERS_BUCKET, {
+      public: true,
+      allowedMimeTypes: ["image/jpeg", "image/png", "image/webp"],
+    });
+  }
+}
+
+export async function createCoverUploadUrl(storageKey: string) {
+  const s = admin();
+  const { data, error } = await s.storage
+    .from(COVERS_BUCKET)
+    .createSignedUploadUrl(storageKey);
+  if (error || !data) throw new Error(error?.message ?? "Falha ao gerar URL de upload da capa");
+  return { signedUrl: data.signedUrl };
+}
+
+/** URL publica permanente de um objeto do bucket de capas. */
+export function coverPublicUrl(storageKey: string): string {
+  const base = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  return `${base}/storage/v1/object/public/${COVERS_BUCKET}/${storageKey}`;
 }

@@ -19,14 +19,26 @@ function initials(title: string): string {
 export function CourseCover({
   title,
   seed,
+  src,
   className = "",
   size = "card",
 }: {
   title: string;
   seed?: string;
+  src?: string | null;
   className?: string;
   size?: "card" | "thumb";
 }) {
+  // Thumb enviada pelo professor tem prioridade sobre a capa gerada.
+  if (src) {
+    return (
+      <div className={`relative overflow-hidden ${className}`}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={src} alt={title} className="absolute inset-0 h-full w-full object-cover" />
+      </div>
+    );
+  }
+
   const shade = SHADES[hash(seed ?? title) % SHADES.length];
   return (
     <div

@@ -6,6 +6,7 @@ import { listAssessmentsByCourse } from "@/server/services/assessment";
 import { CourseEditForm, ModuleForm, LessonForm } from "../../course-forms";
 import { AttachmentUpload } from "../../attachment-upload";
 import { ModuleControls, LessonControls } from "../../content-edit-forms";
+import { CoverUpload } from "../../cover-upload";
 import { Card, Badge } from "@/components/ui";
 
 export default async function ManageCoursePage({
@@ -43,6 +44,9 @@ export default async function ManageCoursePage({
 
       <Card as="section" className="p-6">
         <h1 className="mb-4 text-lg font-bold text-[color:var(--ink)]">Dados do curso</h1>
+        <div className="mb-5 border-b border-[color:var(--border)] pb-5">
+          <CoverUpload courseId={course.id} currentUrl={course.coverUrl} />
+        </div>
         <CourseEditForm
           course={{
             id: course.id,

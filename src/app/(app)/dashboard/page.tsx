@@ -28,7 +28,7 @@ export default async function DashboardPage() {
           href={`/courses/${featured.course.slug}`}
           className="group grid overflow-hidden rounded-3xl border border-[color:var(--border)] bg-[var(--surface)] shadow-[var(--shadow-md)] sm:grid-cols-[240px_1fr]"
         >
-          <CourseCover title={featured.course.title} seed={featured.course.id} className="min-h-40" />
+          <CourseCover title={featured.course.title} seed={featured.course.id} src={featured.course.coverUrl} className="min-h-40" />
           <div className="flex flex-col justify-center gap-3 p-6">
             <span className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted)]">
               {featured.progress.percent > 0 ? "Continue de onde parou" : "Comece agora"}
@@ -76,7 +76,7 @@ export default async function DashboardPage() {
                 href={`/courses/${course.slug}`}
                 className="group overflow-hidden rounded-2xl border border-[color:var(--border)] bg-[var(--surface)] shadow-[var(--shadow-sm)] transition hover:-translate-y-0.5 hover:shadow-[var(--shadow-md)]"
               >
-                <CourseCover title={course.title} seed={course.id} className="aspect-[16/9]" />
+                <CourseCover title={course.title} seed={course.id} src={course.coverUrl} className="aspect-[16/9]" />
                 <div className="space-y-3 p-4">
                   <h3 className="font-semibold text-[color:var(--ink)]">{course.title}</h3>
                   <div className="flex items-center gap-2 text-xs text-[color:var(--muted)]">
