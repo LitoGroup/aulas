@@ -5,6 +5,8 @@ import type { NextAuthConfig } from "next-auth";
  * sem Node APIs. Os providers com acesso ao banco ficam em config.ts.
  */
 export const authConfig = {
+  // Necessario atras do proxy da Vercel (detecta a URL do host confiavel).
+  trustHost: true,
   session: { strategy: "jwt" },
   pages: { signIn: "/login" },
   providers: [],
