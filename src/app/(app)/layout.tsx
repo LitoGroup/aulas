@@ -19,6 +19,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
     { href: "/courses", label: "Cursos" },
     { href: "/assessments", label: "Avaliações" },
     ...(isTeacher ? [{ href: "/manage", label: "Gerenciar" }] : []),
+    ...(role === "ADMIN" ? [{ href: "/manage/users", label: "Alunos" }] : []),
   ];
 
   return (

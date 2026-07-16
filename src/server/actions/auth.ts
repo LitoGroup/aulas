@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 import { registerSchema } from "@/lib/validation/auth";
 import { createUser, EmailAlreadyInUseError } from "@/server/services/user";
+import { autoEnrollAll } from "@/server/services/enrollment";
 import { requestReset, resetPassword, InvalidTokenError } from "@/server/services/password-reset";
 
 export interface ActionState {
@@ -23,7 +24,9 @@ export async function registerAction(
     return { error: parsed.error.issues[0]?.message ?? "Dados invalidos" };
   }
   try {
-    await createUser(parsed.data);
+    const user = await createUser(parsed.data);
+    // Todo aluno novo ja entra matriculado nos cursos publicados.
+    await autoEnrollAll(user.id);
   } catch (e) {
     if (e instanceof EmailAlreadyInUseError) {
       return { error: "Este e-mail ja esta cadastrado" };

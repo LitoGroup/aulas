@@ -37,6 +37,12 @@ const icon = {
       <path d="M11.5 2.5l2 2L6 12l-2.8.8L4 10l7.5-7.5z" strokeLinejoin="round" />
     </svg>
   ),
+  users: (
+    <svg viewBox="0 0 16 16" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.4">
+      <circle cx="6" cy="5.5" r="2.5" />
+      <path d="M1.5 13.5c0-2.2 2-4 4.5-4s4.5 1.8 4.5 4M11 3.4a2.5 2.5 0 0 1 0 4.2M12.5 9.7c1.2.6 2 1.7 2 3" strokeLinecap="round" />
+    </svg>
+  ),
 };
 
 function initials(name: string): string {
@@ -58,16 +64,26 @@ export function AppSidebar({
   isTeacher: boolean;
 }) {
   const pathname = usePathname();
+  const isAdmin = role === "ADMIN";
 
   const learn: NavItem[] = [
     { href: "/dashboard", label: "Painel", icon: icon.panel },
     { href: "/courses", label: "Catálogo de cursos", icon: icon.catalog },
     { href: "/assessments", label: "Minhas avaliações", icon: icon.assessments },
   ];
-  const teach: NavItem[] = [{ href: "/manage", label: "Gerenciar conteúdo", icon: icon.manage }];
+  const teach: NavItem[] = [
+    { href: "/manage", label: "Gerenciar conteúdo", icon: icon.manage },
+    ...(isAdmin ? [{ href: "/manage/users", label: "Alunos", icon: icon.users }] : []),
+  ];
+
+  // Ativo = o href mais especifico que casa com a rota atual.
+  const allHrefs = [...learn, ...teach].map((i) => i.href);
+  const activeHref = allHrefs
+    .filter((h) => pathname === h || pathname.startsWith(h + "/"))
+    .sort((a, b) => b.length - a.length)[0];
 
   function NavLink({ item }: { item: NavItem }) {
-    const active = pathname === item.href || pathname.startsWith(item.href + "/");
+    const active = item.href === activeHref;
     return (
       <Link
         href={item.href}
