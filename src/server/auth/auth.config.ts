@@ -7,6 +7,8 @@ import type { NextAuthConfig } from "next-auth";
 export const authConfig = {
   // Necessario atras do proxy da Vercel (detecta a URL do host confiavel).
   trustHost: true,
+  // Explicito para aceitar qualquer um dos dois nomes de env (v4/v5).
+  secret: process.env.NEXTAUTH_SECRET ?? process.env.AUTH_SECRET,
   session: { strategy: "jwt" },
   pages: { signIn: "/login" },
   providers: [],
