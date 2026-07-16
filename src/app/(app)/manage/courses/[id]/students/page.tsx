@@ -63,7 +63,7 @@ export default async function StudentsPage({
                     <div className="flex items-center gap-2">
                       <div className="h-1.5 w-20 overflow-hidden rounded-full bg-[color:var(--canvas)]">
                         <div
-                          className={`h-full rounded-full ${s.progressPercent >= 100 ? "bg-[color:var(--success)]" : "bg-[color:var(--ink)]"}`}
+                          className={`h-full rounded-full ${s.progressPercent >= 100 ? "bg-[color:var(--accent)]" : "bg-[color:var(--accent)]"}`}
                           style={{ width: `${Math.max(s.progressPercent, 3)}%` }}
                         />
                       </div>

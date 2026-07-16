@@ -82,7 +82,7 @@ export default async function DashboardPage() {
                   <div className="flex items-center gap-2 text-xs text-[color:var(--muted)]">
                     <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-[color:var(--canvas)]">
                       <div
-                        className={`h-full rounded-full ${progress.percent >= 100 ? "bg-[color:var(--success)]" : "bg-[color:var(--ink)]"}`}
+                        className={`h-full rounded-full ${progress.percent >= 100 ? "bg-[color:var(--accent)]" : "bg-[color:var(--accent)]"}`}
                         style={{ width: `${Math.max(progress.percent, 3)}%` }}
                       />
                     </div>

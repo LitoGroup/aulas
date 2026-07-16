@@ -1,5 +1,5 @@
-// Capa de curso sóbria: tom escuro neutro com leve variação por curso.
-const SHADES = ["#1b1b1f", "#202028", "#1e2226", "#232026", "#1c2024", "#26232a"];
+// Capa de curso: tons navy da identidade, com leve variação por curso.
+const SHADES = ["#0e2440", "#102a4c", "#0d2848", "#123054", "#0f2b4d", "#14335a"];
 
 function hash(str: string): number {
   let h = 0;

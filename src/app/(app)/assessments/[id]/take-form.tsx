@@ -124,7 +124,7 @@ export function TakeForm({
                   value={o.id}
                   checked={answers[q.id] === o.id}
                   onChange={() => setAnswers((a) => ({ ...a, [q.id]: o.id }))}
-                  className="accent-[#18181b]"
+                  className="accent-[#0e2440]"
                 />
                 {o.text}
               </label>

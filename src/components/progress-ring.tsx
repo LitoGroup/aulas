@@ -27,7 +27,7 @@ export function ProgressRing({
           cy={size / 2}
           r={r}
           fill="none"
-          stroke={done ? "var(--success)" : "var(--ink)"}
+          stroke={done ? "var(--accent)" : "var(--accent)"}
           strokeWidth={stroke}
           strokeDasharray={c}
           strokeDashoffset={offset}
