@@ -45,7 +45,6 @@ export default async function CatalogPage() {
                   <p className="line-clamp-2 text-sm text-[color:var(--muted)]">
                     {c.description || "Sem descrição"}
                   </p>
-                  <p className="pt-1 text-xs text-[color:var(--muted)]">Por {c.owner.name}</p>
                 </div>
               </Link>
             ))}

@@ -24,7 +24,7 @@ export function DiscountBanner({ className = "" }: { className?: string }) {
         src="/brand/hero-mma.jpeg"
         alt=""
         aria-hidden
-        className="absolute inset-0 h-full w-full object-cover object-right"
+        className="absolute inset-0 h-full w-full object-cover object-[70%_15%]"
       />
       {/* Filtro escuro para legibilidade (mais forte à esquerda) */}
       <div className="absolute inset-0 bg-gradient-to-r from-[#0a1f3c]/95 via-[#0a1f3c]/75 to-[#0a1f3c]/25" />
