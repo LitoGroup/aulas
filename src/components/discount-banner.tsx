@@ -16,37 +16,45 @@ export function DiscountBanner({ className = "" }: { className?: string }) {
 
   return (
     <div
-      className={`flex flex-wrap items-center justify-between gap-6 rounded-2xl border border-[color:var(--border)] bg-[var(--surface)] px-6 py-5 shadow-[var(--shadow-sm)] ${className}`}
+      className={`relative flex min-h-[16rem] flex-col justify-between overflow-hidden rounded-2xl shadow-[var(--shadow-md)] ${className}`}
     >
-      <div className="flex items-center gap-4">
-        <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[color:var(--accent)]/12 text-[color:var(--accent-ink)]">
-          <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="1.8">
-            <path d="M8 8h.01M16 16h.01M16 8L8 16" strokeLinecap="round" />
-            <rect x="3" y="3" width="18" height="18" rx="4" />
-          </svg>
-        </span>
+      {/* Foto de fundo */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/brand/hero-mma.jpeg"
+        alt=""
+        aria-hidden
+        className="absolute inset-0 h-full w-full object-cover object-right"
+      />
+      {/* Filtro escuro para legibilidade (mais forte à esquerda) */}
+      <div className="absolute inset-0 bg-gradient-to-r from-[#0a1f3c]/95 via-[#0a1f3c]/75 to-[#0a1f3c]/25" />
+
+      <div className="relative flex flex-1 flex-col justify-between gap-6 p-7">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted)]">
+          <span className="inline-block rounded-full bg-[color:var(--accent)]/20 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-[color:var(--accent)] ring-1 ring-[color:var(--accent)]/40">
             Oferta por tempo limitado
-          </p>
-          <p className="mt-0.5 text-lg font-bold text-[color:var(--ink)]">
+          </span>
+          <p className="mt-3 max-w-md font-display text-2xl font-bold leading-tight text-white sm:text-3xl">
             10% de desconto em todos os cursos
           </p>
+          <p className="mt-1 text-sm text-white/70">
+            Válido nas formações e cursos de manutenção da Lito Aviation Academy.
+          </p>
         </div>
-      </div>
 
-      <div className="flex items-center gap-3">
-        <span className="text-sm text-[color:var(--muted)]">Cupom</span>
-        <div className="flex items-center overflow-hidden rounded-xl border border-[color:var(--border-strong)]">
-          <span className="px-3.5 py-2 text-sm font-bold tracking-wider text-[color:var(--ink)]">
-            {COUPON}
-          </span>
-          <button
-            onClick={copy}
-            className="border-l border-[color:var(--border-strong)] bg-[color:var(--canvas)] px-3.5 py-2 text-xs font-semibold text-[color:var(--ink-soft)] transition hover:bg-[color:var(--ink)]/[0.06]"
-          >
-            {copied ? "Copiado" : "Copiar"}
-          </button>
+        <div className="flex flex-wrap items-center gap-3">
+          <span className="text-sm text-white/70">Use o cupom:</span>
+          <div className="flex items-center overflow-hidden rounded-xl bg-white/10 ring-1 ring-white/25 backdrop-blur">
+            <span className="px-4 py-2.5 text-base font-bold tracking-widest text-white">
+              {COUPON}
+            </span>
+            <button
+              onClick={copy}
+              className="border-l border-white/20 bg-[color:var(--accent)] px-4 py-2.5 text-sm font-bold text-[#0a1f3c] transition hover:brightness-105"
+            >
+              {copied ? "Copiado" : "Copiar"}
+            </button>
+          </div>
         </div>
       </div>
     </div>
