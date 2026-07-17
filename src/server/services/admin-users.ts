@@ -29,6 +29,61 @@ export async function adminSetPassword(
   await prisma.user.update({ where: { id: userId }, data: { passwordHash } });
 }
 
+export class LastAdminError extends Error {
+  constructor() {
+    super("Nao e possivel remover o ultimo administrador");
+    this.name = "LastAdminError";
+  }
+}
+
+export class SelfActionError extends Error {
+  constructor() {
+    super("Voce nao pode executar esta acao sobre a sua propria conta");
+    this.name = "SelfActionError";
+  }
+}
+
+const ROLES = ["STUDENT", "TEACHER", "ADMIN"] as const;
+
+/** ADMIN altera o papel de um usuario. Impede deixar o sistema sem administrador. */
+export async function adminSetRole(actor: Actor, userId: string, role: Role) {
+  if (actor.role !== "ADMIN") throw new AdminForbiddenError();
+  if (!ROLES.includes(role)) throw new Error("Papel invalido");
+
+  const target = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { role: true },
+  });
+  if (!target) throw new Error("Usuario nao encontrado");
+
+  // Rebaixar um ADMIN so e permitido se sobrar outro ADMIN.
+  if (target.role === "ADMIN" && role !== "ADMIN") {
+    const admins = await prisma.user.count({ where: { role: "ADMIN" } });
+    if (admins <= 1) throw new LastAdminError();
+  }
+
+  return prisma.user.update({ where: { id: userId }, data: { role } });
+}
+
+/** ADMIN exclui um usuario. Nao pode excluir a si mesmo nem o ultimo admin. */
+export async function adminDeleteUser(actor: Actor, userId: string): Promise<void> {
+  if (actor.role !== "ADMIN") throw new AdminForbiddenError();
+  if (actor.id === userId) throw new SelfActionError();
+
+  const target = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { role: true },
+  });
+  if (!target) return;
+
+  if (target.role === "ADMIN") {
+    const admins = await prisma.user.count({ where: { role: "ADMIN" } });
+    if (admins <= 1) throw new LastAdminError();
+  }
+
+  await prisma.user.delete({ where: { id: userId } });
+}
+
 /** Lista todos os usuarios com contagem de matriculas (area de alunos do admin). */
 export async function listUsers(actor: Actor) {
   if (actor.role !== "ADMIN") throw new AdminForbiddenError();
