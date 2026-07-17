@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { signOut } from "next-auth/react";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { BrandMark } from "@/components/brand-logo";
 
 interface NavItem {
   href: string;
@@ -132,9 +133,7 @@ export function AppSidebar({
     >
       {/* Marca + minimizar */}
       <div className={`flex items-center py-5 ${collapsed ? "justify-center px-0" : "gap-2.5 px-5"}`}>
-        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[color:var(--accent)] text-sm font-extrabold text-[#0a1f3c] shadow-[var(--shadow-sm)]">
-          LS
-        </span>
+        <BrandMark size={36} variant="adaptive" />
         {!collapsed && (
           <span className="font-display text-lg font-bold tracking-tight text-[color:var(--ink)]">
             Lito School

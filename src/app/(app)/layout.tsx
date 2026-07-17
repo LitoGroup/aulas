@@ -5,6 +5,7 @@ import { SignOutButton } from "@/components/sign-out-button";
 import { NavLinks } from "@/components/nav-links";
 import { AppSidebar } from "@/components/app-sidebar";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { BrandMark } from "@/components/brand-logo";
 import { Badge } from "@/components/ui";
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
@@ -33,9 +34,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
         <header className="sticky top-0 z-20 border-b border-[color:var(--border)] bg-[var(--surface)]/85 backdrop-blur lg:hidden">
           <div className="flex w-full items-center gap-4 px-4 py-3">
             <Link href="/dashboard" className="flex items-center gap-2">
-              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[color:var(--accent)] text-sm font-extrabold text-[#0a1f3c]">
-                LS
-              </span>
+              <BrandMark size={36} variant="adaptive" />
               <span className="font-display text-lg font-bold text-[color:var(--ink)]">Lito School</span>
             </Link>
             <div className="ml-auto flex items-center gap-3">

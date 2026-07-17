@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { BrandMark } from "@/components/brand-logo";
 
 export default function LegalLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -6,9 +7,7 @@ export default function LegalLayout({ children }: { children: React.ReactNode })
       <header className="border-b border-[color:var(--border)] bg-[var(--surface)]">
         <div className="mx-auto flex max-w-3xl items-center gap-2.5 px-4 py-4">
           <Link href="/" className="flex items-center gap-2.5">
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[color:var(--accent)] text-sm font-extrabold text-[#0a1f3c]">
-              LS
-            </span>
+            <BrandMark size={36} variant="adaptive" />
             <span className="font-display text-lg font-bold text-[color:var(--ink)]">Lito School</span>
           </Link>
         </div>

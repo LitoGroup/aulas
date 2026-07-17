@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { BrandMark } from "@/components/brand-logo";
 
 const features = [
   "Cursos, aulas e apostilas num só lugar",
@@ -43,9 +44,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
 
         <div className="relative flex h-full flex-col justify-between p-12 text-white">
           <Link href="/" className="flex items-center gap-3">
-            <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/10 text-lg font-bold ring-1 ring-white/20 backdrop-blur">
-              LS
-            </span>
+            <BrandMark size={44} variant="white" />
             <span className="font-display text-2xl font-bold">Lito School</span>
           </Link>
 
@@ -80,10 +79,8 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       <div className="flex items-center justify-center bg-[var(--canvas)] px-4 py-10 sm:px-8">
         <div className="w-full max-w-md">
           {/* Marca no topo (mobile) */}
-          <div className="mb-8 flex items-center gap-2 lg:hidden">
-            <span className="brand-gradient flex h-10 w-10 items-center justify-center rounded-xl text-base font-bold text-white">
-              LS
-            </span>
+          <div className="mb-8 flex items-center gap-2.5 lg:hidden">
+            <BrandMark size={40} variant="adaptive" />
             <span className="font-display text-xl font-bold text-[color:var(--ink)]">Lito School</span>
           </div>
 
