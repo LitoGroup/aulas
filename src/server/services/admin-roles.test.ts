@@ -7,6 +7,7 @@ import {
   SelfActionError,
   AdminForbiddenError,
 } from "./admin-users";
+import { createCourse } from "./course";
 
 const marker = `role_${Date.now()}`;
 let admin: { id: string; role: "ADMIN" };
@@ -25,6 +26,7 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
+  await prisma.course.deleteMany({ where: { title: { contains: marker } } });
   await prisma.user.deleteMany({ where: { email: { contains: marker } } });
   await prisma.$disconnect();
 });
@@ -54,6 +56,15 @@ describe("adminDeleteUser", () => {
     await adminDeleteUser(admin, tmp.id);
     const gone = await prisma.user.findUnique({ where: { id: tmp.id } });
     expect(gone).toBeNull();
+  });
+
+  it("transfere os cursos do usuario excluido para quem exclui", async () => {
+    const dono = await createUser({ name: "Dono", email: `${marker}_dono@e.com`, password: "senha1234" });
+    const curso = await createCourse(dono.id, { title: `${marker} Curso do Dono` });
+    await adminDeleteUser(admin, dono.id);
+    const c = await prisma.course.findUnique({ where: { id: curso.id } });
+    expect(c).not.toBeNull();
+    expect(c!.ownerId).toBe(admin.id);
   });
 
   it("promove e rebaixa TEACHER livremente", async () => {

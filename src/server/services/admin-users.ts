@@ -81,7 +81,13 @@ export async function adminDeleteUser(actor: Actor, userId: string): Promise<voi
     if (admins <= 1) throw new LastAdminError();
   }
 
-  await prisma.user.delete({ where: { id: userId } });
+  // Transfere os cursos do usuario para quem esta excluindo (evita cursos
+  // orfaos e a FK que bloqueia a exclusao). O restante (matriculas, progresso,
+  // tentativas, tokens) some em cascata.
+  await prisma.$transaction([
+    prisma.course.updateMany({ where: { ownerId: userId }, data: { ownerId: actor.id } }),
+    prisma.user.delete({ where: { id: userId } }),
+  ]);
 }
 
 /** Lista todos os usuarios com contagem de matriculas (area de alunos do admin). */
