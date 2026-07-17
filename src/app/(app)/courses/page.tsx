@@ -25,7 +25,7 @@ export default async function CatalogPage() {
       ) : (
         // Cards de cursos à esquerda + banner de desconto preenchendo o espaço à direita
         <div className="flex flex-col gap-5 lg:flex-row lg:items-stretch">
-          <div className="grid gap-5 sm:grid-cols-2 lg:flex-none">
+          <div className="flex flex-wrap gap-5 lg:flex-none lg:content-start">
             {courses.map((c) => (
               <Link
                 key={c.id}
