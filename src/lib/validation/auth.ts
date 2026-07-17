@@ -9,6 +9,13 @@ export const registerSchema = z.object({
     .max(128),
 });
 
+// Formulario de cadastro: exige o aceite (LGPD Art. 8).
+export const registerFormSchema = registerSchema.extend({
+  consent: z.literal(true, {
+    message: "Voce precisa aceitar a Politica de Privacidade e os Termos de Uso",
+  }),
+});
+
 export type RegisterInput = z.infer<typeof registerSchema>;
 
 export const loginSchema = z.object({

@@ -10,7 +10,10 @@ export class EmailAlreadyInUseError extends Error {
   }
 }
 
-export async function createUser(input: RegisterInput): Promise<User> {
+export async function createUser(
+  input: RegisterInput,
+  opts?: { consentVersion?: string },
+): Promise<User> {
   // Valida e normaliza (email lowercase, trims) antes de tocar o banco.
   const data = registerSchema.parse(input);
 
@@ -27,6 +30,10 @@ export async function createUser(input: RegisterInput): Promise<User> {
       name: data.name,
       email: data.email,
       passwordHash,
+      // LGPD: registra quando/qual versao o titular aceitou (se informado)
+      ...(opts?.consentVersion
+        ? { consentedAt: new Date(), consentVersion: opts.consentVersion }
+        : {}),
       // role default STUDENT vem do schema Prisma
     },
   });

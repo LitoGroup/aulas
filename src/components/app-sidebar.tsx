@@ -44,6 +44,12 @@ const icon = {
       <path d="M1.5 13.5c0-2.2 2-4 4.5-4s4.5 1.8 4.5 4M11 3.4a2.5 2.5 0 0 1 0 4.2M12.5 9.7c1.2.6 2 1.7 2 3" strokeLinecap="round" />
     </svg>
   ),
+  account: (
+    <svg viewBox="0 0 16 16" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.4">
+      <circle cx="8" cy="5" r="2.8" />
+      <path d="M2.5 14c0-2.5 2.5-4.5 5.5-4.5s5.5 2 5.5 4.5" strokeLinecap="round" />
+    </svg>
+  ),
 };
 
 function initials(name: string): string {
@@ -82,6 +88,7 @@ export function AppSidebar({
     { href: "/dashboard", label: "Painel", icon: icon.panel },
     { href: "/courses", label: "Catálogo de cursos", icon: icon.catalog },
     { href: "/assessments", label: "Minhas avaliações", icon: icon.assessments },
+    { href: "/conta", label: "Minha conta", icon: icon.account },
   ];
   const teach: NavItem[] = [
     { href: "/manage", label: "Gerenciar conteúdo", icon: icon.manage },

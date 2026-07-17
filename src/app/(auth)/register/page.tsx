@@ -41,6 +41,20 @@ export default function RegisterPage() {
           />
           <p className="mt-1 text-xs text-[color:var(--muted)]">Minimo de 8 caracteres.</p>
         </div>
+        <label className="flex items-start gap-2 text-xs text-[color:var(--ink-soft)]">
+          <input type="checkbox" name="consent" required className="mt-0.5" />
+          <span>
+            Li e aceito a{" "}
+            <Link href="/privacidade" target="_blank" className="font-medium text-[color:var(--brand-ink)] underline">
+              Política de Privacidade
+            </Link>{" "}
+            e os{" "}
+            <Link href="/termos" target="_blank" className="font-medium text-[color:var(--brand-ink)] underline">
+              Termos de Uso
+            </Link>
+            , e concordo com o tratamento dos meus dados conforme a LGPD.
+          </span>
+        </label>
         <Button type="submit" disabled={pending}>
           {pending ? "Criando..." : "Criar conta"}
         </Button>

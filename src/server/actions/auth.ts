@@ -1,10 +1,11 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { registerSchema } from "@/lib/validation/auth";
+import { registerFormSchema } from "@/lib/validation/auth";
 import { createUser, EmailAlreadyInUseError } from "@/server/services/user";
 import { autoEnrollAll } from "@/server/services/enrollment";
 import { requestReset, resetPassword, InvalidTokenError } from "@/server/services/password-reset";
+import { LEGAL_VERSION } from "@/lib/legal";
 
 export interface ActionState {
   error?: string;
@@ -15,16 +16,19 @@ export async function registerAction(
   _prev: ActionState | null,
   formData: FormData,
 ): Promise<ActionState> {
-  const parsed = registerSchema.safeParse({
+  const parsed = registerFormSchema.safeParse({
     name: formData.get("name"),
     email: formData.get("email"),
     password: formData.get("password"),
+    consent: formData.get("consent") === "on",
   });
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "Dados invalidos" };
   }
   try {
-    const user = await createUser(parsed.data);
+    const { consent, ...data } = parsed.data;
+    void consent;
+    const user = await createUser(data, { consentVersion: LEGAL_VERSION });
     // Todo aluno novo ja entra matriculado nos cursos publicados.
     await autoEnrollAll(user.id);
   } catch (e) {
