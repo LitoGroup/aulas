@@ -13,16 +13,16 @@ export default function TermsPage() {
       <p className="text-xs text-[color:var(--muted)]">Versão {LEGAL_VERSION}</p>
 
       <p className="rounded-xl border border-[color:var(--accent)]/30 bg-[color:var(--accent)]/8 p-3 text-xs text-[color:var(--ink-soft)]">
-        <strong>Aviso ao operador:</strong> confirme com seu advogado e preencha CNPJ/razão social
-        [confirmar] e as condições comerciais (item 5) antes de considerar definitivo.
+        <strong>Aviso ao operador:</strong> revise com seu advogado e preencha as condições
+        comerciais (item 5) conforme o modelo de negócio antes de considerar definitivo.
       </p>
 
       <H>1. Objeto</H>
       <p>
-        Estes Termos regem o uso da plataforma <strong>Lito School</strong>, mantida pela Lito
-        Aviation Academy (Lito Group / Aviões e Músicas — razão social e CNPJ [confirmar], sediada
-        na Rua Brás Cubas, 231, Guarulhos/SP), que oferece cursos e conteúdos educacionais de
-        aviação online.
+        Estes Termos regem o uso da plataforma <strong>Lito School</strong>, mantida por{" "}
+        <strong>Lito Academy Ltda.</strong> (CNPJ 48.629.788/0001-26 — Lito Group / Aviões e
+        Músicas), sediada na Rua Brás Cubas, 231 — Vila Lanzara, Guarulhos/SP, que oferece cursos e
+        conteúdos educacionais de aviação online.
       </p>
 
       <H>2. Conta e acesso</H>

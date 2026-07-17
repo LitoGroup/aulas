@@ -12,11 +12,6 @@ export default function PrivacyPage() {
       <h1 className="text-2xl font-bold text-[color:var(--ink)]">Política de Privacidade</h1>
       <p className="text-xs text-[color:var(--muted)]">Versão {LEGAL_VERSION}</p>
 
-      <p className="rounded-xl border border-[color:var(--accent)]/30 bg-[color:var(--accent)]/8 p-3 text-xs text-[color:var(--ink-soft)]">
-        <strong>Aviso ao operador:</strong> confirme com seu advogado/DPO e preencha o CNPJ e a
-        razão social (marcados como [confirmar]) antes de considerar este documento definitivo.
-      </p>
-
       <H>1. Quem somos</H>
       <p>
         A <strong>Lito Aviation Academy</strong> (“Lito School”), integrante do Lito Group /
@@ -25,8 +20,9 @@ export default function PrivacyPage() {
         13.709/2018 (LGPD).
       </p>
       <p>
-        Razão social: [confirmar] · CNPJ: [confirmar] · Endereço: Rua Brás Cubas, 231 — Vila
-        Lanzara, Guarulhos/SP, CEP 07115-080 · Contato: (11) 99009-3005.
+        Razão social: <strong>Lito Academy Ltda.</strong> · CNPJ:{" "}
+        <strong>48.629.788/0001-26</strong> · Endereço: Rua Brás Cubas, 231 — Vila Lanzara,
+        Guarulhos/SP, CEP 07115-080 · Contato: (11) 99009-3005.
       </p>
 
       <H>2. Dados que coletamos</H>
