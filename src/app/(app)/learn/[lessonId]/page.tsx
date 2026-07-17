@@ -9,7 +9,7 @@ import { getCourseProgress } from "@/server/services/progress";
 import { computeLessonLocks } from "@/server/services/lesson-access";
 import { VideoEmbed } from "@/components/video-embed";
 import { createVideoPlaybackUrl } from "@/server/storage";
-import { Badge } from "@/components/ui";
+import { typeLabel } from "@/components/status-circle";
 import { CompleteButton } from "./complete-button";
 import { LessonSidebar } from "./lesson-sidebar";
 
@@ -59,21 +59,53 @@ export default async function LessonViewerPage({
     <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
       {/* Player principal */}
       <div className="min-w-0 space-y-5">
-        <div className="flex items-center gap-2 text-sm text-[color:var(--muted)]">
-          <Link href={`/courses/${course.slug}`} className="hover:text-[color:var(--ink)]">
-            {course.title}
-          </Link>
-          <span>/</span>
-          <span>Aula {position} de {ordered.length}</span>
-        </div>
-
-        <div>
-          <h1 className="text-2xl font-bold text-[color:var(--ink)]">{lesson.title}</h1>
-          {done && (
-            <div className="mt-2">
-              <Badge tone="success">Concluída</Badge>
+        {/* Cabeçalho profissional da aula */}
+        <div className="overflow-hidden rounded-2xl border border-[color:var(--border)] bg-[var(--surface)] shadow-[var(--shadow-sm)]">
+          <div className="brand-gradient h-1.5 w-full" />
+          <div className="p-5 sm:p-6">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <nav className="flex items-center gap-2 text-xs font-medium text-[color:var(--muted)]">
+                <Link href="/courses" className="hover:text-[color:var(--ink)]">
+                  Cursos
+                </Link>
+                <span>/</span>
+                <Link href={`/courses/${course.slug}`} className="hover:text-[color:var(--ink)]">
+                  {course.title}
+                </Link>
+                <span>/</span>
+                <span className="text-[color:var(--ink-soft)]">{lesson.module.title}</span>
+              </nav>
+              <span className="rounded-full bg-[color:var(--ink)]/[0.06] px-3 py-1 text-xs font-semibold text-[color:var(--ink-soft)]">
+                Aula {position} de {ordered.length}
+              </span>
             </div>
-          )}
+
+            <div className="mt-3 flex flex-wrap items-center gap-3">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[color:var(--navy-fill)] text-white">
+                <svg viewBox="0 0 20 20" className="h-5 w-5" fill="currentColor">
+                  <path d="M6 4.5v11l9-5.5z" />
+                </svg>
+              </span>
+              <div className="min-w-0">
+                <h1 className="text-xl font-bold leading-tight text-[color:var(--ink)] sm:text-2xl">
+                  {lesson.title}
+                </h1>
+                <div className="mt-1 flex items-center gap-2 text-xs text-[color:var(--muted)]">
+                  <span className="rounded bg-[color:var(--canvas)] px-1.5 py-0.5 font-medium">
+                    {typeLabel(lesson.contentType)}
+                  </span>
+                  {done ? (
+                    <span className="inline-flex items-center gap-1 font-medium text-[color:var(--success)]">
+                      <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--success)]" />
+                      Concluída
+                    </span>
+                  ) : (
+                    <span>Em andamento</span>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         {lesson.contentType === "VIDEO" && (
