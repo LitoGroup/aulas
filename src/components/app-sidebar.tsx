@@ -127,7 +127,7 @@ export function AppSidebar({
           S
         </span>
         {!collapsed && (
-          <span className="font-display text-lg font-bold text-[color:var(--ink)]">School</span>
+          <span className="font-display text-lg font-bold text-[color:var(--ink)]">Lito School</span>
         )}
         {!collapsed && (
           <button

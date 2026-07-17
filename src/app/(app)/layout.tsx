@@ -36,7 +36,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
               <span className="brand-gradient flex h-8 w-8 items-center justify-center rounded-lg text-sm font-bold text-white">
                 S
               </span>
-              <span className="font-display text-lg font-bold text-[color:var(--ink)]">School</span>
+              <span className="font-display text-lg font-bold text-[color:var(--ink)]">Lito School</span>
             </Link>
             <div className="ml-auto flex items-center gap-3">
               <span className="hidden items-center gap-2 text-sm text-[color:var(--ink-soft)] sm:flex">
