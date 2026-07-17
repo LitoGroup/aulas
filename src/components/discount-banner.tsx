@@ -16,41 +16,38 @@ export function DiscountBanner({ className = "" }: { className?: string }) {
 
   return (
     <div
-      className={`relative flex flex-wrap content-center items-center justify-between gap-4 overflow-hidden rounded-2xl brand-gradient px-5 py-4 shadow-[var(--shadow-md)] sm:px-6 ${className}`}
+      className={`flex flex-wrap items-center justify-between gap-6 rounded-2xl border border-[color:var(--border)] bg-[var(--surface)] px-6 py-5 shadow-[var(--shadow-sm)] ${className}`}
     >
-      <span
-        aria-hidden
-        className="pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full bg-[color:var(--accent)]/20 blur-2xl"
-      />
-      <div className="relative flex items-center gap-3">
-        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[color:var(--accent)] text-[#0a1f3c]">
-          <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M4 9V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3a2 2 0 0 0 0 4v3a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-3a2 2 0 0 0 0-4z" strokeLinejoin="round" />
-            <path d="M9 8v.01M15 16v.01M15 8l-6 8" strokeLinecap="round" />
+      <div className="flex items-center gap-4">
+        <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[color:var(--accent)]/12 text-[color:var(--accent-ink)]">
+          <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="1.8">
+            <path d="M8 8h.01M16 16h.01M16 8L8 16" strokeLinecap="round" />
+            <rect x="3" y="3" width="18" height="18" rx="4" />
           </svg>
         </span>
-        <div className="leading-tight text-white">
-          <p className="text-[11px] font-semibold uppercase tracking-wide text-[color:var(--accent)]">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted)]">
             Oferta por tempo limitado
           </p>
-          <p className="text-base font-bold sm:text-lg">
-            10% de desconto em todos os cursos abaixo!
+          <p className="mt-0.5 text-lg font-bold text-[color:var(--ink)]">
+            10% de desconto em todos os cursos
           </p>
         </div>
       </div>
 
-      <div className="relative flex items-center gap-2">
-        <span className="text-sm text-white/80">Use o cupom:</span>
-        <button
-          onClick={copy}
-          className="promo-cta inline-flex items-center gap-2 rounded-xl border-2 border-dashed border-[color:var(--accent)] bg-[color:var(--accent)]/15 px-4 py-2 text-base font-extrabold tracking-widest text-white transition hover:bg-[color:var(--accent)]/25"
-          title="Clique para copiar"
-        >
-          {COUPON}
-          <span className="text-xs font-semibold text-[color:var(--accent)]">
-            {copied ? "COPIADO!" : "COPIAR"}
+      <div className="flex items-center gap-3">
+        <span className="text-sm text-[color:var(--muted)]">Cupom</span>
+        <div className="flex items-center overflow-hidden rounded-xl border border-[color:var(--border-strong)]">
+          <span className="px-3.5 py-2 text-sm font-bold tracking-wider text-[color:var(--ink)]">
+            {COUPON}
           </span>
-        </button>
+          <button
+            onClick={copy}
+            className="border-l border-[color:var(--border-strong)] bg-[color:var(--canvas)] px-3.5 py-2 text-xs font-semibold text-[color:var(--ink-soft)] transition hover:bg-[color:var(--ink)]/[0.06]"
+          >
+            {copied ? "Copiado" : "Copiar"}
+          </button>
+        </div>
       </div>
     </div>
   );
