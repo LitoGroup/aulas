@@ -25,14 +25,19 @@ export default async function CatalogPage() {
       ) : (
         // Cards de cursos à esquerda + banner de desconto preenchendo o espaço à direita
         <div className="flex flex-col gap-5 lg:flex-row lg:items-stretch">
-          <div className="flex flex-wrap gap-5 lg:flex-none lg:content-start">
+          <div className="flex flex-wrap items-stretch gap-5 lg:flex-none">
             {courses.map((c) => (
               <Link
                 key={c.id}
                 href={`/courses/${c.slug}`}
-                className="group w-full overflow-hidden rounded-2xl border border-[color:var(--border)] bg-[var(--surface)] shadow-[var(--shadow-sm)] transition hover:-translate-y-0.5 hover:shadow-[var(--shadow-md)] lg:w-64"
+                className="group flex w-full flex-col overflow-hidden rounded-2xl border border-[color:var(--border)] bg-[var(--surface)] shadow-[var(--shadow-sm)] transition hover:-translate-y-0.5 hover:shadow-[var(--shadow-md)] lg:w-64"
               >
-                <CourseCover title={c.title} seed={c.id} src={c.coverUrl} className="aspect-[16/9]" />
+                <CourseCover
+                  title={c.title}
+                  seed={c.id}
+                  src={c.coverUrl}
+                  className="aspect-[16/9] w-full lg:aspect-auto lg:flex-1"
+                />
                 <div className="space-y-2 p-4">
                   <h2 className="font-semibold text-[color:var(--ink)] group-hover:text-[color:var(--brand-ink)]">
                     {c.title}
