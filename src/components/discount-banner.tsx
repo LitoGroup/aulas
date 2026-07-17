@@ -16,7 +16,7 @@ export function DiscountBanner({ className = "" }: { className?: string }) {
 
   return (
     <div
-      className={`relative flex min-h-[16rem] flex-col justify-between overflow-hidden rounded-2xl shadow-[var(--shadow-md)] ${className}`}
+      className={`relative flex min-h-[22rem] flex-col justify-between overflow-hidden rounded-2xl shadow-[var(--shadow-md)] ${className}`}
     >
       {/* Foto de fundo */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
