@@ -2,7 +2,6 @@ import Link from "next/link";
 import { requireRole } from "@/server/auth/rbac";
 import { listPublishedCourses } from "@/server/services/course";
 import { CourseCover } from "@/components/course-cover";
-import { PageHeader } from "@/components/ui";
 import { SHOWCASE_COURSES } from "@/lib/showcase-courses";
 import { DiscountBanner } from "@/components/discount-banner";
 
@@ -12,10 +11,16 @@ export default async function CatalogPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        title="Explorar cursos"
-        subtitle="Escolha um curso e comece a estudar no seu ritmo."
-      />
+      {/* Cabeçalho + banner de desconto grande ao lado */}
+      <div className="grid items-stretch gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)]">
+        <div className="flex flex-col justify-center">
+          <h1 className="text-2xl font-bold text-[color:var(--ink)]">Explorar cursos</h1>
+          <p className="mt-1 text-sm text-[color:var(--muted)]">
+            Escolha um curso e comece a estudar no seu ritmo.
+          </p>
+        </div>
+        <DiscountBanner />
+      </div>
 
       {courses.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-[color:var(--border)] bg-[var(--surface)] p-10 text-center text-sm text-[color:var(--muted)]">
@@ -54,8 +59,6 @@ export default async function CatalogPage() {
             Cursos oficiais da Lito Aviation Academy. Adquira e desbloqueie o acesso.
           </p>
         </div>
-
-        <DiscountBanner />
 
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
           {SHOWCASE_COURSES.map((c) => (
