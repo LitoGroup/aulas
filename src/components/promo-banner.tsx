@@ -31,7 +31,7 @@ export function PromoBanner() {
         </div>
       </div>
       <span className="promo-cta relative shrink-0 rounded-xl bg-[color:var(--accent)] px-4 py-2 text-sm font-bold text-[#0a1f3c] transition group-hover:brightness-105">
-        Adquirir agora →
+        Adquirir agora
       </span>
     </a>
   );

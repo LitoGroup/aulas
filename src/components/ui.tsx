@@ -128,7 +128,7 @@ export function PageHeader({
   );
 }
 
-/** Barra de progresso reutilizável (âmbar → transição para verde no fim). */
+/** Barra de progresso reutilizável (âmbar transição para verde no fim). */
 export function ProgressBar({ percent }: { percent: number }) {
   const done = percent >= 100;
   return (

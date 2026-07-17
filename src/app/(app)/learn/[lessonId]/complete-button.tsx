@@ -42,7 +42,7 @@ export function CompleteButton({
       <div className="flex flex-wrap items-center gap-3">
         {done ? (
           <span className="inline-flex items-center gap-2 rounded-xl bg-[color:var(--success)]/12 px-4 py-2.5 text-sm font-semibold text-[color:var(--success)]">
-            ✓ Aula concluída
+            Aula concluída
           </span>
         ) : (
           <Button
@@ -57,7 +57,7 @@ export function CompleteButton({
 
         {nextHref && (
           <Button onClick={() => complete(true)} disabled={pending} className="w-auto px-5">
-            {done ? "Próxima aula →" : "Concluir e avançar →"}
+            {done ? "Próxima aula" : "Concluir e avançar"}
           </Button>
         )}
       </div>

@@ -51,7 +51,7 @@ export function CoverUpload({
       setStatus(saved.error);
     } else {
       setPreview(saved.url);
-      setStatus("✓ Capa atualizada");
+      setStatus("Capa atualizada");
       router.refresh();
     }
     setBusy(false);

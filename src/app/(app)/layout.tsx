@@ -7,6 +7,7 @@ import { AppSidebar } from "@/components/app-sidebar";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { BrandMark } from "@/components/brand-logo";
 import { Badge } from "@/components/ui";
+import { roleLabel } from "@/lib/roles";
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const session = await auth();
@@ -40,7 +41,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
             <div className="ml-auto flex items-center gap-3">
               <span className="hidden items-center gap-2 text-sm text-[color:var(--ink-soft)] sm:flex">
                 {name}
-                <Badge tone="brand">{role}</Badge>
+                <Badge tone="brand">{roleLabel(role)}</Badge>
               </span>
               <div className="w-10">
                 <ThemeToggle collapsed />

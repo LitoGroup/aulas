@@ -1,6 +1,6 @@
 import { LEGAL_VERSION } from "@/lib/legal";
 
-export const metadata = { title: "Termos de Uso — Lito School" };
+export const metadata = { title: "Termos de Uso - Lito School" };
 
 function H({ children }: { children: React.ReactNode }) {
   return <h2 className="pt-4 text-lg font-bold text-[color:var(--ink)]">{children}</h2>;
@@ -15,8 +15,8 @@ export default function TermsPage() {
       <H>1. Objeto</H>
       <p>
         Estes Termos regem o uso da plataforma <strong>Lito School</strong>, mantida por{" "}
-        <strong>Lito Academy Ltda.</strong> (CNPJ 48.629.788/0001-26 — Lito Group / Aviões e
-        Músicas), sediada na Rua Brás Cubas, 231 — Vila Lanzara, Guarulhos/SP, que oferece cursos e
+        <strong>Lito Academy Ltda.</strong> (CNPJ 48.629.788/0001-26 - Lito Group / Aviões e
+        Músicas), sediada na Rua Brás Cubas, 231 - Vila Lanzara, Guarulhos/SP, que oferece cursos e
         conteúdos educacionais de aviação online.
       </p>
 
@@ -48,7 +48,7 @@ export default function TermsPage() {
       <H>6. Contato</H>
       <p>
         Suporte e dúvidas: <strong>mma@litogroup.com</strong> · (11) 99009-3005 · Rua Brás Cubas,
-        231 — Vila Lanzara, Guarulhos/SP.
+        231 - Vila Lanzara, Guarulhos/SP.
       </p>
     </>
   );

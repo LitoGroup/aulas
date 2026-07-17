@@ -43,7 +43,7 @@ export function PasswordForm({ userId }: { userId: string }) {
       >
         Cancelar
       </button>
-      {state?.success && <span className="text-xs font-medium text-[color:var(--success)]">✓ {state.success}</span>}
+      {state?.success && <span className="text-xs font-medium text-[color:var(--success)]">{state.success}</span>}
       {state?.error && <span className="text-xs text-[color:var(--danger)]">{state.error}</span>}
     </form>
   );

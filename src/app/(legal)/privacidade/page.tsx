@@ -1,6 +1,6 @@
 import { LEGAL_VERSION, DPO_EMAIL } from "@/lib/legal";
 
-export const metadata = { title: "Política de Privacidade — Lito School" };
+export const metadata = { title: "Política de Privacidade - Lito School" };
 
 function H({ children }: { children: React.ReactNode }) {
   return <h2 className="pt-4 text-lg font-bold text-[color:var(--ink)]">{children}</h2>;
@@ -21,14 +21,14 @@ export default function PrivacyPage() {
       </p>
       <p>
         Razão social: <strong>Lito Academy Ltda.</strong> · CNPJ:{" "}
-        <strong>48.629.788/0001-26</strong> · Endereço: Rua Brás Cubas, 231 — Vila Lanzara,
+        <strong>48.629.788/0001-26</strong> · Endereço: Rua Brás Cubas, 231 - Vila Lanzara,
         Guarulhos/SP, CEP 07115-080 · Contato: (11) 99009-3005.
       </p>
 
       <H>2. Dados que coletamos</H>
       <p>
-        Coletamos os dados que você nos fornece no cadastro — <strong>nome, e-mail e senha</strong>{" "}
-        (armazenada apenas de forma criptografada/hash, nunca em texto) — e dados gerados pelo
+        Coletamos os dados que você nos fornece no cadastro - <strong>nome, e-mail e senha</strong>{" "}
+        (armazenada apenas de forma criptografada/hash, nunca em texto) - e dados gerados pelo
         uso: matrículas, progresso nas aulas e resultados de avaliações.
       </p>
 

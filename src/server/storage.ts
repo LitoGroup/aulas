@@ -5,7 +5,7 @@ export const VIDEOS_BUCKET = "school-videos";
 export const COVERS_BUCKET = "school-covers";
 
 /**
- * Cliente admin (service_role) — SOMENTE server-side. Bypassa RLS, entao
+ * Cliente admin (service_role) - SOMENTE server-side. Bypassa RLS, entao
  * nunca deve ser importado em codigo de cliente.
  */
 function admin() {
@@ -64,7 +64,7 @@ export async function removeObject(storageKey: string): Promise<void> {
 /**
  * Garante o bucket privado de vídeos (apenas video/*).
  * O tamanho máximo por arquivo é limitado pelo FILE_SIZE_LIMIT global da
- * instância Supabase (hoje 50 MB nesta infra) — não definimos limite aqui
+ * instância Supabase (hoje 50 MB nesta infra) - não definimos limite aqui
  * para herdar automaticamente qualquer aumento feito no servidor.
  */
 export async function ensureVideosBucket(): Promise<void> {

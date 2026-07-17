@@ -100,7 +100,7 @@ export default async function CatalogPage() {
                   rel="noopener noreferrer"
                   className="mt-auto inline-flex items-center justify-center gap-1.5 rounded-xl bg-[color:var(--accent)] px-4 py-2.5 text-sm font-semibold text-[#0a1f3c] transition hover:brightness-105"
                 >
-                  Adquirir curso agora →
+                  Adquirir curso agora
                 </a>
               </div>
             </div>

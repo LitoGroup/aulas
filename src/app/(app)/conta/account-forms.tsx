@@ -100,7 +100,7 @@ export function DeleteAccount() {
       setBusy(false);
       return;
     }
-    // conta removida — encerra a sessão
+    // conta removida - encerra a sessão
     await signOut({ redirectTo: "/login" });
   }
 

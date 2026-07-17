@@ -70,7 +70,7 @@ export function DeleteUserButton({
   const [err, setErr] = useState<string | null>(null);
 
   if (disabled) {
-    return <span className="text-xs text-[color:var(--muted)]">—</span>;
+    return <span className="text-xs text-[color:var(--muted)]">-</span>;
   }
 
   function onDelete() {

@@ -73,7 +73,7 @@ export default async function CourseDetailPage({
                   href={`/learn/${nextLesson.id}`}
                   className="rounded-xl brand-gradient px-5 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-md)] transition hover:-translate-y-px"
                 >
-                  {progress.completed > 0 ? "Continuar de onde parei →" : "Começar o curso →"}
+                  {progress.completed > 0 ? "Continuar de onde parei" : "Começar o curso"}
                 </Link>
               )}
             </div>
@@ -175,8 +175,11 @@ export default async function CourseDetailPage({
                   className="flex items-center justify-between gap-3 px-5 py-4 transition hover:bg-[color:var(--canvas)]"
                 >
                   <span className="flex items-center gap-3">
-                    <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[color:var(--navy-fill)] text-sm font-bold text-white">
-                      ✓
+                    <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[color:var(--navy-fill)] text-white">
+                      <svg viewBox="0 0 16 16" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.4">
+                        <rect x="3" y="2" width="10" height="12" rx="1.5" />
+                        <path d="M5.5 6l1.5 1.5L9.5 5M5.5 10.5h5" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
                     </span>
                     <span>
                       <span className="block text-sm font-semibold text-[color:var(--ink)]">{a.title}</span>
@@ -185,7 +188,7 @@ export default async function CourseDetailPage({
                       </span>
                     </span>
                   </span>
-                  <span className="text-sm font-medium text-[color:var(--ink-soft)]">Fazer prova →</span>
+                  <span className="text-sm font-medium text-[color:var(--ink-soft)]">Fazer prova</span>
                 </Link>
               </li>
             ))}

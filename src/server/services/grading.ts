@@ -31,7 +31,7 @@ async function assertEnrolled(actor: Actor, assessmentId: string): Promise<strin
 
 /**
  * Retorna a avaliacao para responder, SEM o gabarito (isCorrect nao e
- * selecionado) — evita cola no cliente.
+ * selecionado) - evita cola no cliente.
  */
 export async function getAssessmentForTaking(actor: Actor, assessmentId: string) {
   await assertEnrolled(actor, assessmentId);

@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { signOut } from "next-auth/react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { BrandMark } from "@/components/brand-logo";
+import { roleLabel } from "@/lib/roles";
 
 interface NavItem {
   href: string;
@@ -180,7 +181,7 @@ export function AppSidebar({
             <span className="block truncate text-sm font-semibold text-[color:var(--ink)]">{name}</span>
             <span className="mt-0.5 inline-flex items-center gap-1 text-[11px] font-semibold uppercase tracking-wide text-[color:var(--accent-ink)]">
               <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--accent)]" />
-              {role}
+              {roleLabel(role)}
             </span>
           </span>
         </div>

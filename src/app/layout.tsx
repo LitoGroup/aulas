@@ -17,7 +17,7 @@ const bricolage = Bricolage_Grotesque({
 });
 
 export const metadata: Metadata = {
-  title: "Lito School — Plataforma de Aulas",
+  title: "Lito School - Plataforma de Aulas",
   description: "Sistema de aulas online: cursos, aulas e avaliações.",
 };
 

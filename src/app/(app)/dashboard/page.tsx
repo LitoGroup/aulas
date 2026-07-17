@@ -41,7 +41,7 @@ export default async function DashboardPage() {
               </span>
             </div>
             <span className="mt-1 inline-flex w-fit items-center gap-1 rounded-xl brand-gradient px-4 py-2 text-sm font-semibold text-white shadow-[var(--shadow-md)] transition group-hover:-translate-y-px">
-              Continuar estudando →
+              Continuar estudando
             </span>
           </div>
         </Link>

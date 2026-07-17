@@ -75,7 +75,7 @@ export default async function StudentsPage({
                     return (
                       <td key={a.id} className="px-4 py-3">
                         {score?.best === null ? (
-                          <span className="text-[color:var(--muted)]">—</span>
+                          <span className="text-[color:var(--muted)]">-</span>
                         ) : (
                           <span className="flex items-center gap-2">
                             <span className="font-semibold text-[color:var(--ink)]">{score.best}%</span>

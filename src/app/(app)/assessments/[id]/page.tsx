@@ -66,7 +66,7 @@ export default async function TakeAssessmentPage({
         <h1 className="text-2xl font-bold text-[color:var(--ink)]">{assessment.title}</h1>
         {approved && (
           <p className="mt-1 text-sm font-medium text-[color:var(--success)]">
-            ✓ Você já foi aprovado nesta avaliação
+            Você já foi aprovado nesta avaliação
           </p>
         )}
       </div>
@@ -75,7 +75,7 @@ export default async function TakeAssessmentPage({
       <div className="rounded-2xl border border-[color:var(--border)] bg-[var(--surface)] p-5 text-sm leading-relaxed text-[color:var(--ink-soft)] shadow-[var(--shadow-sm)]">
         <p className="font-semibold text-[color:var(--ink)]">Atenção</p>
         <p className="mt-1">
-          Esta avaliação vale nota. Leia cada questão com cuidado antes de responder — o
+          Esta avaliação vale nota. Leia cada questão com cuidado antes de responder - o
           resultado é calculado automaticamente ao enviar.
         </p>
         <p className="mt-1">
@@ -88,8 +88,8 @@ export default async function TakeAssessmentPage({
         <div className="grid grid-cols-2 gap-6 sm:grid-cols-4">
           <Stat value={assessment.questions.length} label="Questões" />
           <Stat value={attempts.length} label="Tentativas realizadas" />
-          <Stat value={worst === null ? "—" : `${worst}%`} label="Menor nota" tone={worst !== null && worst < assessment.passingScore ? "bad" : "neutral"} />
-          <Stat value={best === null ? "—" : `${best}%`} label="Maior nota" tone={best !== null && best >= assessment.passingScore ? "good" : "neutral"} />
+          <Stat value={worst === null ? "-" : `${worst}%`} label="Menor nota" tone={worst !== null && worst < assessment.passingScore ? "bad" : "neutral"} />
+          <Stat value={best === null ? "-" : `${best}%`} label="Maior nota" tone={best !== null && best >= assessment.passingScore ? "good" : "neutral"} />
         </div>
         <div className="mt-5 flex items-center justify-center gap-2 border-t border-[color:var(--border)] pt-4 text-sm text-[color:var(--muted)]">
           <span>Nota para aprovação:</span>

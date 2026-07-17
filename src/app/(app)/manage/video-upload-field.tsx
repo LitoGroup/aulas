@@ -6,7 +6,7 @@ import { Label } from "@/components/ui";
 
 /**
  * Campo de upload de vídeo para a plataforma (bucket privado).
- * Faz o upload direto navegador→storage com progresso e preenche o
+ * Faz o upload direto navegador para o storage com progresso e preenche o
  * hidden input `videoRef` com a storageKey para o submit do form.
  */
 export function VideoUploadField({
@@ -19,7 +19,7 @@ export function VideoUploadField({
   const [storageKey, setStorageKey] = useState(defaultRef ?? "");
   const [progress, setProgress] = useState<number | null>(null);
   const [status, setStatus] = useState<string | null>(
-    defaultRef ? "Vídeo já enviado — envie outro para substituir." : null,
+    defaultRef ? "Vídeo já enviado - envie outro para substituir." : null,
   );
 
   async function onChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -51,7 +51,7 @@ export function VideoUploadField({
       xhr.onload = () => {
         if (xhr.status >= 200 && xhr.status < 300) {
           setStorageKey(signed.storageKey);
-          setStatus(`✓ ${file.name} enviado`);
+          setStatus(`${file.name} enviado`);
         } else {
           setStatus("Falha no envio do vídeo");
         }

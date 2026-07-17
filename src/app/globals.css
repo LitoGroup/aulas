@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /* ---------------------------------------------------------------------------
-   School — sistema visual sóbrio e profissional
+   School - sistema visual sóbrio e profissional
    Neutro quase monocromático · ações em tinta preta · acento mínimo
 --------------------------------------------------------------------------- */
 :root {
@@ -24,7 +24,7 @@
   --brand: var(--ink);
   --brand-ink: var(--ink);
 
-  /* preenchimento navy solido (avatares, chips, item ativo) — sempre com texto branco */
+  /* preenchimento navy solido (avatares, chips, item ativo) - sempre com texto branco */
   --navy-fill: #0e2440;
   color-scheme: light;
 
@@ -80,7 +80,7 @@ h1, h2, h3, .font-display {
   background-image: linear-gradient(135deg, #0d2848 0%, #17548f 100%);
 }
 
-/* Ênfase discreta — sem marca-texto colorido */
+/* Ênfase discreta - sem marca-texto colorido */
 .highlight {
   color: var(--ink);
   font-weight: 600;

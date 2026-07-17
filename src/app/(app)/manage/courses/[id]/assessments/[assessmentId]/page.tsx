@@ -56,7 +56,7 @@ export default async function EditAssessmentPage({
                     key={o.id}
                     className={o.isCorrect ? "font-medium text-[color:var(--success)]" : "text-[color:var(--ink-soft)]"}
                   >
-                    {o.isCorrect ? "✓ " : "• "}
+                    {o.isCorrect ? "" : "• "}
                     {o.text}
                   </li>
                 ))}
