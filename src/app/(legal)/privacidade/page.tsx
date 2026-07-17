@@ -13,14 +13,20 @@ export default function PrivacyPage() {
       <p className="text-xs text-[color:var(--muted)]">Versão {LEGAL_VERSION}</p>
 
       <p className="rounded-xl border border-[color:var(--accent)]/30 bg-[color:var(--accent)]/8 p-3 text-xs text-[color:var(--ink-soft)]">
-        <strong>Aviso ao operador:</strong> este é um modelo-base. Revise e valide com seu
-        advogado/DPO antes de publicar. Preencha os itens marcados como [preencher].
+        <strong>Aviso ao operador:</strong> confirme com seu advogado/DPO e preencha o CNPJ e a
+        razão social (marcados como [confirmar]) antes de considerar este documento definitivo.
       </p>
 
       <H>1. Quem somos</H>
       <p>
-        A Lito School ([preencher: razão social, CNPJ, endereço]) é a controladora dos dados
-        pessoais tratados nesta plataforma, nos termos da Lei nº 13.709/2018 (LGPD).
+        A <strong>Lito Aviation Academy</strong> (“Lito School”), integrante do Lito Group /
+        Aviões e Músicas, Centro de Instrução de Aviação Civil homologado pela ANAC, é a
+        controladora dos dados pessoais tratados nesta plataforma, nos termos da Lei nº
+        13.709/2018 (LGPD).
+      </p>
+      <p>
+        Razão social: [confirmar] · CNPJ: [confirmar] · Endereço: Rua Brás Cubas, 231 — Vila
+        Lanzara, Guarulhos/SP, CEP 07115-080 · Contato: (11) 99009-3005.
       </p>
 
       <H>2. Dados que coletamos</H>
@@ -39,15 +45,18 @@ export default function PrivacyPage() {
 
       <H>4. Compartilhamento</H>
       <p>
-        Utilizamos provedores de infraestrutura para hospedagem e armazenamento
-        ([preencher: ex. Vercel, Supabase]). Vídeos podem ser exibidos via YouTube/Vimeo.
-        Não vendemos seus dados.
+        Para operar a plataforma, utilizamos os seguintes operadores: <strong>Vercel</strong>{" "}
+        (hospedagem da aplicação), <strong>Supabase</strong> (banco de dados e armazenamento de
+        arquivos) e <strong>YouTube/Vimeo</strong> (exibição de vídeos das aulas). Esses
+        provedores tratam dados exclusivamente para prestar o serviço contratado. Não vendemos
+        nem cedemos seus dados a terceiros para fins de marketing.
       </p>
 
       <H>5. Retenção</H>
       <p>
-        Mantemos seus dados enquanto sua conta estiver ativa. Ao excluir a conta, os dados são
-        removidos [preencher: prazo e eventuais exceções legais de guarda].
+        Mantemos seus dados enquanto sua conta estiver ativa. Ao solicitar a exclusão em “Minha
+        conta”, seus dados pessoais são eliminados dos nossos sistemas em até 30 dias, ressalvadas
+        as informações que a lei exigir que sejam guardadas por prazo determinado.
       </p>
 
       <H>6. Seus direitos</H>
@@ -64,8 +73,9 @@ export default function PrivacyPage() {
 
       <H>8. Cookies</H>
       <p>
-        Usamos cookies estritamente necessários para manter sua sessão autenticada. [preencher:
-        detalhar demais cookies, se houver].
+        Usamos apenas cookies estritamente necessários para manter sua sessão autenticada e
+        garantir a segurança do acesso. Não utilizamos cookies de publicidade ou de rastreamento
+        de terceiros.
       </p>
     </>
   );

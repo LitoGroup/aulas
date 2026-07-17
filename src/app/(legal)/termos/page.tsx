@@ -13,13 +13,16 @@ export default function TermsPage() {
       <p className="text-xs text-[color:var(--muted)]">Versão {LEGAL_VERSION}</p>
 
       <p className="rounded-xl border border-[color:var(--accent)]/30 bg-[color:var(--accent)]/8 p-3 text-xs text-[color:var(--ink-soft)]">
-        <strong>Aviso ao operador:</strong> modelo-base. Revise com seu advogado antes de publicar.
+        <strong>Aviso ao operador:</strong> confirme com seu advogado e preencha CNPJ/razão social
+        [confirmar] e as condições comerciais (item 5) antes de considerar definitivo.
       </p>
 
       <H>1. Objeto</H>
       <p>
-        Estes Termos regem o uso da plataforma Lito School, que oferece cursos e conteúdos
-        educacionais online.
+        Estes Termos regem o uso da plataforma <strong>Lito School</strong>, mantida pela Lito
+        Aviation Academy (Lito Group / Aviões e Músicas — razão social e CNPJ [confirmar], sediada
+        na Rua Brás Cubas, 231, Guarulhos/SP), que oferece cursos e conteúdos educacionais de
+        aviação online.
       </p>
 
       <H>2. Conta e acesso</H>
@@ -42,12 +45,16 @@ export default function TermsPage() {
 
       <H>5. Alterações e encerramento</H>
       <p>
-        Podemos atualizar estes Termos e a plataforma. [preencher: condições de cancelamento,
-        reembolso e encerramento de conta].
+        Podemos atualizar estes Termos e a plataforma a qualquer momento. Você pode encerrar sua
+        conta quando quiser em “Minha conta”. [confirmar: condições comerciais de
+        matrícula/pagamento, cancelamento e reembolso, quando aplicáveis.]
       </p>
 
       <H>6. Contato</H>
-      <p>[preencher: canal de suporte/contato].</p>
+      <p>
+        Suporte e dúvidas: <strong>mma@litogroup.com</strong> · (11) 99009-3005 · Rua Brás Cubas,
+        231 — Vila Lanzara, Guarulhos/SP.
+      </p>
     </>
   );
 }
