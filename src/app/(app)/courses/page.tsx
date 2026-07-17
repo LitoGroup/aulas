@@ -61,8 +61,13 @@ export default async function CatalogPage() {
               className="group flex flex-col overflow-hidden rounded-2xl border border-[color:var(--border)] bg-[var(--surface)] shadow-[var(--shadow-sm)]"
             >
               {/* Capa com cadeado */}
-              <div className="relative">
-                <CourseCover title={c.title} seed={c.url} className="aspect-[16/9]" />
+              <div className="relative aspect-[16/9] overflow-hidden bg-[color:var(--navy-fill)]">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={c.image}
+                  alt={c.title}
+                  className="absolute inset-0 h-full w-full object-cover"
+                />
                 <div className="absolute inset-0 flex items-center justify-center bg-[#0a1420]/55 backdrop-blur-[2px]">
                   <span className="flex h-11 w-11 items-center justify-center rounded-full bg-white/15 ring-1 ring-white/30">
                     <svg viewBox="0 0 16 16" className="h-5 w-5 text-white" fill="none" stroke="currentColor" strokeWidth="1.4">
