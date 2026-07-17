@@ -91,6 +91,25 @@ h1, h2, h3, .font-display {
   filter: brightness(0) invert(1);
 }
 
+/* Pop-up promocional: entra deslizando e pisca chamando atenção */
+@keyframes promo-in {
+  from { transform: translateY(16px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+@keyframes promo-blink {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(126, 217, 87, 0); }
+  50% { box-shadow: 0 0 0 6px rgba(126, 217, 87, 0.35); }
+}
+.promo-pop {
+  animation: promo-in 0.35s ease-out, promo-blink 1s ease-in-out 0.35s 4;
+}
+.promo-cta {
+  animation: promo-blink 1.4s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .promo-pop, .promo-cta { animation: none; }
+}
+
 :where(a, button, input, select, textarea):focus-visible {
   outline: 2px solid var(--ink);
   outline-offset: 2px;
