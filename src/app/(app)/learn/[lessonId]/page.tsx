@@ -10,6 +10,7 @@ import { computeLessonLocks } from "@/server/services/lesson-access";
 import { VideoEmbed } from "@/components/video-embed";
 import { createVideoPlaybackUrl } from "@/server/storage";
 import { typeLabel } from "@/components/status-circle";
+import { PromoBanner } from "@/components/promo-banner";
 import { CompleteButton } from "./complete-button";
 import { LessonSidebar } from "./lesson-sidebar";
 
@@ -59,6 +60,8 @@ export default async function LessonViewerPage({
     <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
       {/* Player principal */}
       <div className="min-w-0 space-y-5">
+        <PromoBanner />
+
         {/* Cabeçalho profissional da aula */}
         <div className="overflow-hidden rounded-2xl border border-[color:var(--border)] bg-[var(--surface)] shadow-[var(--shadow-sm)]">
           <div className="brand-gradient h-1.5 w-full" />

@@ -6,7 +6,6 @@ import { NavLinks } from "@/components/nav-links";
 import { AppSidebar } from "@/components/app-sidebar";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { BrandMark } from "@/components/brand-logo";
-import { PromoPopup } from "@/components/promo-popup";
 import { Badge } from "@/components/ui";
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
@@ -56,8 +55,6 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
         <main className="w-full px-4 py-8 sm:px-8">{children}</main>
       </div>
-
-      <PromoPopup />
     </div>
   );
 }
