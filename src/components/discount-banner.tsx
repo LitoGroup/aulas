@@ -4,7 +4,7 @@ import { useState } from "react";
 
 const COUPON = "MMA10";
 
-export function DiscountBanner() {
+export function DiscountBanner({ className = "" }: { className?: string }) {
   const [copied, setCopied] = useState(false);
 
   function copy() {
@@ -15,7 +15,9 @@ export function DiscountBanner() {
   }
 
   return (
-    <div className="relative flex flex-wrap items-center justify-between gap-4 overflow-hidden rounded-2xl brand-gradient px-5 py-4 shadow-[var(--shadow-md)] sm:px-6">
+    <div
+      className={`relative flex flex-wrap content-center items-center justify-between gap-4 overflow-hidden rounded-2xl brand-gradient px-5 py-4 shadow-[var(--shadow-md)] sm:px-6 ${className}`}
+    >
       <span
         aria-hidden
         className="pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full bg-[color:var(--accent)]/20 blur-2xl"

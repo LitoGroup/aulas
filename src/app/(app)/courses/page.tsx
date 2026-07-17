@@ -11,15 +11,11 @@ export default async function CatalogPage() {
 
   return (
     <div className="space-y-6">
-      {/* Cabeçalho + banner de desconto grande ao lado */}
-      <div className="grid items-stretch gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)]">
-        <div className="flex flex-col justify-center">
-          <h1 className="text-2xl font-bold text-[color:var(--ink)]">Explorar cursos</h1>
-          <p className="mt-1 text-sm text-[color:var(--muted)]">
-            Escolha um curso e comece a estudar no seu ritmo.
-          </p>
-        </div>
-        <DiscountBanner />
+      <div>
+        <h1 className="text-2xl font-bold text-[color:var(--ink)]">Explorar cursos</h1>
+        <p className="mt-1 text-sm text-[color:var(--muted)]">
+          Escolha um curso e comece a estudar no seu ritmo.
+        </p>
       </div>
 
       {courses.length === 0 ? (
@@ -27,25 +23,30 @@ export default async function CatalogPage() {
           Nenhum curso publicado ainda.
         </div>
       ) : (
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
-          {courses.map((c) => (
-            <Link
-              key={c.id}
-              href={`/courses/${c.slug}`}
-              className="group overflow-hidden rounded-2xl border border-[color:var(--border)] bg-[var(--surface)] shadow-[var(--shadow-sm)] transition hover:-translate-y-0.5 hover:shadow-[var(--shadow-md)]"
-            >
-              <CourseCover title={c.title} seed={c.id} src={c.coverUrl} className="aspect-[16/9]" />
-              <div className="space-y-2 p-4">
-                <h2 className="font-semibold text-[color:var(--ink)] group-hover:text-[color:var(--brand-ink)]">
-                  {c.title}
-                </h2>
-                <p className="line-clamp-2 text-sm text-[color:var(--muted)]">
-                  {c.description || "Sem descrição"}
-                </p>
-                <p className="pt-1 text-xs text-[color:var(--muted)]">Por {c.owner.name}</p>
-              </div>
-            </Link>
-          ))}
+        // Cards de cursos à esquerda + banner de desconto preenchendo o espaço à direita
+        <div className="flex flex-col gap-5 lg:flex-row lg:items-stretch">
+          <div className="grid gap-5 sm:grid-cols-2 lg:flex-none">
+            {courses.map((c) => (
+              <Link
+                key={c.id}
+                href={`/courses/${c.slug}`}
+                className="group w-full overflow-hidden rounded-2xl border border-[color:var(--border)] bg-[var(--surface)] shadow-[var(--shadow-sm)] transition hover:-translate-y-0.5 hover:shadow-[var(--shadow-md)] lg:w-64"
+              >
+                <CourseCover title={c.title} seed={c.id} src={c.coverUrl} className="aspect-[16/9]" />
+                <div className="space-y-2 p-4">
+                  <h2 className="font-semibold text-[color:var(--ink)] group-hover:text-[color:var(--brand-ink)]">
+                    {c.title}
+                  </h2>
+                  <p className="line-clamp-2 text-sm text-[color:var(--muted)]">
+                    {c.description || "Sem descrição"}
+                  </p>
+                  <p className="pt-1 text-xs text-[color:var(--muted)]">Por {c.owner.name}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+
+          <DiscountBanner className="lg:flex-1" />
         </div>
       )}
 
