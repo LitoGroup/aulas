@@ -22,19 +22,27 @@ export function CourseCover({
   src,
   className = "",
   size = "card",
+  fit = "cover",
 }: {
   title: string;
   seed?: string;
   src?: string | null;
   className?: string;
   size?: "card" | "thumb";
+  fit?: "cover" | "contain";
 }) {
   // Thumb enviada pelo professor tem prioridade sobre a capa gerada.
   if (src) {
     return (
-      <div className={`relative overflow-hidden ${className}`}>
+      <div
+        className={`relative overflow-hidden ${fit === "contain" ? "bg-[color:var(--navy-fill)]" : ""} ${className}`}
+      >
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={src} alt={title} className="absolute inset-0 h-full w-full object-cover" />
+        <img
+          src={src}
+          alt={title}
+          className={`absolute inset-0 h-full w-full ${fit === "contain" ? "object-contain" : "object-cover"}`}
+        />
       </div>
     );
   }

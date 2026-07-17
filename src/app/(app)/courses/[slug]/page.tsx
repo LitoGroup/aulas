@@ -50,7 +50,13 @@ export default async function CourseDetailPage({
 
       {/* Cabeçalho do curso */}
       <div className="overflow-hidden rounded-2xl border border-[color:var(--border)] bg-[var(--surface)] shadow-[var(--shadow-sm)]">
-        <CourseCover title={course.title} seed={course.id} src={course.coverUrl} className="h-32 sm:h-40" />
+        <CourseCover
+          title={course.title}
+          seed={course.id}
+          src={course.coverUrl}
+          fit="contain"
+          className="h-52 w-full sm:h-72"
+        />
         <div className="p-6">
           <h1 className="text-2xl font-bold text-[color:var(--ink)]">{course.title}</h1>
           {course.description && (
