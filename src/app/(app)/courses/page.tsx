@@ -4,6 +4,7 @@ import { listPublishedCourses } from "@/server/services/course";
 import { CourseCover } from "@/components/course-cover";
 import { PageHeader } from "@/components/ui";
 import { SHOWCASE_COURSES } from "@/lib/showcase-courses";
+import { DiscountBanner } from "@/components/discount-banner";
 
 export default async function CatalogPage() {
   await requireRole(["STUDENT", "TEACHER", "ADMIN"]);
@@ -53,6 +54,8 @@ export default async function CatalogPage() {
             Cursos oficiais da Lito Aviation Academy. Adquira e desbloqueie o acesso.
           </p>
         </div>
+
+        <DiscountBanner />
 
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
           {SHOWCASE_COURSES.map((c) => (
