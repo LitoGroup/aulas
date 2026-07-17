@@ -12,11 +12,6 @@ export default function TermsPage() {
       <h1 className="text-2xl font-bold text-[color:var(--ink)]">Termos de Uso</h1>
       <p className="text-xs text-[color:var(--muted)]">Versão {LEGAL_VERSION}</p>
 
-      <p className="rounded-xl border border-[color:var(--accent)]/30 bg-[color:var(--accent)]/8 p-3 text-xs text-[color:var(--ink-soft)]">
-        <strong>Aviso ao operador:</strong> revise com seu advogado e preencha as condições
-        comerciais (item 5) conforme o modelo de negócio antes de considerar definitivo.
-      </p>
-
       <H>1. Objeto</H>
       <p>
         Estes Termos regem o uso da plataforma <strong>Lito School</strong>, mantida por{" "}
