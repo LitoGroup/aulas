@@ -4,7 +4,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { signOut } from "next-auth/react";
-import { Badge } from "@/components/ui";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 interface NavItem {
@@ -101,15 +100,18 @@ export function AppSidebar({
       <Link
         href={item.href}
         title={collapsed ? item.label : undefined}
-        className={`flex items-center gap-3 rounded-xl py-2.5 text-sm font-medium transition ${
+        className={`relative flex items-center gap-3 rounded-xl py-2.5 text-sm transition ${
           collapsed ? "justify-center px-0" : "px-3"
         } ${
           active
-            ? "bg-[color:var(--navy-fill)] text-white shadow-[var(--shadow-sm)]"
-            : "text-[color:var(--ink-soft)] hover:bg-[color:var(--canvas)] hover:text-[color:var(--ink)]"
+            ? "bg-[color:var(--ink)]/[0.06] font-semibold text-[color:var(--ink)]"
+            : "font-medium text-[color:var(--muted)] hover:bg-[color:var(--ink)]/[0.04] hover:text-[color:var(--ink)]"
         }`}
       >
-        {item.icon}
+        {active && !collapsed && (
+          <span className="absolute left-0 top-1/2 h-5 w-1 -translate-y-1/2 rounded-r-full bg-[color:var(--accent)]" />
+        )}
+        <span className={active ? "text-[color:var(--accent-ink)]" : ""}>{item.icon}</span>
         {!collapsed && item.label}
       </Link>
     );
@@ -122,12 +124,14 @@ export function AppSidebar({
       }`}
     >
       {/* Marca + minimizar */}
-      <div className={`flex items-center py-5 ${collapsed ? "justify-center px-0" : "gap-2 px-5"}`}>
-        <span className="brand-gradient flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-sm font-bold text-white">
-          S
+      <div className={`flex items-center py-5 ${collapsed ? "justify-center px-0" : "gap-2.5 px-5"}`}>
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[color:var(--accent)] text-sm font-extrabold text-[#0a1f3c] shadow-[var(--shadow-sm)]">
+          LS
         </span>
         {!collapsed && (
-          <span className="font-display text-lg font-bold text-[color:var(--ink)]">Lito School</span>
+          <span className="font-display text-lg font-bold tracking-tight text-[color:var(--ink)]">
+            Lito School
+          </span>
         )}
         {!collapsed && (
           <button
@@ -157,18 +161,21 @@ export function AppSidebar({
       {/* Perfil */}
       {collapsed ? (
         <div className="mb-4 flex justify-center" title={`${name} (${role})`}>
-          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[color:var(--navy-fill)] text-sm font-bold text-white">
+          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[color:var(--navy-fill)] text-sm font-bold text-white ring-2 ring-[color:var(--accent)]/40">
             {initials(name)}
           </span>
         </div>
       ) : (
-        <div className="mx-4 mb-4 flex items-center gap-3 rounded-2xl border border-[color:var(--border)] bg-[color:var(--canvas)] p-3">
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[color:var(--navy-fill)] text-sm font-bold text-white">
+        <div className="mx-3 mb-3 flex items-center gap-3 rounded-2xl bg-[color:var(--ink)]/[0.04] p-3">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[color:var(--navy-fill)] text-sm font-bold text-white ring-2 ring-[color:var(--accent)]/40">
             {initials(name)}
           </span>
           <span className="min-w-0">
             <span className="block truncate text-sm font-semibold text-[color:var(--ink)]">{name}</span>
-            <Badge tone="brand">{role}</Badge>
+            <span className="mt-0.5 inline-flex items-center gap-1 text-[11px] font-semibold uppercase tracking-wide text-[color:var(--accent-ink)]">
+              <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--accent)]" />
+              {role}
+            </span>
           </span>
         </div>
       )}
