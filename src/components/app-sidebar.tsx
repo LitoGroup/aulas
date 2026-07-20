@@ -6,53 +6,9 @@ import { useEffect, useState } from "react";
 import { signOut } from "next-auth/react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { BrandMark } from "@/components/brand-logo";
+import { NavIcon } from "@/components/nav-icons";
 import { roleLabel } from "@/lib/roles";
-
-interface NavItem {
-  href: string;
-  label: string;
-  icon: React.ReactNode;
-}
-
-const icon = {
-  panel: (
-    <svg viewBox="0 0 16 16" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.4">
-      <rect x="1.5" y="1.5" width="5.5" height="5.5" rx="1" />
-      <rect x="9" y="1.5" width="5.5" height="5.5" rx="1" />
-      <rect x="1.5" y="9" width="5.5" height="5.5" rx="1" />
-      <rect x="9" y="9" width="5.5" height="5.5" rx="1" />
-    </svg>
-  ),
-  catalog: (
-    <svg viewBox="0 0 16 16" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.4">
-      <path d="M2 3.5A1.5 1.5 0 0 1 3.5 2H8v12H3.5A1.5 1.5 0 0 1 2 12.5v-9z" />
-      <path d="M14 3.5A1.5 1.5 0 0 0 12.5 2H8v12h4.5a1.5 1.5 0 0 0 1.5-1.5v-9z" />
-    </svg>
-  ),
-  assessments: (
-    <svg viewBox="0 0 16 16" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.4">
-      <rect x="3" y="2" width="10" height="12" rx="1.5" />
-      <path d="M5.5 6l1.5 1.5L9.5 5M5.5 10.5h5" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  ),
-  manage: (
-    <svg viewBox="0 0 16 16" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.4">
-      <path d="M11.5 2.5l2 2L6 12l-2.8.8L4 10l7.5-7.5z" strokeLinejoin="round" />
-    </svg>
-  ),
-  users: (
-    <svg viewBox="0 0 16 16" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.4">
-      <circle cx="6" cy="5.5" r="2.5" />
-      <path d="M1.5 13.5c0-2.2 2-4 4.5-4s4.5 1.8 4.5 4M11 3.4a2.5 2.5 0 0 1 0 4.2M12.5 9.7c1.2.6 2 1.7 2 3" strokeLinecap="round" />
-    </svg>
-  ),
-  account: (
-    <svg viewBox="0 0 16 16" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.4">
-      <circle cx="8" cy="5" r="2.8" />
-      <path d="M2.5 14c0-2.5 2.5-4.5 5.5-4.5s5.5 2 5.5 4.5" strokeLinecap="round" />
-    </svg>
-  ),
-};
+import { learnItems, teachItems, activeHref, type NavItem } from "@/lib/nav";
 
 function initials(name: string): string {
   return name
@@ -73,7 +29,6 @@ export function AppSidebar({
   isTeacher: boolean;
 }) {
   const pathname = usePathname();
-  const isAdmin = role === "ADMIN";
 
   const [collapsed, setCollapsed] = useState(false);
   useEffect(() => {
@@ -86,25 +41,12 @@ export function AppSidebar({
     });
   }
 
-  const learn: NavItem[] = [
-    { href: "/dashboard", label: "Painel", icon: icon.panel },
-    { href: "/courses", label: "Catálogo de cursos", icon: icon.catalog },
-    { href: "/assessments", label: "Minhas avaliações", icon: icon.assessments },
-    { href: "/conta", label: "Minha conta", icon: icon.account },
-  ];
-  const teach: NavItem[] = [
-    { href: "/manage", label: "Gerenciar conteúdo", icon: icon.manage },
-    ...(isAdmin ? [{ href: "/manage/users", label: "Alunos", icon: icon.users }] : []),
-  ];
-
-  // Ativo = o href mais especifico que casa com a rota atual.
-  const allHrefs = [...learn, ...teach].map((i) => i.href);
-  const activeHref = allHrefs
-    .filter((h) => pathname === h || pathname.startsWith(h + "/"))
-    .sort((a, b) => b.length - a.length)[0];
+  const learn = learnItems();
+  const teach = teachItems(role);
+  const active_ = activeHref(pathname, [...learn, ...teach].map((i) => i.href));
 
   function NavLink({ item }: { item: NavItem }) {
-    const active = item.href === activeHref;
+    const active = item.href === active_;
     return (
       <Link
         href={item.href}
@@ -120,7 +62,9 @@ export function AppSidebar({
         {active && !collapsed && (
           <span className="absolute left-0 top-1/2 h-5 w-1 -translate-y-1/2 rounded-r-full bg-[color:var(--accent)]" />
         )}
-        <span className={active ? "text-[color:var(--accent-ink)]" : ""}>{item.icon}</span>
+        <span className={active ? "text-[color:var(--accent-ink)]" : ""}>
+          <NavIcon name={item.icon} />
+        </span>
         {!collapsed && item.label}
       </Link>
     );
@@ -200,7 +144,7 @@ export function AppSidebar({
           ))}
         </div>
 
-        {isTeacher && (
+        {isTeacher && teach.length > 0 && (
           <div className={`space-y-1 ${collapsed ? "border-t border-[color:var(--border)] pt-4" : ""}`}>
             {!collapsed && (
               <p className="px-3 pb-1 text-[11px] font-semibold uppercase tracking-wider text-[color:var(--muted)]">

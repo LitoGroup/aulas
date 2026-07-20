@@ -52,13 +52,13 @@ export function TakeForm({
     return (
       <div className="space-y-4">
         <div
-          className={`rounded-2xl border p-8 text-center shadow-[var(--shadow-sm)] ${
+          className={`rounded-2xl border p-6 text-center shadow-[var(--shadow-sm)] sm:p-8 ${
             result.passed
               ? "border-[color:var(--success)]/30 bg-[color:var(--success)]/5"
               : "border-[color:var(--danger)]/30 bg-[color:var(--danger)]/5"
           }`}
         >
-          <p className="text-5xl font-bold text-[color:var(--ink)]">{result.score}%</p>
+          <p className="text-4xl font-bold text-[color:var(--ink)] sm:text-5xl">{result.score}%</p>
           <p
             className={`mt-2 text-lg font-bold ${
               result.passed ? "text-[color:var(--success)]" : "text-[color:var(--danger)]"

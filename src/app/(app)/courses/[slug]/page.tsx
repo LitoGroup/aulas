@@ -44,7 +44,10 @@ export default async function CourseDetailPage({
 
   return (
     <div className="space-y-6">
-      <Link href="/courses" className="text-sm text-[color:var(--muted)] hover:text-[color:var(--ink)]">
+      <Link
+        href="/courses"
+        className="-ml-2 inline-flex min-h-[2.5rem] items-center px-2 text-sm text-[color:var(--muted)] hover:text-[color:var(--ink)]"
+      >
         ← Catálogo
       </Link>
 

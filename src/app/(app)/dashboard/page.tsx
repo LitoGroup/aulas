@@ -97,7 +97,7 @@ export default async function DashboardPage() {
       )}
 
       {isTeacher && (
-        <section className="flex items-center justify-between rounded-2xl border border-[color:var(--border)] bg-[var(--surface)] p-5">
+        <section className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[color:var(--border)] bg-[var(--surface)] p-5">
           <div>
             <h2 className="font-bold text-[color:var(--ink)]">Área do professor</h2>
             <p className="mt-0.5 text-sm text-[color:var(--muted)]">
@@ -106,7 +106,7 @@ export default async function DashboardPage() {
           </div>
           <Link
             href="/manage"
-            className="rounded-xl brand-gradient px-4 py-2 text-sm font-semibold text-white shadow-[var(--shadow-md)]"
+            className="shrink-0 rounded-xl brand-gradient px-4 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-md)]"
           >
             Gerenciar
           </Link>

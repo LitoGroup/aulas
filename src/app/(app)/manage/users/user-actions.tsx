@@ -45,7 +45,7 @@ export function RoleSelect({
         value={value}
         disabled={disabled || pending}
         onChange={(e) => onChange(e.target.value as Role)}
-        className="rounded-lg border border-[color:var(--border)] bg-[var(--surface)] px-2.5 py-1.5 text-xs font-medium text-[color:var(--ink)] disabled:opacity-50"
+        className="h-10 w-full rounded-lg border border-[color:var(--border)] bg-[var(--surface)] px-2.5 text-xs font-medium text-[color:var(--ink)] disabled:opacity-50 md:h-auto md:w-auto md:py-1.5"
       >
         <option value="STUDENT">STUDENT</option>
         <option value="TEACHER">TEACHER</option>
@@ -88,7 +88,7 @@ export function DeleteUserButton({
       <button
         onClick={onDelete}
         disabled={pending}
-        className="rounded-lg border border-[color:var(--danger)]/40 px-2.5 py-1.5 text-xs font-medium text-[color:var(--danger)] transition hover:bg-[color:var(--danger)]/8 disabled:opacity-50"
+        className="min-h-[2.5rem] rounded-lg border border-[color:var(--danger)]/40 px-3 py-2 text-xs font-medium text-[color:var(--danger)] transition hover:bg-[color:var(--danger)]/8 disabled:opacity-50"
       >
         {pending ? "..." : "Excluir"}
       </button>

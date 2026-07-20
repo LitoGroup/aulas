@@ -14,8 +14,13 @@ import {
 import { Input, Label, Button, Select, Textarea, Alert } from "@/components/ui";
 import { VideoUploadField } from "./video-upload-field";
 
+// 40px no celular (alvo de dedo), compacto a partir de sm onde há mouse.
 const iconBtn =
-  "inline-flex h-7 w-7 items-center justify-center rounded-lg border border-[color:var(--border)] text-[color:var(--ink-soft)] transition hover:bg-[color:var(--canvas)] disabled:opacity-40";
+  "inline-flex h-10 w-10 items-center justify-center rounded-lg border border-[color:var(--border)] text-[color:var(--ink-soft)] transition hover:bg-[color:var(--canvas)] disabled:opacity-40 sm:h-7 sm:w-7";
+
+/** Ação em texto (Renomear, Editar): sem padding o alvo virava 16px. */
+const textBtn =
+  "inline-flex min-h-[2.5rem] items-center rounded-lg px-2 text-xs font-medium text-[color:var(--ink-soft)] transition hover:bg-[color:var(--canvas)] hover:underline sm:min-h-0 sm:px-1 sm:py-1";
 
 function MoveButtons({
   courseId,
@@ -73,7 +78,7 @@ function DeleteButton({
       <input type="hidden" name={field} value={id} />
       <button
         type="submit"
-        className="inline-flex h-7 items-center rounded-lg border border-[color:var(--border)] px-2 text-xs font-medium text-[color:var(--danger)] transition hover:bg-[color:var(--danger)]/8"
+        className="inline-flex min-h-[2.5rem] items-center rounded-lg border border-[color:var(--border)] px-3 text-xs font-medium text-[color:var(--danger)] transition hover:bg-[color:var(--danger)]/8 sm:min-h-0 sm:h-7 sm:px-2"
         title="Excluir"
       >
         Excluir
@@ -100,11 +105,11 @@ export function ModuleControls({
   return (
     <div className="flex flex-wrap items-center gap-2">
       {editing ? (
-        <form action={action} className="flex items-center gap-2">
+        <form action={action} className="flex w-full flex-wrap items-center gap-2">
           <input type="hidden" name="courseId" value={courseId} />
           <input type="hidden" name="moduleId" value={moduleId} />
-          <Input name="title" defaultValue={title} className="h-8 py-1" />
-          <Button type="submit" disabled={pending} className="h-8 w-auto px-3 py-1 text-xs">
+          <Input name="title" defaultValue={title} className="h-10 min-w-0 flex-1 py-1 sm:h-8" />
+          <Button type="submit" disabled={pending} className="h-10 w-auto px-3 py-1 text-xs sm:h-8">
             Salvar
           </Button>
           <button type="button" onClick={() => setEditing(false)} className={iconBtn}>
@@ -114,7 +119,7 @@ export function ModuleControls({
       ) : (
         <>
           <MoveButtons courseId={courseId} field="moduleId" id={moduleId} action={moveModuleAction} />
-          <button onClick={() => setEditing(true)} className="text-xs font-medium text-[color:var(--ink-soft)] hover:underline">
+          <button onClick={() => setEditing(true)} className={textBtn}>
             Renomear
           </button>
           <DeleteButton
@@ -161,7 +166,7 @@ export function LessonControls({
     <div className="mt-1">
       <div className="flex flex-wrap items-center gap-2">
         <MoveButtons courseId={courseId} field="lessonId" id={lesson.id} action={moveLessonAction} />
-        <button onClick={() => setEditing((v) => !v)} className="text-xs font-medium text-[color:var(--ink-soft)] hover:underline">
+        <button onClick={() => setEditing((v) => !v)} className={textBtn}>
           {editing ? "Fechar" : "Editar"}
         </button>
         <DeleteButton

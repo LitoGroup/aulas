@@ -58,7 +58,10 @@ export default async function TakeAssessmentPage({
 
   return (
     <div className="mx-auto max-w-3xl space-y-6">
-      <Link href="/dashboard" className="text-sm text-[color:var(--muted)] hover:text-[color:var(--ink)]">
+      <Link
+        href="/dashboard"
+        className="-ml-2 inline-flex min-h-[2.5rem] items-center px-2 text-sm text-[color:var(--muted)] hover:text-[color:var(--ink)]"
+      >
         ← Painel
       </Link>
 

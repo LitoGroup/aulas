@@ -60,7 +60,9 @@ export function CoverUpload({
   return (
     <div>
       <Label>Thumb do curso</Label>
-      <div className="flex items-center gap-4">
+      {/* flex-wrap: com a miniatura de 144px fixa, o seletor de arquivo não
+          cabia na mesma linha em 375px e estourava o card. */}
+      <div className="flex flex-wrap items-center gap-4">
         <div className="relative h-20 w-36 shrink-0 overflow-hidden rounded-xl border border-[color:var(--border)] bg-[color:var(--canvas)]">
           {preview ? (
             // eslint-disable-next-line @next/next/no-img-element
@@ -71,7 +73,7 @@ export function CoverUpload({
             </span>
           )}
         </div>
-        <div className="min-w-0">
+        <div className="min-w-0 flex-1 basis-56">
           <input
             type="file"
             accept="image/jpeg,image/png,image/webp"

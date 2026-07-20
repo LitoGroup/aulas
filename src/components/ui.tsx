@@ -120,7 +120,7 @@ export function PageHeader({
   return (
     <div className="flex flex-wrap items-end justify-between gap-4">
       <div>
-        <h1 className="text-2xl font-bold text-[color:var(--ink)]">{title}</h1>
+        <h1 className="text-xl font-bold text-[color:var(--ink)] sm:text-2xl">{title}</h1>
         {subtitle && <p className="mt-1 text-sm text-[color:var(--muted)]">{subtitle}</p>}
       </div>
       {action}

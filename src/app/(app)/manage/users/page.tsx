@@ -19,6 +19,54 @@ function initials(name: string) {
     .join("");
 }
 
+const dataCurta = (d: Date) =>
+  new Intl.DateTimeFormat("pt-BR", { dateStyle: "short" }).format(d);
+
+/** Um usuário por cartão. No celular a tabela de 720px seria inutilizável. */
+function UserCard({ u, isSelf }: { u: UserRow; isSelf: boolean }) {
+  return (
+    <Card className="p-4">
+      <div className="flex items-center gap-3">
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[color:var(--navy-fill)] text-xs font-bold text-white">
+          {initials(u.name)}
+        </span>
+        <span className="min-w-0 flex-1">
+          <span className="block truncate font-semibold text-[color:var(--ink)]">
+            {u.name}
+            {isSelf && (
+              <span className="ml-2 text-[11px] font-normal text-[color:var(--muted)]">(você)</span>
+            )}
+          </span>
+          <span className="block truncate text-xs text-[color:var(--muted)]">{u.email}</span>
+        </span>
+      </div>
+
+      <dl className="mt-3 grid grid-cols-2 gap-3 border-t border-[color:var(--border)] pt-3 text-xs">
+        <div>
+          <dt className="text-[color:var(--muted)]">Cursos</dt>
+          <dd className="mt-0.5 font-semibold text-[color:var(--ink-soft)]">
+            {u._count.enrollments}
+          </dd>
+        </div>
+        <div>
+          <dt className="text-[color:var(--muted)]">Cadastro</dt>
+          <dd className="mt-0.5 font-semibold text-[color:var(--ink-soft)]">
+            {dataCurta(u.createdAt)}
+          </dd>
+        </div>
+      </dl>
+
+      <div className="mt-3 space-y-2 border-t border-[color:var(--border)] pt-3">
+        <RoleSelect userId={u.id} role={u.role} disabled={isSelf} />
+        <div className="flex flex-wrap items-start gap-2">
+          <PasswordForm userId={u.id} />
+          <DeleteUserButton userId={u.id} name={u.name} disabled={isSelf} />
+        </div>
+      </div>
+    </Card>
+  );
+}
+
 function UsersTable({
   users,
   currentUserId,
@@ -27,7 +75,16 @@ function UsersTable({
   currentUserId: string;
 }) {
   return (
-    <Card>
+    <>
+      {/* Celular: cartões */}
+      <div className="space-y-3 md:hidden">
+        {users.map((u) => (
+          <UserCard key={u.id} u={u} isSelf={u.id === currentUserId} />
+        ))}
+      </div>
+
+      {/* Desktop: tabela */}
+      <Card className="hidden md:block">
       <div className="overflow-x-auto">
         <table className="w-full min-w-[720px] text-sm">
           <thead>
@@ -65,7 +122,7 @@ function UsersTable({
                   </td>
                   <td className="px-5 py-3 text-[color:var(--ink-soft)]">{u._count.enrollments}</td>
                   <td className="px-5 py-3 text-xs text-[color:var(--muted)]">
-                    {new Intl.DateTimeFormat("pt-BR", { dateStyle: "short" }).format(u.createdAt)}
+                    {dataCurta(u.createdAt)}
                   </td>
                   <td className="px-5 py-3">
                     <div className="flex flex-wrap items-start gap-2">
@@ -79,7 +136,8 @@ function UsersTable({
           </tbody>
         </table>
       </div>
-    </Card>
+      </Card>
+    </>
   );
 }
 
@@ -114,7 +172,7 @@ export default async function UsersPage() {
 
       {/* Equipe interna */}
       <section className="space-y-3">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <h2 className="flex items-center gap-2 text-lg font-bold text-[color:var(--ink)]">
             Equipe interna <Badge tone="brand">{team.length}</Badge>
           </h2>
@@ -129,7 +187,7 @@ export default async function UsersPage() {
 
       {/* Alunos */}
       <section className="space-y-3">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <h2 className="flex items-center gap-2 text-lg font-bold text-[color:var(--ink)]">
             Alunos <Badge tone="success">{students.length}</Badge>
           </h2>

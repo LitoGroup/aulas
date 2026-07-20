@@ -45,8 +45,15 @@ export function ChromaVideo({
     const io = new IntersectionObserver(
       ([entry]) => {
         visible = entry.isIntersecting;
-        if (visible) video.play().catch(() => {});
-        else video.pause();
+        if (visible) {
+          // O src só é atribuído quando o banner aparece de fato. Onde ele está
+          // escondido (celular), o vídeo nunca chega a ser baixado - display
+          // none sozinho não cancela o download.
+          if (!video.src) video.src = src;
+          video.play().catch(() => {});
+        } else {
+          video.pause();
+        }
       },
       { threshold: 0.1 },
     );
@@ -134,18 +141,18 @@ export function ChromaVideo({
       raf = requestAnimationFrame(draw);
     };
 
-    video.play().catch(() => {});
     raf = requestAnimationFrame(draw);
     return () => {
       cancelAnimationFrame(raf);
       io.disconnect();
       document.removeEventListener("visibilitychange", onVisibility);
     };
-  }, [crop.x, crop.y, crop.w, crop.h, tolerance, endTrim]);
+  }, [src, crop.x, crop.y, crop.w, crop.h, tolerance, endTrim]);
 
   return (
     <>
-      <video ref={videoRef} src={src} muted loop playsInline autoPlay className="hidden" />
+      {/* sem `src` aqui de propósito: ele é atribuído quando o banner entra na tela */}
+      <video ref={videoRef} muted loop playsInline preload="none" className="hidden" />
       <canvas ref={canvasRef} aria-hidden className={className} />
     </>
   );

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Bricolage_Grotesque } from "next/font/google";
 import "./globals.css";
 import { CookieBanner } from "@/components/cookie-banner";
@@ -19,6 +19,26 @@ const bricolage = Bricolage_Grotesque({
 export const metadata: Metadata = {
   title: "Lito School - Plataforma de Aulas",
   description: "Sistema de aulas online: cursos, aulas e avaliações.",
+  applicationName: "Lito School",
+  // Instalável na tela inicial; no iOS abre sem a barra do Safari.
+  appleWebApp: {
+    capable: true,
+    title: "Lito School",
+    statusBarStyle: "black-translucent",
+  },
+  formatDetection: { telephone: false },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  // Deixa o app pintar sob o notch e a barra inferior do iPhone; o conteúdo
+  // é reposicionado pelos utilitários pt-safe/pb-safe.
+  viewportFit: "cover",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#0a1420" },
+  ],
 };
 
 export default function RootLayout({

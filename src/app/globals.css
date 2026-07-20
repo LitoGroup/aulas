@@ -75,6 +75,40 @@ h1, h2, h3, .font-display {
   letter-spacing: -0.021em;
 }
 
+/* --------------------- Área segura (notch / barra do iOS) -------------------
+   Com viewportFit "cover" o app pinta sob os recortes do aparelho; estas
+   classes devolvem o respiro só onde o sistema realmente ocupa espaço. */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.pt-safe {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+/* Gaveta do celular: entra deslizando de baixo */
+@keyframes sheet-up {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+.sheet-up {
+  animation: sheet-up 0.26s cubic-bezier(0.32, 0.72, 0, 1) both;
+}
+@keyframes sheet-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.sheet-fade {
+  animation: sheet-fade 0.2s ease-out both;
+}
+
+/* No celular o toque não tem "hover": o realce fica no active. Também remove
+   o flash azul do tap no Android/iOS. */
+@media (hover: none) {
+  :where(a, button, summary, [role="button"]) {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
 /* Preenchimento de marca: gradiente navy da identidade */
 .brand-gradient {
   background-image: linear-gradient(135deg, #0d2848 0%, #17548f 100%);

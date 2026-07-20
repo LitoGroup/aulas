@@ -13,6 +13,7 @@ import { typeLabel } from "@/components/status-circle";
 import { PromoBanner } from "@/components/promo-banner";
 import { CompleteButton } from "./complete-button";
 import { LessonSidebar } from "./lesson-sidebar";
+import { CourseContentPanel } from "./course-content-panel";
 
 export default async function LessonViewerPage({
   params,
@@ -187,9 +188,10 @@ export default async function LessonViewerPage({
         )}
       </div>
 
-      {/* Sidebar do curso */}
-      <aside className="lg:sticky lg:top-8 lg:h-[calc(100vh-4rem)]">
-        <div className="h-full overflow-hidden rounded-2xl border border-[color:var(--border)] bg-[var(--surface)] shadow-[var(--shadow-sm)]">
+      {/* Conteúdo do curso. No celular vai para o topo como gaveta compacta;
+          no desktop continua sendo a coluna fixa da direita. */}
+      <aside className="order-first lg:order-none lg:sticky lg:top-8 lg:h-[calc(100vh-4rem)]">
+        <CourseContentPanel concluidas={progress.completed} total={progress.total}>
           <LessonSidebar
             courseTitle={outline.title}
             modules={outline.modules}
@@ -198,7 +200,7 @@ export default async function LessonViewerPage({
             locks={locks}
             percent={progress.percent}
           />
-        </div>
+        </CourseContentPanel>
       </aside>
     </div>
   );

@@ -18,7 +18,8 @@ export function CookieBanner() {
   if (!show) return null;
 
   return (
-    <div className="fixed inset-x-0 bottom-0 z-50 p-4">
+    // No celular sobe acima da barra de abas para não cobrir a navegação.
+    <div className="fixed inset-x-0 bottom-[3.75rem] z-50 p-4 pb-safe lg:bottom-0">
       <div className="mx-auto flex max-w-3xl flex-col items-start gap-3 rounded-2xl border border-[color:var(--border)] bg-[var(--surface)] p-4 shadow-[var(--shadow-lg)] sm:flex-row sm:items-center">
         <p className="flex-1 text-sm text-[color:var(--ink-soft)]">
           Usamos cookies essenciais para manter você conectado e melhorar sua experiência. Ao

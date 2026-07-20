@@ -28,7 +28,10 @@ export default async function StudentsPage({
 
   return (
     <div className="space-y-6">
-      <Link href={`/manage/courses/${id}`} className="text-sm text-[color:var(--muted)] hover:text-[color:var(--ink)]">
+      <Link
+        href={`/manage/courses/${id}`}
+        className="-ml-2 inline-flex min-h-[2.5rem] items-center px-2 text-sm text-[color:var(--muted)] hover:text-[color:var(--ink)]"
+      >
         ← Voltar ao curso
       </Link>
       <PageHeader
@@ -41,7 +44,64 @@ export default async function StudentsPage({
           Nenhum aluno matriculado ainda.
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-2xl border border-[color:var(--border)] bg-[var(--surface)] shadow-[var(--shadow-sm)]">
+        <>
+        {/* Celular: um cartão por aluno. A tabela cresce uma coluna por
+            avaliação, então em 375px ela é impraticável. */}
+        <div className="space-y-3 lg:hidden">
+          {gradebook.students.map((s) => (
+            <div
+              key={s.id}
+              className="rounded-2xl border border-[color:var(--border)] bg-[var(--surface)] p-4 shadow-[var(--shadow-sm)]"
+            >
+              <div className="min-w-0">
+                <p className="truncate font-semibold text-[color:var(--ink)]">{s.name}</p>
+                <p className="truncate text-xs text-[color:var(--muted)]">{s.email}</p>
+              </div>
+
+              <div className="mt-3 flex items-center gap-2">
+                <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-[color:var(--canvas)]">
+                  <div
+                    className="h-full rounded-full bg-[color:var(--accent)]"
+                    style={{ width: `${Math.max(s.progressPercent, 3)}%` }}
+                  />
+                </div>
+                <span className="text-xs font-semibold text-[color:var(--ink-soft)]">
+                  {s.progressPercent}%
+                </span>
+              </div>
+
+              {gradebook.assessments.length > 0 && (
+                <ul className="mt-3 space-y-2 border-t border-[color:var(--border)] pt-3">
+                  {gradebook.assessments.map((a) => {
+                    const score = s.scores[a.id];
+                    return (
+                      <li key={a.id} className="flex items-center justify-between gap-3 text-sm">
+                        <span className="min-w-0 flex-1 truncate text-[color:var(--ink-soft)]">
+                          {a.title}
+                        </span>
+                        {score?.best === null ? (
+                          <span className="shrink-0 text-[color:var(--muted)]">-</span>
+                        ) : (
+                          <span className="flex shrink-0 items-center gap-2">
+                            <span className="font-semibold text-[color:var(--ink)]">
+                              {score.best}%
+                            </span>
+                            <Badge tone={score.passed ? "success" : "neutral"}>
+                              {score.passed ? "Aprovado" : "Reprovado"}
+                            </Badge>
+                          </span>
+                        )}
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* Desktop: tabela */}
+        <div className="hidden overflow-x-auto rounded-2xl border border-[color:var(--border)] bg-[var(--surface)] shadow-[var(--shadow-sm)] lg:block">
           <table className="w-full min-w-[560px] text-sm">
             <thead>
               <tr className="border-b border-[color:var(--border)] text-left text-xs uppercase tracking-wide text-[color:var(--muted)]">
@@ -92,6 +152,7 @@ export default async function StudentsPage({
             </tbody>
           </table>
         </div>
+        </>
       )}
     </div>
   );
