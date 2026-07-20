@@ -24,7 +24,10 @@ export async function markCompleteAction(
     return { error: "Nao foi possivel marcar como concluida" };
   }
 
-  revalidatePath(`/learn/${lessonId}`);
+  // Concluir uma aula muda o cadeado das seguintes, entao nao basta revalidar
+  // a aula atual: revalida o template para que as irmas venham com o cadeado
+  // atualizado (senao a proxima aula podia responder com o redirect antigo).
+  revalidatePath("/learn/[lessonId]", "page");
   if (slug) revalidatePath(`/courses/${slug}`);
   revalidatePath("/dashboard");
   return { success: "Aula concluida!" };

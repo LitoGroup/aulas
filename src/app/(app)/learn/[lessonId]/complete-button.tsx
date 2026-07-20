@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState, useTransition } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { markCompleteAction } from "@/server/actions/progress";
 import { Button, Alert } from "@/components/ui";
@@ -18,23 +19,37 @@ export function CompleteButton({
 }) {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
-  const [pending, setPending] = useState(false);
+  const [pending, startTransition] = useTransition();
 
-  async function complete(advance: boolean) {
+  // Deixa a próxima aula pronta antes do clique. Sem isso a navegação após
+  // concluir espera uma ida ao servidor e o botão parece travado.
+  useEffect(() => {
+    if (nextHref) router.prefetch(nextHref);
+  }, [router, nextHref]);
+
+  function complete(advance: boolean) {
     setError(null);
-    setPending(true);
     const fd = new FormData();
     fd.set("lessonId", lessonId);
     fd.set("slug", slug);
-    const res = await markCompleteAction(null, fd);
-    setPending(false);
-    if (res?.error) {
-      setError(res.error);
-      return;
-    }
-    if (advance && nextHref) router.push(nextHref);
-    else router.refresh();
+
+    // A action revalida a rota atual, o que dispara um refresh. Fora de uma
+    // transition esse refresh corria junto com o router.push e descartava a
+    // navegação: a aula era marcada, mas o aluno continuava na mesma tela e
+    // precisava clicar de novo. Dentro da transition as duas atualizações são
+    // sequenciadas.
+    startTransition(async () => {
+      const res = await markCompleteAction(null, fd);
+      if (res?.error) {
+        setError(res.error);
+        return;
+      }
+      if (advance && nextHref) router.push(nextHref);
+    });
   }
+
+  const primaria =
+    "inline-flex w-auto items-center justify-center gap-2 rounded-xl brand-gradient px-5 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-md)] transition hover:-translate-y-px hover:brightness-108";
 
   return (
     <div className="space-y-2">
@@ -46,6 +61,7 @@ export function CompleteButton({
           </span>
         ) : (
           <Button
+            type="button"
             onClick={() => complete(false)}
             disabled={pending}
             variant="ghost"
@@ -55,11 +71,23 @@ export function CompleteButton({
           </Button>
         )}
 
-        {nextHref && (
-          <Button onClick={() => complete(true)} disabled={pending} className="w-auto px-5">
-            {done ? "Próxima aula" : "Concluir e avançar"}
-          </Button>
-        )}
+        {nextHref &&
+          (done ? (
+            // Aula já concluída: só navegar. Chamar a action de novo aqui
+            // custava uma ida ao servidor inteira antes de sair da página.
+            <Link href={nextHref} prefetch className={primaria}>
+              Próxima aula
+            </Link>
+          ) : (
+            <Button
+              type="button"
+              onClick={() => complete(true)}
+              disabled={pending}
+              className="w-auto px-5"
+            >
+              {pending ? "Salvando..." : "Concluir e avançar"}
+            </Button>
+          ))}
       </div>
     </div>
   );
