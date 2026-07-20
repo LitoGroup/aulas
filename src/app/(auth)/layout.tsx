@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { BrandMark } from "@/components/brand-logo";
-import { ChromaVideo } from "@/components/chroma-video";
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -46,8 +45,11 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
             </div>
 
             {/* Avatar da plataforma recebendo o aluno */}
-            <ChromaVideo
-              src="/brand/promo-avatar.mp4"
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/brand/avatar-lito.png"
+              alt=""
+              aria-hidden
               className="avatar-pop h-48 w-auto object-contain drop-shadow-[0_16px_32px_rgba(0,0,0,0.5)] lg:h-80"
             />
           </div>
