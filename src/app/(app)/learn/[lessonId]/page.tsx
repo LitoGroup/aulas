@@ -27,8 +27,10 @@ export default async function LessonViewerPage({
 
   const course = lesson.module.course;
   const isOwner = course.ownerId === actor.id || actor.role === "ADMIN";
-  const enrolled = isOwner || (await isEnrolled(actor.id, course.id));
-  if (!enrolled) redirect(`/courses/${course.slug}`);
+  // Matrícula e permissão de ver são coisas diferentes: o professor abre a aula
+  // para conferir, mas só quem tem matrícula tem progresso para registrar.
+  const matriculado = await isEnrolled(actor.id, course.id);
+  if (!isOwner && !matriculado) redirect(`/courses/${course.slug}`);
 
   const [outline, progress] = await Promise.all([
     getCourseOutline(course.id),
@@ -168,24 +170,23 @@ export default async function LessonViewerPage({
           </div>
         )}
 
-        {!isOwner && (
-          <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[color:var(--border)] pt-5">
-            <CompleteButton
-              lessonId={lessonId}
-              slug={course.slug}
-              done={done}
-              nextHref={next ? `/learn/${next.id}` : null}
-            />
-            {prev && (
-              <Link
-                href={`/learn/${prev.id}`}
-                className="text-sm text-[color:var(--muted)] hover:text-[color:var(--ink)]"
-              >
-                ← Aula anterior
-              </Link>
-            )}
-          </div>
-        )}
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[color:var(--border)] pt-5">
+          <CompleteButton
+            lessonId={lessonId}
+            slug={course.slug}
+            done={done}
+            nextHref={next ? `/learn/${next.id}` : null}
+            podeConcluir={matriculado}
+          />
+          {prev && (
+            <Link
+              href={`/learn/${prev.id}`}
+              className="inline-flex min-h-[2.5rem] items-center px-2 text-sm text-[color:var(--muted)] hover:text-[color:var(--ink)]"
+            >
+              ← Aula anterior
+            </Link>
+          )}
+        </div>
       </div>
 
       {/* Conteúdo do curso. No celular vai para o topo como gaveta compacta;

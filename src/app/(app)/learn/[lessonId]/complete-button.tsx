@@ -11,11 +11,14 @@ export function CompleteButton({
   slug,
   done,
   nextHref,
+  podeConcluir,
 }: {
   lessonId: string;
   slug: string;
   done: boolean;
   nextHref: string | null;
+  /** Só há progresso a registrar para quem tem matrícula no curso. */
+  podeConcluir: boolean;
 }) {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
@@ -50,6 +53,23 @@ export function CompleteButton({
 
   const primaria =
     "inline-flex w-auto items-center justify-center gap-2 rounded-xl brand-gradient px-5 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-md)] transition hover:-translate-y-px hover:brightness-108";
+
+  // Sem matrícula não existe progresso para gravar (a ação recusaria), mas
+  // navegar entre as aulas continua útil para quem está conferindo o curso.
+  if (!podeConcluir) {
+    return (
+      <div className="flex flex-wrap items-center gap-3">
+        <span className="text-sm text-[color:var(--muted)]">
+          Visualizando sem matrícula: seu progresso não é registrado.
+        </span>
+        {nextHref && (
+          <Link href={nextHref} prefetch className={primaria}>
+            Próxima aula
+          </Link>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-2">
