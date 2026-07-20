@@ -4,6 +4,7 @@ import { listEnrollments } from "@/server/services/enrollment";
 import { getCourseProgress } from "@/server/services/progress";
 import { CourseCover } from "@/components/course-cover";
 import { ProgressRing } from "@/components/progress-ring";
+import { studyCta, studyEyebrow } from "@/lib/study-cta";
 
 export default async function DashboardPage() {
   const user = await requireRole(["STUDENT", "TEACHER", "ADMIN"]);
@@ -31,7 +32,7 @@ export default async function DashboardPage() {
           <CourseCover title={featured.course.title} seed={featured.course.id} src={featured.course.coverUrl} className="min-h-40" />
           <div className="flex flex-col justify-center gap-3 p-6">
             <span className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted)]">
-              {featured.progress.percent > 0 ? "Continue de onde parou" : "Comece agora"}
+              {studyEyebrow(featured.progress.percent)}
             </span>
             <h2 className="text-xl font-bold text-[color:var(--ink)]">{featured.course.title}</h2>
             <div className="flex items-center gap-3">
@@ -41,7 +42,7 @@ export default async function DashboardPage() {
               </span>
             </div>
             <span className="mt-1 inline-flex w-fit items-center gap-1 rounded-xl brand-gradient px-4 py-2 text-sm font-semibold text-white shadow-[var(--shadow-md)] transition group-hover:-translate-y-px">
-              Continuar estudando
+              {studyCta(featured.progress.percent)}
             </span>
           </div>
         </Link>
