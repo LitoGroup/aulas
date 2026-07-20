@@ -3,20 +3,23 @@
 import { useEffect, useRef } from "react";
 
 /**
- * Remove fundo verde (chroma key) em tempo real via canvas, deixando o
- * personagem com fundo transparente. Inclui supressão de spill (a franja
- * esverdeada na borda) e borda suave.
- * O vídeo precisa ser same-origin (/public) para o canvas ler os pixels.
+ * Remove o fundo de um vídeo em tempo real (canvas), detectando a cor do
+ * fundo automaticamente pelos cantos superiores do quadro. Funciona para
+ * fundos razoavelmente uniformes (verde, azul, branco).
+ *
+ * `crop` recorta a região do quadro que interessa (0..1), útil para excluir
+ * chão e objetos de cena, deixando só o personagem.
  */
 export function ChromaVideo({
   src,
   className = "",
-  // recorte do quadro (0..1) para enquadrar só o personagem
-  crop = { x: 0.33, y: 0.02, w: 0.34, h: 0.95 },
+  crop = { x: 0.28, y: 0.02, w: 0.44, h: 0.82 },
+  tolerance = 62,
 }: {
   src: string;
   className?: string;
   crop?: { x: number; y: number; w: number; h: number };
+  tolerance?: number;
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -28,7 +31,7 @@ export function ChromaVideo({
     const ctx = canvas.getContext("2d", { willReadFrequently: true });
     if (!ctx) return;
 
-    const W = 280;
+    const W = 260;
     let raf = 0;
 
     const draw = () => {
@@ -49,19 +52,26 @@ export function ChromaVideo({
 
         const frame = ctx.getImageData(0, 0, W, H);
         const d = frame.data;
-        for (let i = 0; i < d.length; i += 4) {
-          const r = d[i];
-          const g = d[i + 1];
-          const b = d[i + 2];
-          const other = Math.max(r, b);
-          const greenness = g - other;
 
-          if (greenness > 40) {
-            d[i + 3] = 0; // fundo verde
-          } else if (greenness > 8) {
-            // borda: suaviza e remove o excesso de verde (spill)
-            d[i + 3] = Math.round(255 * (1 - (greenness - 8) / 32));
-            d[i + 1] = other;
+        // Cor do fundo: média dos cantos superiores (área sem personagem).
+        const sample = (x: number, y: number) => {
+          const i = (y * W + x) * 4;
+          return [d[i], d[i + 1], d[i + 2]] as const;
+        };
+        const pts = [sample(2, 2), sample(W - 3, 2), sample(2, 6), sample(W - 3, 6)];
+        const bg = [0, 1, 2].map(
+          (c) => pts.reduce((s, p) => s + p[c], 0) / pts.length,
+        );
+
+        for (let i = 0; i < d.length; i += 4) {
+          const dist = Math.sqrt(
+            (d[i] - bg[0]) ** 2 + (d[i + 1] - bg[1]) ** 2 + (d[i + 2] - bg[2]) ** 2,
+          );
+          if (dist < tolerance) {
+            d[i + 3] = 0; // fundo
+          } else if (dist < tolerance * 1.5) {
+            // borda: transparência suave
+            d[i + 3] = Math.round(255 * ((dist - tolerance) / (tolerance * 0.5)));
           }
         }
         ctx.putImageData(frame, 0, 0);
@@ -72,7 +82,7 @@ export function ChromaVideo({
     video.play().catch(() => {});
     raf = requestAnimationFrame(draw);
     return () => cancelAnimationFrame(raf);
-  }, [crop.x, crop.y, crop.w, crop.h]);
+  }, [crop.x, crop.y, crop.w, crop.h, tolerance]);
 
   return (
     <>
