@@ -30,9 +30,21 @@ export function PromoBanner() {
           </p>
         </div>
       </div>
-      <span className="promo-cta relative shrink-0 rounded-xl bg-[color:var(--accent)] px-4 py-2 text-sm font-bold text-[#0a1f3c] transition group-hover:brightness-105">
-        Adquirir agora
-      </span>
+      <div className="relative ml-auto flex shrink-0 items-center gap-4">
+        {/* Avatar em vídeo (boneco pulando) */}
+        <video
+          src="/brand/promo-avatar.mp4"
+          autoPlay
+          loop
+          muted
+          playsInline
+          aria-hidden
+          className="h-16 w-16 shrink-0 object-contain drop-shadow-[0_4px_10px_rgba(0,0,0,0.4)]"
+        />
+        <span className="promo-cta rounded-xl bg-[color:var(--accent)] px-4 py-2 text-sm font-bold text-[#0a1f3c] transition group-hover:brightness-105">
+          Adquirir agora
+        </span>
+      </div>
     </a>
   );
 }
