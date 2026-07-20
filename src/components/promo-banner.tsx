@@ -1,5 +1,4 @@
 import { BrandMark } from "@/components/brand-logo";
-import { ChromaVideo } from "@/components/chroma-video";
 
 const COMPLETE_COURSE_URL =
   "https://litoaviationacademy.com.br/formacoes-e-cursos/mecanico-de-aeronaves-basico-celula-avionica-gmp/";
@@ -32,11 +31,18 @@ export function PromoBanner() {
         </div>
       </div>
       <div className="relative ml-auto flex shrink-0 items-center gap-4">
-        {/* Boneco com fundo removido (chroma key) */}
-        <ChromaVideo
-          src="/brand/promo-avatar-green.mp4"
-          className="hidden h-24 w-auto object-contain drop-shadow-[0_6px_14px_rgba(0,0,0,0.45)] sm:block"
-        />
+        {/* Card retrato do boneco, recortado no personagem (fundo escuro limpo) */}
+        <span className="relative hidden h-24 w-[70px] shrink-0 overflow-hidden rounded-xl ring-1 ring-white/15 sm:block">
+          <video
+            src="/brand/promo-avatar.mp4"
+            autoPlay
+            loop
+            muted
+            playsInline
+            aria-hidden
+            className="absolute inset-0 h-full w-full scale-[1.35] object-cover object-[center_30%]"
+          />
+        </span>
         <span className="promo-cta rounded-xl bg-[color:var(--accent)] px-4 py-2 text-sm font-bold text-[#0a1f3c] transition group-hover:brightness-105">
           Adquirir agora
         </span>
