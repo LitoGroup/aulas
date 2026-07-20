@@ -34,7 +34,7 @@ export function PromoBanner() {
       <div className="relative ml-auto flex shrink-0 items-center gap-4">
         {/* Avatar da plataforma: fundo verde removido, solto no banner */}
         <ChromaVideo
-          src="/brand/promo-avatar.mp4"
+          src="/brand/avatar-lito-green.mp4"
           className="hidden h-28 w-auto object-contain drop-shadow-[0_8px_16px_rgba(0,0,0,0.35)] sm:block"
         />
         <span className="promo-cta rounded-xl bg-[color:var(--accent)] px-4 py-2 text-sm font-bold text-[#0a1f3c] transition group-hover:brightness-105">
