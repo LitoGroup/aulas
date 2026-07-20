@@ -141,7 +141,90 @@ h1, h2, h3, .font-display {
   --navy-fill: #1c5a99;
   --brand: var(--ink);
   --brand-ink: var(--ink);
+  --accent: #7ed957;
+  --accent-ink: #8ade52;
+  --success: #82d95b;
+  --danger: #f8716f;
   color-scheme: dark;
+}
+
+/* ------------------------ Cena da tela de login ------------------------- */
+
+/* malha de pontos que some nas bordas */
+.auth-grid {
+  background-image: radial-gradient(circle at center, rgba(126, 217, 87, 0.16) 1px, transparent 1px);
+  background-size: 26px 26px;
+  mask-image: radial-gradient(ellipse 65% 55% at 50% 45%, #000 15%, transparent 78%);
+}
+
+/* feixe do radar girando */
+@keyframes auth-sweep {
+  to { transform: rotate(360deg); }
+}
+.auth-sweep {
+  transform-origin: center;
+  animation: auth-sweep 9s linear infinite;
+}
+
+/* anéis do radar expandindo */
+@keyframes auth-ring {
+  0% { transform: scale(0.5); opacity: 0; }
+  25% { opacity: 0.6; }
+  100% { transform: scale(1.35); opacity: 0; }
+}
+.auth-ring {
+  transform-origin: center;
+  animation: auth-ring 6s ease-out infinite;
+}
+
+/* chips de recurso flutuando */
+@keyframes auth-chip {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-7px); }
+}
+.auth-chip {
+  animation: auth-chip 5s ease-in-out infinite;
+}
+
+/* palco de luz sob o personagem */
+@keyframes auth-stage {
+  0%, 100% { opacity: 0.5; transform: translateX(-50%) scaleX(1); }
+  50% { opacity: 0.85; transform: translateX(-50%) scaleX(1.1); }
+}
+.auth-stage {
+  animation: auth-stage 3.2s ease-in-out infinite;
+}
+
+/* brilho percorrendo o botão principal */
+@keyframes auth-shine {
+  0% { transform: translateX(-140%) skewX(-18deg); }
+  60%, 100% { transform: translateX(320%) skewX(-18deg); }
+}
+.auth-shine::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 35%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  animation: auth-shine 3.8s ease-in-out infinite;
+}
+
+/* frases que se revezam no painel */
+@keyframes auth-msg {
+  0%, 2% { opacity: 0; transform: translateY(10px); }
+  8%, 27% { opacity: 1; transform: translateY(0); }
+  34%, 100% { opacity: 0; transform: translateY(-10px); }
+}
+.auth-msg {
+  animation: auth-msg 13.5s ease-in-out infinite both;
+}
+.auth-msg-2 { animation-delay: 4.5s; }
+.auth-msg-3 { animation-delay: 9s; }
+
+/* SMIL não obedece a preferência de menos movimento; escondemos o elemento */
+@media (prefers-reduced-motion: reduce) {
+  .auth-smil { display: none; }
 }
 
 /* estrelas piscando */

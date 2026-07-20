@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { signIn, getSession } from "next-auth/react";
-import { Input, Label, Button, Alert } from "@/components/ui";
+import { Alert } from "@/components/ui";
+import { AuthField, AuthButton, MailIcon, LockIcon } from "@/components/auth-ui";
 import { WelcomeSplash } from "@/components/welcome-splash";
 
 const WELCOME_MS = 3000;
@@ -46,23 +47,50 @@ export function LoginForm({ callbackUrl }: { callbackUrl: string }) {
   return (
     <form onSubmit={onSubmit} className="space-y-4">
       {error && <Alert kind="error">{error}</Alert>}
-      <div>
-        <Label htmlFor="email">E-mail</Label>
-        <Input id="email" name="email" type="email" autoComplete="email" required />
-      </div>
-      <div>
-        <Label htmlFor="password">Senha</Label>
-        <Input
-          id="password"
-          name="password"
-          type="password"
-          autoComplete="current-password"
-          required
-        />
-      </div>
-      <Button type="submit" disabled={pending}>
-        {pending ? "Entrando..." : "Entrar"}
-      </Button>
+
+      <AuthField
+        id="email"
+        name="email"
+        type="email"
+        label="E-mail"
+        icon={<MailIcon />}
+        placeholder="voce@exemplo.com"
+        autoComplete="email"
+        required
+      />
+
+      <AuthField
+        id="password"
+        name="password"
+        type="password"
+        label="Senha"
+        icon={<LockIcon />}
+        placeholder="••••••••"
+        autoComplete="current-password"
+        required
+      />
+
+      <AuthButton type="submit" disabled={pending}>
+        {pending ? (
+          "Entrando..."
+        ) : (
+          <>
+            Entrar
+            <svg
+              viewBox="0 0 20 20"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="h-4 w-4"
+              aria-hidden
+            >
+              <path d="M4 10h11M11 6l4 4-4 4" />
+            </svg>
+          </>
+        )}
+      </AuthButton>
     </form>
   );
 }
