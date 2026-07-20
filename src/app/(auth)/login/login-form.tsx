@@ -6,7 +6,7 @@ import { signIn, getSession } from "next-auth/react";
 import { Input, Label, Button, Alert } from "@/components/ui";
 import { WelcomeSplash } from "@/components/welcome-splash";
 
-const WELCOME_MS = 4000;
+const WELCOME_MS = 3000;
 
 export function LoginForm({ callbackUrl }: { callbackUrl: string }) {
   const router = useRouter();

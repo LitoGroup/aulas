@@ -140,7 +140,7 @@ h1, h2, h3, .font-display {
   to { width: 100%; }
 }
 .welcome-bar {
-  animation: welcome-bar 4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation: welcome-bar 3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 /* Balão de fala do avatar */
