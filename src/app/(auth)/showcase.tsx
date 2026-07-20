@@ -4,7 +4,9 @@
  * personagem da plataforma recebendo o aluno. Tudo decorativo — sem interação.
  */
 
-const ROTA = "M -40 520 C 70 486 128 372 214 306 S 352 168 470 108";
+// Arco que sobe pela esquerda, passa acima da cabeça do personagem e sai pelo
+// canto superior direito. A rota antiga era uma diagonal que cruzava o corpo.
+const ROTA = "M -20 200 C 60 175 140 140 230 128 C 320 116 400 80 460 20";
 
 const RECURSOS = [
   { texto: "Aulas em vídeo", posicao: "left-2 top-[26%]", atraso: "0s" },
@@ -42,11 +44,12 @@ export function AuthShowcase() {
           />
         </div>
 
-        {/* rota de voo desenhada, com a aeronave percorrendo o traçado */}
+        {/* Rota de voo com a aeronave percorrendo o traçado. Só no desktop: no
+            painel curto do celular o traçado cai sobre o título. */}
         <svg
           viewBox="0 0 420 560"
           preserveAspectRatio="xMidYMid slice"
-          className="absolute inset-0 h-full w-full"
+          className="absolute inset-0 hidden h-full w-full lg:block"
         >
           <defs>
             <linearGradient id="auth-rota-cor" x1="0" y1="1" x2="1" y2="0">
