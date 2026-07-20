@@ -31,7 +31,8 @@ export function PromoBanner() {
         </div>
       </div>
       <div className="relative ml-auto flex shrink-0 items-center gap-4">
-        {/* Avatar em vídeo (boneco pulando) */}
+        {/* Avatar em vídeo. mix-blend-screen faz o fundo escuro se fundir ao
+            navy do banner, deixando só o boneco em evidência. */}
         <video
           src="/brand/promo-avatar.mp4"
           autoPlay
@@ -39,7 +40,8 @@ export function PromoBanner() {
           muted
           playsInline
           aria-hidden
-          className="h-16 w-16 shrink-0 object-contain drop-shadow-[0_4px_10px_rgba(0,0,0,0.4)]"
+          style={{ mixBlendMode: "screen" }}
+          className="h-20 w-14 shrink-0 object-cover object-[center_22%]"
         />
         <span className="promo-cta rounded-xl bg-[color:var(--accent)] px-4 py-2 text-sm font-bold text-[#0a1f3c] transition group-hover:brightness-105">
           Adquirir agora
