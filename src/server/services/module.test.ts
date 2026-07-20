@@ -46,11 +46,34 @@ describe("module & lesson service", () => {
       title: "Aula 1",
       contentType: "VIDEO",
       videoProvider: "YOUTUBE",
-      videoRef: "abc123",
+      videoRef: "QW9JnB0GX1I",
     });
     expect(lesson.contentType).toBe("VIDEO");
-    expect(lesson.videoRef).toBe("abc123");
+    expect(lesson.videoRef).toBe("QW9JnB0GX1I");
     expect(lesson.order).toBe(0);
+  });
+
+  it("guarda so o ID quando o professor cola o link inteiro", async () => {
+    const m = await createModule(teacher, courseId, { title: "Mod link" });
+    const lesson = await createLesson(teacher, m.id, {
+      title: "Aula com link",
+      contentType: "VIDEO",
+      videoProvider: "YOUTUBE",
+      videoRef: "https://youtu.be/QW9JnB0GX1I?si=K8HyWa4_feITzxb7",
+    });
+    expect(lesson.videoRef).toBe("QW9JnB0GX1I");
+  });
+
+  it("recusa link de video que nao da para tocar", async () => {
+    const m = await createModule(teacher, courseId, { title: "Mod ruim" });
+    await expect(
+      createLesson(teacher, m.id, {
+        title: "Aula quebrada",
+        contentType: "VIDEO",
+        videoProvider: "YOUTUBE",
+        videoRef: "https://exemplo.com/nao-e-video",
+      }),
+    ).rejects.toThrow();
   });
 
   it("rejeita aula VIDEO sem ref", async () => {

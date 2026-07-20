@@ -214,8 +214,12 @@ export function LessonControls({
                 </div>
                 {provider !== "S3" && (
                   <div>
-                    <Label>ID do vídeo</Label>
-                    <Input name="videoRef" defaultValue={lesson.videoRef ?? ""} />
+                    <Label>Link do vídeo</Label>
+                    <Input
+                      name="videoRef"
+                      defaultValue={lesson.videoRef ?? ""}
+                      placeholder="https://youtu.be/dQw4w9WgXcQ"
+                    />
                   </div>
                 )}
               </div>

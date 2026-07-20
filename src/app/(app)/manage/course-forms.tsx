@@ -142,8 +142,15 @@ export function LessonForm({ courseId, moduleId }: { courseId: string; moduleId:
             </div>
             {provider !== "S3" && (
               <div>
-                <Label htmlFor={`vr-${moduleId}`}>ID do vídeo</Label>
-                <Input id={`vr-${moduleId}`} name="videoRef" placeholder="ex: dQw4w9WgXcQ" />
+                <Label htmlFor={`vr-${moduleId}`}>Link do vídeo</Label>
+                <Input
+                  id={`vr-${moduleId}`}
+                  name="videoRef"
+                  placeholder="https://youtu.be/dQw4w9WgXcQ"
+                />
+                <p className="mt-1 text-xs text-[color:var(--muted)]">
+                  Cole o link da página do vídeo. Também aceita só o ID.
+                </p>
               </div>
             )}
           </div>

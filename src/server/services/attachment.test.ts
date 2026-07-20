@@ -33,7 +33,7 @@ beforeAll(async () => {
     title: "Aula",
     contentType: "VIDEO",
     videoProvider: "YOUTUBE",
-    videoRef: "abc",
+    videoRef: "QW9JnB0GX1I",
   });
   lessonId = l.id;
   await enroll(student.id, courseId);
