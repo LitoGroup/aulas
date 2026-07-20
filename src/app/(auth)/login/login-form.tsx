@@ -2,13 +2,17 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { signIn } from "next-auth/react";
+import { signIn, getSession } from "next-auth/react";
 import { Input, Label, Button, Alert } from "@/components/ui";
+import { WelcomeSplash } from "@/components/welcome-splash";
+
+const WELCOME_MS = 4000;
 
 export function LoginForm({ callbackUrl }: { callbackUrl: string }) {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
+  const [welcome, setWelcome] = useState<{ name?: string | null } | null>(null);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -20,14 +24,24 @@ export function LoginForm({ callbackUrl }: { callbackUrl: string }) {
       password: String(form.get("password")),
       redirect: false,
     });
-    setPending(false);
+
     if (res?.error) {
-      setError("E-mail ou senha invalidos");
+      setPending(false);
+      setError("E-mail ou senha inválidos");
       return;
     }
-    router.push(callbackUrl);
-    router.refresh();
+
+    // Boas-vindas com o avatar enquanto a área do aluno é preparada.
+    const session = await getSession();
+    setWelcome({ name: session?.user?.name });
+    router.prefetch(callbackUrl);
+    setTimeout(() => {
+      router.push(callbackUrl);
+      router.refresh();
+    }, WELCOME_MS);
   }
+
+  if (welcome) return <WelcomeSplash name={welcome.name} />;
 
   return (
     <form onSubmit={onSubmit} className="space-y-4">

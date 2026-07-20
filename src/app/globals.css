@@ -127,6 +127,22 @@ h1, h2, h3, .font-display {
   transform: translateY(-6px) scale(1.07);
 }
 
+/* Tela de boas-vindas pós-login */
+@keyframes welcome-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.welcome-fade {
+  animation: welcome-fade 0.35s ease-out both;
+}
+@keyframes welcome-bar {
+  from { width: 0%; }
+  to { width: 100%; }
+}
+.welcome-bar {
+  animation: welcome-bar 4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
 /* Balão de fala do avatar */
 @keyframes bubble-in {
   from { transform: translateY(6px) scale(0.92); opacity: 0; }
