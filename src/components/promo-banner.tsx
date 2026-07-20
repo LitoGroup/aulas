@@ -32,11 +32,17 @@ export function PromoBanner() {
         </div>
       </div>
       <div className="relative ml-auto flex shrink-0 items-center gap-4">
-        {/* Avatar da plataforma: fundo verde removido, solto no banner */}
-        <ChromaVideo
-          src="/brand/promo-avatar.mp4"
-          className="hidden h-28 w-auto object-contain drop-shadow-[0_8px_16px_rgba(0,0,0,0.35)] sm:block"
-        />
+        {/* Avatar da plataforma: fundo removido, com entrada, flutuação e fala */}
+        <div className="relative hidden sm:block">
+          <span className="avatar-bubble absolute -top-1 right-full mr-2 whitespace-nowrap rounded-xl bg-white px-3 py-1.5 text-xs font-semibold text-[#0a1f3c] shadow-[var(--shadow-md)]">
+            Bora decolar na carreira?
+            <span className="absolute right-[-5px] top-1/2 h-2.5 w-2.5 -translate-y-1/2 rotate-45 bg-white" />
+          </span>
+          <ChromaVideo
+            src="/brand/promo-avatar.mp4"
+            className="avatar-pop h-28 w-auto object-contain drop-shadow-[0_8px_16px_rgba(0,0,0,0.35)]"
+          />
+        </div>
         <span className="promo-cta rounded-xl bg-[color:var(--accent)] px-4 py-2 text-sm font-bold text-[#0a1f3c] transition group-hover:brightness-105">
           Adquirir agora
         </span>

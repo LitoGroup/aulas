@@ -106,6 +106,41 @@ h1, h2, h3, .font-display {
 .promo-cta {
   animation: promo-blink 1.4s ease-in-out infinite;
 }
+
+/* Avatar: entrada com "pop" e flutuação sutil (parece vivo entre os loops) */
+@keyframes avatar-in {
+  from { transform: translateY(14px) scale(0.9); opacity: 0; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
+}
+@keyframes avatar-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+.avatar-pop {
+  animation: avatar-in 0.5s cubic-bezier(0.34, 1.4, 0.64, 1) both,
+             avatar-float 3.2s ease-in-out 0.5s infinite;
+  transition: transform 0.25s ease;
+}
+/* reage ao passar o mouse no banner */
+.group:hover .avatar-pop {
+  animation-play-state: paused;
+  transform: translateY(-6px) scale(1.07);
+}
+
+/* Balão de fala do avatar */
+@keyframes bubble-in {
+  from { transform: translateY(6px) scale(0.92); opacity: 0; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
+}
+.avatar-bubble {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+.group:hover .avatar-bubble {
+  opacity: 1;
+  animation: bubble-in 0.28s cubic-bezier(0.34, 1.4, 0.64, 1) both;
+}
 @media (prefers-reduced-motion: reduce) {
   .promo-pop, .promo-cta { animation: none; }
 }

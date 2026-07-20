@@ -38,8 +38,31 @@ export function ChromaVideo({
 
     const W = 260;
     let raf = 0;
+    let visible = true;
+
+    // Só processa quando o banner está na tela e a aba está ativa (economiza
+    // CPU/bateria: o chroma roda quadro a quadro).
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        visible = entry.isIntersecting;
+        if (visible) video.play().catch(() => {});
+        else video.pause();
+      },
+      { threshold: 0.1 },
+    );
+    io.observe(canvas);
+
+    const onVisibility = () => {
+      if (document.hidden) video.pause();
+      else if (visible) video.play().catch(() => {});
+    };
+    document.addEventListener("visibilitychange", onVisibility);
 
     const draw = () => {
+      if (!visible || document.hidden) {
+        raf = requestAnimationFrame(draw);
+        return;
+      }
       const vw = video.videoWidth;
       const vh = video.videoHeight;
 
@@ -113,7 +136,11 @@ export function ChromaVideo({
 
     video.play().catch(() => {});
     raf = requestAnimationFrame(draw);
-    return () => cancelAnimationFrame(raf);
+    return () => {
+      cancelAnimationFrame(raf);
+      io.disconnect();
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
   }, [crop.x, crop.y, crop.w, crop.h, tolerance, endTrim]);
 
   return (
