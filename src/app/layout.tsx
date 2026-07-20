@@ -59,6 +59,14 @@ export default function RootLayout({
             __html: `(function(){try{var t=localStorage.getItem("theme");if(!t){t=window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}document.documentElement.dataset.theme=t}catch(e){}})();`,
           }}
         />
+        {/* O navegador dispara "beforeinstallprompt" bem cedo, muitas vezes
+            antes do React montar. Guardamos o evento aqui para o botão de
+            instalar poder usá-lo depois. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){window.__pwaPrompt=null;window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();window.__pwaPrompt=e;window.dispatchEvent(new Event("pwa-installable"))});window.addEventListener("appinstalled",function(){window.__pwaPrompt=null});if("serviceWorker"in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){})})}})();`,
+          }}
+        />
         {children}
         <CookieBanner />
       </body>

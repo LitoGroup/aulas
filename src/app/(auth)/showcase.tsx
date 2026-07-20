@@ -22,7 +22,7 @@ const MENSAGENS = [
 
 export function AuthShowcase() {
   return (
-    <div className="relative order-1 min-h-[300px] overflow-hidden bg-gradient-to-b from-[#0a1f3c] via-[#0c2a4e] to-[#07182c] lg:order-2 lg:min-h-[640px]">
+    <div className="relative min-h-[260px] overflow-hidden bg-gradient-to-b from-[#0a1f3c] via-[#0c2a4e] to-[#07182c] lg:order-2 lg:min-h-[640px]">
       {/* -------------------------- Cena de fundo -------------------------- */}
       <div aria-hidden className="pointer-events-none absolute inset-0">
         {/* radar: anéis expandindo e feixe girando atrás do personagem */}
@@ -118,7 +118,7 @@ export function AuthShowcase() {
             src="/brand/avatar-lito.png"
             alt=""
             aria-hidden
-            className="avatar-pop relative h-56 w-auto object-contain drop-shadow-[0_18px_34px_rgba(0,0,0,0.55)] lg:h-[26rem]"
+            className="avatar-pop relative h-40 w-auto object-contain drop-shadow-[0_18px_34px_rgba(0,0,0,0.55)] sm:h-52 lg:h-[26rem]"
           />
         </div>
 
