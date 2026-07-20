@@ -128,6 +128,45 @@ h1, h2, h3, .font-display {
 }
 
 /* ------------------------- Tela de login (auth) ------------------------- */
+/* A área de login usa sempre o tema escuro, independente da preferência,
+   para manter o clima "cabine noturna". */
+.auth-dark {
+  --canvas: #0a1420;
+  --surface: #101c2b;
+  --ink: #e7eef7;
+  --ink-soft: #c1cedd;
+  --muted: #8296ac;
+  --border: #24384f;
+  --border-strong: #35506e;
+  --navy-fill: #1c5a99;
+  --brand: var(--ink);
+  --brand-ink: var(--ink);
+  color-scheme: dark;
+}
+
+/* estrelas piscando */
+@keyframes star-twinkle {
+  0%, 100% { opacity: 0.25; }
+  50% { opacity: 1; }
+}
+.star { animation: star-twinkle 4s ease-in-out infinite; }
+
+/* avião cruzando o céu com rastro */
+@keyframes sky-fly {
+  0% { transform: translate(-20%, 60px); opacity: 0; }
+  15% { opacity: 1; }
+  85% { opacity: 1; }
+  100% { transform: translate(120%, -80px); opacity: 0; }
+}
+.sky-plane { animation: sky-fly 14s linear infinite; }
+
+/* brilho do horizonte respirando */
+@keyframes horizon-pulse {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 0.85; }
+}
+.horizon-glow { animation: horizon-pulse 8s ease-in-out infinite; }
+
 /* entrada escalonada dos elementos */
 @keyframes auth-up {
   from { transform: translateY(18px); opacity: 0; }
