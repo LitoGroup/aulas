@@ -24,7 +24,7 @@ export function AuthShowcase() {
       {/* -------------------------- Cena de fundo -------------------------- */}
       <div aria-hidden className="pointer-events-none absolute inset-0">
         {/* radar: anéis expandindo e feixe girando atrás do personagem */}
-        <div className="absolute left-1/2 top-[52%] h-[30rem] w-[30rem] -translate-x-1/2 -translate-y-1/2">
+        <div className="absolute left-1/2 top-[54%] h-[24rem] w-[24rem] -translate-x-1/2 -translate-y-1/2">
           {[0, 1, 2].map((i) => (
             <span
               key={i}
@@ -95,7 +95,7 @@ export function AuthShowcase() {
         <div className="relative flex w-full flex-1 items-end justify-center">
           <div
             aria-hidden
-            className="auth-stage absolute bottom-3 left-1/2 h-5 w-52 -translate-x-1/2 rounded-[50%] bg-[color:var(--accent)]/30 blur-xl"
+            className="auth-stage absolute bottom-3 left-1/2 h-5 w-36 -translate-x-1/2 rounded-[50%] bg-[color:var(--accent)]/30 blur-xl"
           />
           {RECURSOS.map((r) => (
             <div key={r.texto} className={`auth-up auth-d5 absolute hidden lg:block ${r.posicao}`}>
@@ -115,7 +115,7 @@ export function AuthShowcase() {
             src="/brand/avatar-lito.png"
             alt=""
             aria-hidden
-            className="avatar-pop relative h-44 w-auto object-contain drop-shadow-[0_18px_34px_rgba(0,0,0,0.55)] lg:h-[21rem]"
+            className="avatar-pop relative h-56 w-auto object-contain drop-shadow-[0_18px_34px_rgba(0,0,0,0.55)] lg:h-[26rem]"
           />
         </div>
 
