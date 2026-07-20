@@ -1,13 +1,6 @@
 import Link from "next/link";
 import { BrandMark } from "@/components/brand-logo";
-
-// Estrelas com posições determinísticas (sem aleatoriedade em render).
-const STARS = Array.from({ length: 46 }, (_, i) => {
-  const x = (i * 97) % 100;
-  const y = (i * 61) % 62;
-  const r = i % 7 === 0 ? 1.6 : i % 3 === 0 ? 1.1 : 0.7;
-  return { x, y, r, delay: (i % 9) * 0.5 };
-});
+import { ChromaVideo } from "@/components/chroma-video";
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -34,63 +27,29 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           </p>
         </div>
 
-        {/* --------------------- Cena: céu noturno --------------------- */}
-        <div className="relative order-1 min-h-[220px] overflow-hidden lg:order-2 lg:min-h-[560px]">
-          {/* gradiente do céu */}
-          <div className="absolute inset-0 bg-gradient-to-b from-[#050a14] via-[#0d1f38] to-[#1d3552]" />
-          {/* brilho do horizonte */}
+        {/* ------------------- Painel do avatar (marca) ------------------- */}
+        <div className="relative order-1 min-h-[260px] overflow-hidden bg-gradient-to-br from-[#0a1f3c] via-[#0d2b52] to-[#123a6b] lg:order-2 lg:min-h-[560px]">
+          {/* halo atrás do personagem */}
           <div
             aria-hidden
-            className="horizon-glow absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-[#c9763f]/45 via-[#5b4a6b]/20 to-transparent"
+            className="auth-glow pointer-events-none absolute bottom-0 left-1/2 h-80 w-80 -translate-x-1/2 translate-y-1/4 rounded-full bg-[color:var(--accent)]/20 blur-3xl"
           />
 
-          {/* estrelas */}
-          <svg aria-hidden className="absolute inset-0 h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-            {STARS.map((s, i) => (
-              <circle
-                key={i}
-                className="star"
-                cx={s.x}
-                cy={s.y}
-                r={s.r / 6}
-                fill="white"
-                style={{ animationDelay: `${s.delay}s` }}
-              />
-            ))}
-          </svg>
-
-          {/* avião cruzando com rastro */}
-          <div aria-hidden className="sky-plane absolute left-0 top-1/3">
-            <div className="relative">
-              <span className="absolute right-full top-1/2 h-px w-28 -translate-y-1/2 bg-gradient-to-l from-white/50 to-transparent" />
-              <svg viewBox="0 0 24 24" className="h-7 w-7 -rotate-[18deg] text-white/90" fill="currentColor">
-                <path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L12 19v-5.5z" />
-              </svg>
+          <div className="relative flex h-full flex-col items-center justify-between gap-4 p-8 text-center">
+            <div>
+              <p className="auth-up auth-d3 text-xs font-semibold uppercase tracking-[0.2em] text-[#7ed957]">
+                Lito Aviation Academy
+              </p>
+              <p className="auth-up auth-d4 mt-2 font-display text-2xl font-bold leading-tight text-white">
+                Sua carreira na aviação decola aqui.
+              </p>
             </div>
-          </div>
 
-          {/* silhueta de montanhas */}
-          <svg
-            aria-hidden
-            className="absolute inset-x-0 bottom-0 h-2/5 w-full"
-            viewBox="0 0 600 200"
-            preserveAspectRatio="none"
-            fill="none"
-          >
-            <path d="M0 200V120l70-45 55 38 60-58 75 62 65-40 80 55 60-32 75 48v52z" fill="#050a12" opacity="0.95" />
-            <path d="M0 200v-40l90-32 70 30 85-42 90 46 75-28 90 40 100-24v50z" fill="#020509" />
-          </svg>
-
-          {/* chamada sobre a cena */}
-          <div className="absolute inset-x-0 bottom-0 p-8">
-            <p className="auth-up auth-d3 text-xs font-semibold uppercase tracking-[0.2em] text-[#7ed957]">
-              Lito Aviation Academy
-            </p>
-            <p className="auth-up auth-d4 mt-2 font-display text-2xl font-bold leading-tight text-white">
-              Sua carreira na aviação
-              <br />
-              decola aqui.
-            </p>
+            {/* Avatar da plataforma recebendo o aluno */}
+            <ChromaVideo
+              src="/brand/promo-avatar.mp4"
+              className="avatar-pop h-48 w-auto object-contain drop-shadow-[0_16px_32px_rgba(0,0,0,0.5)] lg:h-80"
+            />
           </div>
         </div>
       </div>
