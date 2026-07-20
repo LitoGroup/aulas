@@ -127,6 +127,51 @@ h1, h2, h3, .font-display {
   transform: translateY(-6px) scale(1.07);
 }
 
+/* ------------------------- Tela de login (auth) ------------------------- */
+/* entrada escalonada dos elementos */
+@keyframes auth-up {
+  from { transform: translateY(18px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+.auth-up {
+  animation: auth-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.auth-d1 { animation-delay: 0.08s; }
+.auth-d2 { animation-delay: 0.18s; }
+.auth-d3 { animation-delay: 0.28s; }
+.auth-d4 { animation-delay: 0.38s; }
+.auth-d5 { animation-delay: 0.48s; }
+
+/* avião cruzando o painel, com leve subida */
+@keyframes auth-fly {
+  0% { transform: translate(-15%, 40px) rotate(8deg); opacity: 0; }
+  12% { opacity: 0.28; }
+  88% { opacity: 0.28; }
+  100% { transform: translate(115%, -140px) rotate(8deg); opacity: 0; }
+}
+.auth-plane {
+  animation: auth-fly 16s linear infinite;
+}
+
+/* rastro da rota sendo desenhado */
+@keyframes auth-draw {
+  to { stroke-dashoffset: 0; }
+}
+.auth-route {
+  stroke-dasharray: 1200;
+  stroke-dashoffset: 1200;
+  animation: auth-draw 6s ease-out 0.4s forwards;
+}
+
+/* brilhos ambientes que respiram devagar */
+@keyframes auth-drift {
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.35; }
+  50% { transform: translate(28px, -22px) scale(1.12); opacity: 0.5; }
+}
+.auth-glow {
+  animation: auth-drift 12s ease-in-out infinite;
+}
+
 /* Tela de boas-vindas pós-login */
 @keyframes welcome-fade {
   from { opacity: 0; }
