@@ -25,7 +25,9 @@ export interface NavItem {
 const LEARN: NavItem[] = [
   { href: "/dashboard", label: "Painel", short: "Painel", icon: "panel" },
   { href: "/courses", label: "Catálogo de cursos", short: "Cursos", icon: "catalog" },
-  { href: "/assessments", label: "Minhas avaliações", short: "Provas", icon: "assessments" },
+  // "Provas" e não "Avaliações": a pesquisa de satisfação também é uma
+  // avaliação, e o nome ambíguo mandava quem procurava uma para a outra.
+  { href: "/assessments", label: "Minhas provas", short: "Provas", icon: "assessments" },
   { href: "/conta", label: "Minha conta", short: "Conta", icon: "account" },
 ];
 

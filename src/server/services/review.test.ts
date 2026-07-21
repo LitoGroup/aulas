@@ -10,6 +10,7 @@ import {
   submitReview,
   getOwnReview,
   listCourseReviews,
+  resumirCursos,
   NotEnrolledError,
   CourseNotFinishedError,
 } from "./review";
@@ -127,6 +128,28 @@ describe("resultado para o professor", () => {
     const doA = respostas.find((r) => r.rating === 4);
     expect(doA?.aluno).toBe("Aluno A");
     expect(doA?.comment).toBe("Revisei minha nota");
+  });
+});
+
+describe("resumo de varios cursos (lista de gestao)", () => {
+  it("nao mistura as notas entre cursos", async () => {
+    // Um segundo curso, sem nenhuma resposta, para provar o agrupamento.
+    const t = await prisma.user.findFirst({ where: { email: `${marker}_t@e.com` } });
+    const outro = await createCourse(t!.id, { title: `${marker} Outro` });
+
+    const mapa = await resumirCursos([courseId, outro.id]);
+    expect(mapa.get(courseId)?.total).toBe(2);
+    expect(mapa.get(outro.id)?.total).toBe(0);
+    expect(mapa.get(outro.id)?.media).toBe(0);
+  });
+
+  it("devolve entrada para todo curso pedido, mesmo sem resposta", async () => {
+    const mapa = await resumirCursos([courseId]);
+    expect(mapa.has(courseId)).toBe(true);
+  });
+
+  it("lista vazia nao consulta o banco a toa", async () => {
+    expect((await resumirCursos([])).size).toBe(0);
   });
 });
 

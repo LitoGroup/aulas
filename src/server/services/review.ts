@@ -83,6 +83,30 @@ export async function submitReview(
   });
 }
 
+/**
+ * Resumo de vários cursos de uma vez, para a lista de gestão.
+ * Uma consulta só: com uma por curso a lista viraria N+1.
+ */
+export async function resumirCursos(courseIds: string[]): Promise<Map<string, ReviewSummary>> {
+  const saida = new Map<string, ReviewSummary>();
+  if (courseIds.length === 0) return saida;
+
+  const linhas = await prisma.courseReview.findMany({
+    where: { enrollment: { courseId: { in: courseIds } } },
+    select: { rating: true, enrollment: { select: { courseId: true } } },
+  });
+
+  const porCurso = new Map<string, number[]>();
+  for (const l of linhas) {
+    const id = l.enrollment.courseId;
+    const atual = porCurso.get(id);
+    if (atual) atual.push(l.rating);
+    else porCurso.set(id, [l.rating]);
+  }
+  for (const id of courseIds) saida.set(id, resumirNotas(porCurso.get(id) ?? []));
+  return saida;
+}
+
 /** Notas e comentários de um curso, para o professor. */
 export async function listCourseReviews(courseId: string) {
   const respostas = await prisma.courseReview.findMany({
