@@ -85,7 +85,10 @@ model Course {
   title       String
   slug        String   @unique
   description String?
+  /// Miniatura dos cartoes (painel e catalogo). Formato 16:9.
   coverUrl    String?  @map("cover_url")
+  /// Faixa larga do topo da pagina do curso. Cai para coverUrl quando ausente.
+  bannerUrl   String?  @map("banner_url")
   ownerId     String   @map("owner_id")
   isPublished Boolean  @default(false) @map("is_published")
   createdAt   DateTime @default(now()) @map("created_at")

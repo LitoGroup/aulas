@@ -36,21 +36,31 @@ export async function getCoverUploadUrlAction(input: {
   }
 }
 
-/** Persiste a capa no curso apos o upload concluir. */
+/**
+ * Persiste a imagem no curso apos o upload concluir.
+ *
+ * `thumb` alimenta os cartoes (painel e catalogo); `banner` alimenta a faixa
+ * larga do topo da pagina do curso. Sao formatos diferentes: uma arte larga
+ * fica ilegivel recortada num cartao quase quadrado.
+ */
 export async function setCourseCoverAction(input: {
   courseId: string;
   storageKey: string;
+  alvo?: "thumb" | "banner";
 }): Promise<{ ok: true; url: string } | { error: string }> {
   try {
     const actor = await requireRole(["TEACHER", "ADMIN"]);
     await assertCanEdit(actor, input.courseId);
     const url = coverPublicUrl(input.storageKey);
-    await prisma.course.update({ where: { id: input.courseId }, data: { coverUrl: url } });
+    await prisma.course.update({
+      where: { id: input.courseId },
+      data: input.alvo === "banner" ? { bannerUrl: url } : { coverUrl: url },
+    });
     revalidatePath(`/manage/courses/${input.courseId}`);
     revalidatePath("/courses");
     revalidatePath("/dashboard");
     return { ok: true, url };
   } catch {
-    return { error: "Não foi possível salvar a capa" };
+    return { error: "Não foi possível salvar a imagem" };
   }
 }

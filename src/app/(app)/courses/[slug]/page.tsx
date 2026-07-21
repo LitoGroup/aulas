@@ -68,13 +68,13 @@ export default async function CourseDetailPage({
 
       {/* Cabeçalho do curso */}
       <div className="overflow-hidden rounded-2xl border border-[color:var(--border)] bg-[var(--surface)] shadow-[var(--shadow-sm)]">
-        {/* `cover` como no resto do app (cartões do painel e do catálogo). Com
+        {/* Banner largo aqui; a thumb dos cartões cai como reserva. Com
             `contain` a arte encolhia até caber pela altura e sobrava faixa
-            vazia dos lados — 76% da largura no caso da capa 4:3. */}
+            vazia dos lados — 76% da largura no caso de uma capa 4:3. */}
         <CourseCover
           title={course.title}
           seed={course.id}
-          src={course.coverUrl}
+          src={course.bannerUrl ?? course.coverUrl}
           className="h-44 w-full sm:h-64 lg:h-72"
         />
         <div className="p-6">

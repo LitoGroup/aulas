@@ -50,7 +50,10 @@ export default async function ManageCoursePage({
       <Card as="section" className="p-6">
         <h1 className="mb-4 text-lg font-bold text-[color:var(--ink)]">Dados do curso</h1>
         <div className="mb-5 border-b border-[color:var(--border)] pb-5">
-          <CoverUpload courseId={course.id} currentUrl={course.coverUrl} />
+          <div className="space-y-4">
+            <CoverUpload courseId={course.id} currentUrl={course.coverUrl} alvo="thumb" />
+            <CoverUpload courseId={course.id} currentUrl={course.bannerUrl} alvo="banner" />
+          </div>
         </div>
         <CourseEditForm
           course={{
