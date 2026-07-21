@@ -41,15 +41,25 @@ export async function createUploadUrl(storageKey: string) {
  * URL assinada temporaria (padrao 60s).
  * inline=true -> abre no navegador (ex.: PDF em nova guia);
  * inline=false -> forca download (ex.: DOCX, ZIP).
+ *
+ * `downloadName` define com que nome o arquivo e salvo. Sem ele o Supabase usa
+ * a chave do storage, e o aluno receberia algo como
+ * "3f2a...-Introdu_o.pdf" em vez de "Introdução.pdf".
  */
 export async function createSignedFileUrl(
   storageKey: string,
-  { expiresIn = 60, inline = false }: { expiresIn?: number; inline?: boolean } = {},
+  {
+    expiresIn = 60,
+    inline = false,
+    downloadName,
+  }: { expiresIn?: number; inline?: boolean; downloadName?: string } = {},
 ): Promise<string> {
   const s = admin();
   const { data, error } = await s.storage
     .from(ATTACHMENTS_BUCKET)
-    .createSignedUrl(storageKey, expiresIn, { download: !inline });
+    .createSignedUrl(storageKey, expiresIn, {
+      download: inline ? false : (downloadName ?? true),
+    });
   if (error || !data) throw new Error(error?.message ?? "Falha ao gerar URL do arquivo");
   return data.signedUrl;
 }

@@ -82,3 +82,31 @@ export function isInlineViewable(mimeType: string, fileName: string): boolean {
   if (mt === "application/pdf" || mt.startsWith("image/")) return true;
   return /\.(pdf|png|jpe?g|gif|webp|svg)$/i.test(fileName);
 }
+
+export type ModoDeAcesso = "abrir" | "baixar";
+
+/**
+ * Decide se o arquivo abre no navegador ou baixa.
+ *
+ * "baixar" é sempre respeitado — é escolha explícita do aluno. Já "abrir" só
+ * vale para o que o navegador exibe: mandar um DOCX inline abriria uma guia em
+ * branco que baixa sozinha.
+ */
+export function resolverModoDeAcesso(
+  pedido: string | null | undefined,
+  mimeType: string,
+  fileName: string,
+): ModoDeAcesso {
+  if (pedido === "baixar") return "baixar";
+  return isInlineViewable(mimeType, fileName) ? "abrir" : "baixar";
+}
+
+/** Tamanho legível para mostrar ao lado do arquivo. */
+export function formatarTamanho(bytes: number): string {
+  if (!Number.isFinite(bytes) || bytes <= 0) return "";
+  if (bytes < 1024) return `${bytes} B`;
+  const kb = bytes / 1024;
+  if (kb < 1024) return `${Math.round(kb)} KB`;
+  const mb = kb / 1024;
+  return `${mb.toFixed(mb < 10 ? 1 : 0)} MB`;
+}

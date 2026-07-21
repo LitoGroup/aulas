@@ -2,12 +2,12 @@ import { NextResponse } from "next/server";
 import { auth } from "@/server/auth/config";
 import {
   getAttachmentForDownload,
-  isInlineViewable,
+  resolverModoDeAcesso,
 } from "@/server/services/attachment";
 import { createSignedFileUrl } from "@/server/storage";
 
 export async function GET(
-  _req: Request,
+  req: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
   const { id } = await params;
@@ -19,9 +19,16 @@ export async function GET(
   try {
     const actor = { id: session.user.id, role: session.user.role };
     const { storageKey, fileName, mimeType } = await getAttachmentForDownload(actor, id);
-    // PDFs/imagens abrem inline (nova guia); os demais forcam download.
-    const inline = isInlineViewable(mimeType, fileName);
-    const url = await createSignedFileUrl(storageKey, { expiresIn: 120, inline });
+    // ?modo=baixar força o download; sem parâmetro, PDFs e imagens abrem
+    // inline e o restante baixa.
+    const pedido = new URL(req.url).searchParams.get("modo");
+    const modo = resolverModoDeAcesso(pedido, mimeType, fileName);
+    const url = await createSignedFileUrl(storageKey, {
+      expiresIn: 120,
+      inline: modo === "abrir",
+      // Salva com o nome que o professor enviou, não com a chave do storage.
+      downloadName: fileName,
+    });
     return NextResponse.redirect(url);
   } catch {
     return NextResponse.json({ error: "Acesso negado" }, { status: 403 });
