@@ -8,6 +8,8 @@ import { AttachmentUpload } from "../../attachment-upload";
 import { ModuleControls, LessonControls } from "../../content-edit-forms";
 import { CoverUpload } from "../../cover-upload";
 import { Card, Badge } from "@/components/ui";
+import { ReviewSummaryPanel } from "@/components/review-summary";
+import { listCourseReviews } from "@/server/services/review";
 
 export default async function ManageCoursePage({
   params,
@@ -26,7 +28,10 @@ export default async function ManageCoursePage({
   }
   if (!course) notFound();
 
-  const assessments = await listAssessmentsByCourse(course.id);
+  const [assessments, reviews] = await Promise.all([
+    listAssessmentsByCourse(course.id),
+    listCourseReviews(course.id),
+  ]);
 
   return (
     <div className="space-y-8">
@@ -149,6 +154,16 @@ export default async function ManageCoursePage({
             </ul>
           </Card>
         )}
+      </section>
+
+      <section className="space-y-3">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h2 className="flex items-center gap-2 text-lg font-bold text-[color:var(--ink)]">
+            Satisfação dos alunos
+            {reviews.resumo.total > 0 && <Badge tone="success">{reviews.resumo.total}</Badge>}
+          </h2>
+        </div>
+        <ReviewSummaryPanel resumo={reviews.resumo} respostas={reviews.respostas} />
       </section>
     </div>
   );

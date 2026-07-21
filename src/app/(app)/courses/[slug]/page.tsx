@@ -9,6 +9,8 @@ import { listAssessmentsByCourse } from "@/server/services/assessment";
 import { CourseCover } from "@/components/course-cover";
 import { ProgressBar } from "@/components/ui";
 import { StatusCircle, typeLabel } from "@/components/status-circle";
+import { CourseReviewCard } from "@/components/course-review-card";
+import { getOwnReview } from "@/server/services/review";
 import { EnrollButton } from "../enroll-button";
 
 export default async function CourseDetailPage({
@@ -42,6 +44,10 @@ export default async function CourseDetailPage({
     ? course.modules.find((m) => m.lessons.some((l) => l.id === nextLesson.id))?.id
     : course.modules[0]?.id;
 
+  // Pesquisa de satisfação: só faz sentido para quem terminou o curso.
+  const cursoConcluido = enrolled && progress.total > 0 && progress.percent >= 100;
+  const review = cursoConcluido ? await getOwnReview(actor.id, course.id) : null;
+
   return (
     <div className="space-y-6">
       <Link
@@ -50,6 +56,15 @@ export default async function CourseDetailPage({
       >
         ← Catálogo
       </Link>
+
+      {cursoConcluido && (
+        <CourseReviewCard
+          courseId={course.id}
+          slug={course.slug}
+          notaAtual={review?.rating ?? null}
+          comentarioAtual={review?.comment ?? null}
+        />
+      )}
 
       {/* Cabeçalho do curso */}
       <div className="overflow-hidden rounded-2xl border border-[color:var(--border)] bg-[var(--surface)] shadow-[var(--shadow-sm)]">

@@ -203,6 +203,27 @@ export default async function LessonViewerPage({
           </div>
         )}
 
+        {/* Curso terminado: leva à pesquisa, senão o aluno conclui a última
+            aula e nunca descobre que ela existe. */}
+        {matriculado && progress.total > 0 && progress.percent >= 100 && (
+          <Link
+            href={`/courses/${course.slug}`}
+            className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[color:var(--accent)]/30 bg-[color:var(--accent)]/[0.06] p-5 transition hover:bg-[color:var(--accent)]/10"
+          >
+            <span className="min-w-0">
+              <span className="block text-sm font-bold text-[color:var(--ink)]">
+                Você concluiu o curso!
+              </span>
+              <span className="mt-0.5 block text-sm text-[color:var(--muted)]">
+                Conte como foi sua experiência — leva menos de um minuto.
+              </span>
+            </span>
+            <span className="shrink-0 rounded-xl brand-gradient px-4 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-md)]">
+              Avaliar o curso
+            </span>
+          </Link>
+        )}
+
         <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[color:var(--border)] pt-5">
           <CompleteButton
             lessonId={lessonId}

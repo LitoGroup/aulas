@@ -52,7 +52,11 @@ export async function exportUserData(userId: string) {
       consentVersion: true,
       createdAt: true,
       enrollments: {
-        select: { enrolledAt: true, course: { select: { title: true } } },
+        select: {
+          enrolledAt: true,
+          course: { select: { title: true } },
+          review: { select: { rating: true, comment: true, updatedAt: true } },
+        },
       },
       attempts: {
         select: {
@@ -87,6 +91,14 @@ export async function exportUserData(userId: string) {
       aprovado: a.passed,
       enviadaEm: a.submittedAt,
     })),
+    pesquisasDeSatisfacao: user.enrollments
+      .filter((e) => e.review)
+      .map((e) => ({
+        curso: e.course.title,
+        nota: e.review!.rating,
+        comentario: e.review!.comment,
+        respondidaEm: e.review!.updatedAt,
+      })),
   };
 }
 

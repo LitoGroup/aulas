@@ -29,7 +29,9 @@ export default function PrivacyPage() {
       <p>
         Coletamos os dados que você nos fornece no cadastro - <strong>nome, e-mail e senha</strong>{" "}
         (armazenada apenas de forma criptografada/hash, nunca em texto) - e dados gerados pelo
-        uso: matrículas, progresso nas aulas e resultados de avaliações.
+        uso: matrículas, progresso nas aulas, resultados de avaliações e as respostas que você
+        der à pesquisa de satisfação ao concluir um curso (nota e comentário, associados ao seu
+        nome e visíveis apenas para a equipe da escola).
       </p>
 
       <H>3. Para que usamos</H>
