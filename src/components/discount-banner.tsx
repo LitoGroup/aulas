@@ -5,7 +5,7 @@ import { useState } from "react";
 // Um cupom por tipo de pagamento. O código é copiado exatamente como está
 // (minúsculo); a exibição em maiúsculas é só visual (não muda o que se copia).
 const CUPONS = [
-  { label: "À vista", code: "agoraoununca" },
+  { label: "À vista ou parcelado", code: "agoraoununca" },
   { label: "Recorrência", code: "agoraoununca2" },
 ];
 
@@ -40,7 +40,7 @@ export function DiscountBanner({ className = "" }: { className?: string }) {
             Oferta por tempo limitado
           </span>
           <p className="mt-3 max-w-md font-display text-2xl font-bold leading-tight text-white sm:text-3xl">
-            10% de desconto em todos os cursos
+            17% de desconto em todos os cursos
           </p>
           <p className="mt-1 text-sm text-white/70">
             Válido nas formações e cursos de manutenção da Lito Aviation Academy.
@@ -51,7 +51,7 @@ export function DiscountBanner({ className = "" }: { className?: string }) {
           <span className="text-sm text-white/70">Use o cupom no checkout:</span>
           {CUPONS.map(({ label, code }) => (
             <div key={code} className="flex flex-wrap items-center gap-2.5">
-              <span className="w-24 shrink-0 text-xs font-semibold uppercase tracking-wide text-white/60">
+              <span className="w-full text-xs font-semibold uppercase tracking-wide text-white/60 sm:w-40 sm:shrink-0">
                 {label}
               </span>
               <div className="flex items-center overflow-hidden rounded-xl bg-white/10 ring-1 ring-white/25 backdrop-blur">

@@ -16,17 +16,17 @@ function linhaDoCupom(rotulo: string) {
 }
 
 describe("DiscountBanner", () => {
-  it("mostra os dois cupons, à vista e recorrência", () => {
+  it("mostra os dois cupons: à vista ou parcelado, e recorrência", () => {
     render(<DiscountBanner />);
-    expect(screen.getByText("À vista")).toBeDefined();
+    expect(screen.getByText("À vista ou parcelado")).toBeDefined();
     expect(screen.getByText("Recorrência")).toBeDefined();
     expect(screen.getByText("agoraoununca")).toBeDefined();
     expect(screen.getByText("agoraoununca2")).toBeDefined();
   });
 
-  it("copia o código à vista exatamente em minúsculas", async () => {
+  it("copia o código à vista/parcelado exatamente em minúsculas", async () => {
     render(<DiscountBanner />);
-    fireEvent.click(within(linhaDoCupom("À vista")).getByRole("button"));
+    fireEvent.click(within(linhaDoCupom("À vista ou parcelado")).getByRole("button"));
     await waitFor(() => expect(writeText).toHaveBeenCalledWith("agoraoununca"));
   });
 
