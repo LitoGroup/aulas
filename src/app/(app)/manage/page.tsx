@@ -2,6 +2,7 @@ import Link from "next/link";
 import { requireRole } from "@/server/auth/rbac";
 import { listCoursesByOwner } from "@/server/services/course";
 import { resumirCursos } from "@/server/services/review";
+import { DeleteCourseButton } from "./delete-course-button";
 
 export default async function ManagePage() {
   const actor = await requireRole(["TEACHER", "ADMIN"]);
@@ -27,10 +28,10 @@ export default async function ManagePage() {
           {courses.map((c) => {
             const nota = satisfacao.get(c.id);
             return (
-              <li key={c.id}>
+              <li key={c.id} className="flex items-center gap-1 pr-2">
                 <Link
                   href={`/manage/courses/${c.id}`}
-                  className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 px-4 py-3 hover:bg-[color:var(--canvas)]"
+                  className="flex min-w-0 flex-1 flex-wrap items-center justify-between gap-x-3 gap-y-2 px-4 py-3 hover:bg-[color:var(--canvas)]"
                 >
                   <span className="min-w-0 font-medium text-[color:var(--ink)]">{c.title}</span>
                   <span className="flex shrink-0 items-center gap-2">
@@ -66,6 +67,7 @@ export default async function ManagePage() {
                     </span>
                   </span>
                 </Link>
+                <DeleteCourseButton courseId={c.id} title={c.title} />
               </li>
             );
           })}

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { requireRole } from "@/server/auth/rbac";
 import { listEnrollments } from "@/server/services/enrollment";
+import { listPublishedCourses } from "@/server/services/course";
 import { getCourseProgress } from "@/server/services/progress";
 import { CourseCover } from "@/components/course-cover";
 import { ProgressRing } from "@/components/progress-ring";
@@ -10,19 +11,32 @@ export default async function DashboardPage() {
   const user = await requireRole(["STUDENT", "TEACHER", "ADMIN"]);
   const isTeacher = user.role === "TEACHER" || user.role === "ADMIN";
 
-  const enrollments = await listEnrollments(user.id);
+  // Todo curso publicado aparece no painel do aluno, tenha ele começado ou não.
+  const [publicados, enrollments] = await Promise.all([
+    listPublishedCourses(),
+    listEnrollments(user.id),
+  ]);
+  const idsPublicados = new Set(publicados.map((c) => c.id));
+  // Cursos despublicados em que o aluno ainda está matriculado entram também,
+  // mas com o selo "Em breve" (foram retirados do ar depois de publicados).
+  const despublicados = enrollments
+    .map((e) => e.course)
+    .filter((c) => !c.isPublished && c.publishedAt !== null && !idsPublicados.has(c.id));
+
   const courses = await Promise.all(
-    enrollments.map(async (e) => ({
-      course: e.course,
-      progress: await getCourseProgress(user.id, e.courseId),
+    [...publicados, ...despublicados].map(async (course) => ({
+      course,
+      progress: await getCourseProgress(user.id, course.id),
     })),
   );
 
-  // O card de "continuar" nunca aponta para um curso despublicado (o botão
-  // levaria à mensagem de em breve, o que confundiria).
+  // O card de "continuar" prioriza um curso já começado e nunca aponta para um
+  // despublicado (o botão levaria à mensagem de em breve, o que confundiria).
   const disponivel = (c: (typeof courses)[number]) => c.course.isPublished;
-  const inProgress = courses.filter((c) => c.progress.percent < 100 && disponivel(c));
-  const featured = inProgress[0] ?? courses.find(disponivel);
+  const comecados = courses.filter(
+    (c) => disponivel(c) && c.progress.percent > 0 && c.progress.percent < 100,
+  );
+  const featured = comecados[0] ?? courses.find(disponivel);
 
   return (
     <div className="space-y-8">
@@ -64,11 +78,11 @@ export default async function DashboardPage() {
         </div>
       )}
 
-      {/* Meus cursos */}
+      {/* Todos os cursos publicados */}
       {courses.length > 0 && (
         <section className="space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-bold text-[color:var(--ink)]">Meus cursos</h2>
+            <h2 className="text-lg font-bold text-[color:var(--ink)]">Cursos</h2>
             <Link href="/courses" className="text-sm font-medium text-[color:var(--brand-ink)] hover:underline">
               Explorar catálogo
             </Link>

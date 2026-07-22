@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireRole } from "@/server/auth/rbac";
-import { createCourse, updateCourse } from "@/server/services/course";
+import { createCourse, updateCourse, deleteCourse, NotOwnerError } from "@/server/services/course";
 import { createModule } from "@/server/services/module";
 import { createLesson } from "@/server/services/lesson";
 import { courseInputSchema } from "@/lib/validation/course";
@@ -14,6 +14,22 @@ export interface ActionState {
 }
 
 const TEACHER = ["TEACHER", "ADMIN"] as const;
+
+export async function deleteCourseAction(
+  courseId: string,
+): Promise<{ ok: true } | { error: string }> {
+  try {
+    const actor = await requireRole([...TEACHER]);
+    await deleteCourse(actor, courseId);
+  } catch (e) {
+    if (e instanceof NotOwnerError) return { error: "Você não tem permissão sobre este curso" };
+    return { error: "Não foi possível excluir o curso" };
+  }
+  revalidatePath("/manage");
+  revalidatePath("/courses");
+  revalidatePath("/dashboard");
+  return { ok: true };
+}
 
 export async function createCourseAction(
   _prev: ActionState | null,
