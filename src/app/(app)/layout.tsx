@@ -5,6 +5,7 @@ import { AppSidebar } from "@/components/app-sidebar";
 import { MobileNav } from "@/components/mobile-nav";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { BrandMark } from "@/components/brand-logo";
+import { LiveAnnouncementBar } from "@/components/live-announcement-bar";
 import { isTeacherRole } from "@/lib/nav";
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
@@ -15,11 +16,15 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   const name = session.user.name ?? "Aluno";
 
   return (
-    <div className="flex min-h-screen">
-      {/* Sidebar fixa (desktop) */}
-      <AppSidebar name={name} role={role} isTeacher={isTeacherRole(role)} />
+    <div className="flex min-h-screen flex-col">
+      {/* Faixa da live, no topo de todas as páginas internas (rola com a página) */}
+      <LiveAnnouncementBar />
 
-      <div className="min-w-0 flex-1">
+      <div className="flex min-h-0 flex-1">
+        {/* Sidebar fixa (desktop) */}
+        <AppSidebar name={name} role={role} isTeacher={isTeacherRole(role)} />
+
+        <div className="min-w-0 flex-1">
         {/* Topo do celular: uma linha só. A navegação mora na barra inferior. */}
         <header className="sticky top-0 z-30 border-b border-[color:var(--border)] bg-[var(--surface)]/85 pt-safe backdrop-blur lg:hidden">
           <div className="flex w-full items-center gap-3 px-4 py-2.5">
@@ -35,11 +40,12 @@ export default async function AppLayout({ children }: { children: React.ReactNod
           </div>
         </header>
 
-        {/* pb-28 abre espaço para a barra de abas fixa do celular */}
-        <main className="w-full px-4 pb-28 pt-5 sm:px-8 lg:pb-8 lg:pt-8">{children}</main>
-      </div>
+          {/* pb-28 abre espaço para a barra de abas fixa do celular */}
+          <main className="w-full px-4 pb-28 pt-5 sm:px-8 lg:pb-8 lg:pt-8">{children}</main>
+        </div>
 
-      <MobileNav name={name} role={role} />
+        <MobileNav name={name} role={role} />
+      </div>
     </div>
   );
 }
