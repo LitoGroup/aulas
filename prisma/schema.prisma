@@ -91,6 +91,9 @@ model Course {
   bannerUrl   String?  @map("banner_url")
   ownerId     String   @map("owner_id")
   isPublished Boolean  @default(false) @map("is_published")
+  /// Momento da 1a publicacao; nunca limpo. Se preenchido e isPublished=false,
+  /// o curso foi publicado e depois despublicado (mostra "liberado em breve").
+  publishedAt DateTime? @map("published_at")
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
 

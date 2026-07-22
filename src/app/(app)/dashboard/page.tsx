@@ -18,8 +18,11 @@ export default async function DashboardPage() {
     })),
   );
 
-  const inProgress = courses.filter((c) => c.progress.percent < 100);
-  const featured = inProgress[0] ?? courses[0];
+  // O card de "continuar" nunca aponta para um curso despublicado (o botão
+  // levaria à mensagem de em breve, o que confundiria).
+  const disponivel = (c: (typeof courses)[number]) => c.course.isPublished;
+  const inProgress = courses.filter((c) => c.progress.percent < 100 && disponivel(c));
+  const featured = inProgress[0] ?? courses.find(disponivel);
 
   return (
     <div className="space-y-8">
@@ -75,9 +78,16 @@ export default async function DashboardPage() {
               <Link
                 key={course.id}
                 href={`/courses/${course.slug}`}
-                className="group overflow-hidden rounded-2xl border border-[color:var(--border)] bg-[var(--surface)] shadow-[var(--shadow-sm)] transition hover:-translate-y-0.5 hover:shadow-[var(--shadow-md)]"
+                className="group relative overflow-hidden rounded-2xl border border-[color:var(--border)] bg-[var(--surface)] shadow-[var(--shadow-sm)] transition hover:-translate-y-0.5 hover:shadow-[var(--shadow-md)]"
               >
-                <CourseCover title={course.title} seed={course.id} src={course.coverUrl} className="aspect-[16/9]" />
+                <div className={course.isPublished ? "" : "opacity-60"}>
+                  <CourseCover title={course.title} seed={course.id} src={course.coverUrl} className="aspect-[16/9]" />
+                </div>
+                {!course.isPublished && (
+                  <span className="absolute left-3 top-3 rounded-full bg-[#0a1f3c]/85 px-2.5 py-1 text-[11px] font-semibold text-white backdrop-blur">
+                    Em breve
+                  </span>
+                )}
                 <div className="space-y-3 p-4">
                   <h3 className="font-semibold text-[color:var(--ink)]">{course.title}</h3>
                   <div className="flex items-center gap-2 text-xs text-[color:var(--muted)]">

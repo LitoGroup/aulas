@@ -9,6 +9,7 @@ import { CourseCover } from "@/components/course-cover";
 import { ProgressBar } from "@/components/ui";
 import { StatusCircle, typeLabel } from "@/components/status-circle";
 import { CourseReviewCard } from "@/components/course-review-card";
+import { CourseComingSoon } from "@/components/course-coming-soon";
 import { getOwnReview } from "@/server/services/review";
 
 export default async function CourseDetailPage({
@@ -20,7 +21,15 @@ export default async function CourseDetailPage({
   const actor = await requireRole(["STUDENT", "TEACHER", "ADMIN"]);
   const course = await getCourseBySlug(slug);
 
-  if (!course || !course.isPublished) notFound();
+  if (!course) notFound();
+
+  const isOwner = course.ownerId === actor.id || actor.role === "ADMIN";
+  if (!isOwner && !course.isPublished) {
+    // Já esteve no ar e foi despublicado: avisa que volta em breve.
+    // Nunca publicado (rascunho): continua escondido.
+    if (course.publishedAt) return <CourseComingSoon title={course.title} />;
+    notFound();
+  }
 
   // Sem portão de matrícula: todo aluno logado tem acesso ao curso publicado.
   const ordered = course.modules.flatMap((m) =>

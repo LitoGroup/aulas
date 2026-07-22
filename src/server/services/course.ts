@@ -62,11 +62,15 @@ export async function updateCourse(
   courseId: string,
   input: Partial<CourseInput> & { isPublished?: boolean },
 ): Promise<Course> {
-  await assertCanEdit(actor, courseId);
+  const atual = await assertCanEdit(actor, courseId);
   const parsed = courseInputSchema.partial().parse({
     title: input.title,
     description: input.description,
   });
+  // Marca a 1a publicacao e nunca limpa: despublicar depois deixa publishedAt
+  // preenchido, o sinal de "ja esteve no ar" para a mensagem de em breve.
+  const primeiraPublicacao =
+    input.isPublished === true && atual.publishedAt === null;
   return prisma.course.update({
     where: { id: courseId },
     data: {
@@ -75,6 +79,7 @@ export async function updateCourse(
         ? { description: parsed.description || null }
         : {}),
       ...(input.isPublished !== undefined ? { isPublished: input.isPublished } : {}),
+      ...(primeiraPublicacao ? { publishedAt: new Date() } : {}),
     },
   });
 }

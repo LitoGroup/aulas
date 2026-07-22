@@ -26,9 +26,13 @@ export default async function LessonViewerPage({
 
   const course = lesson.module.course;
   const isOwner = course.ownerId === actor.id || actor.role === "ADMIN";
-  // Sem portão de matrícula: todo aluno logado acessa o curso publicado. Só o
-  // rascunho continua restrito ao dono/admin, que conferem sem gerar progresso.
-  if (!isOwner && !course.isPublished) notFound();
+  // Sem portão de matrícula: todo aluno logado acessa o curso publicado.
+  if (!isOwner && !course.isPublished) {
+    // Despublicado (já esteve no ar): manda para a página do curso, que mostra
+    // "será liberado em breve". Rascunho nunca publicado continua escondido.
+    if (course.publishedAt) redirect(`/courses/${course.slug}`);
+    notFound();
+  }
   const podeEstudar = !isOwner;
 
   const [outline, progress] = await Promise.all([

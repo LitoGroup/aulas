@@ -77,7 +77,14 @@ export function getLessonForViewer(lessonId: string) {
       module: {
         include: {
           course: {
-            select: { id: true, slug: true, ownerId: true, title: true, isPublished: true },
+            select: {
+              id: true,
+              slug: true,
+              ownerId: true,
+              title: true,
+              isPublished: true,
+              publishedAt: true,
+            },
           },
         },
       },

@@ -70,4 +70,34 @@ describe("course service", () => {
     expect(list.length).toBeGreaterThan(0);
     expect(list.every((c) => c.ownerId === teacherId)).toBe(true);
   });
+
+  it("marca publishedAt na 1a publicacao e mantem ao despublicar", async () => {
+    const c = await createCourse(teacherId, { title: `${marker} Publicacao` });
+    expect(c.publishedAt).toBeNull();
+    const owner = { id: teacherId, role: "TEACHER" as const };
+
+    const publicado = await updateCourse(owner, c.id, { isPublished: true });
+    expect(publicado.isPublished).toBe(true);
+    expect(publicado.publishedAt).toBeInstanceOf(Date);
+    const marcadoEm = publicado.publishedAt!.getTime();
+
+    // Despublicar preserva publishedAt: é o sinal de "já esteve no ar".
+    const despublicado = await updateCourse(owner, c.id, { isPublished: false });
+    expect(despublicado.isPublished).toBe(false);
+    expect(despublicado.publishedAt).not.toBeNull();
+
+    // Republicar não reescreve a data da primeira vez.
+    const republicado = await updateCourse(owner, c.id, { isPublished: true });
+    expect(republicado.publishedAt!.getTime()).toBe(marcadoEm);
+  });
+
+  it("rascunho nunca publicado fica com publishedAt nulo", async () => {
+    const c = await createCourse(teacherId, { title: `${marker} SoRascunho` });
+    const editado = await updateCourse(
+      { id: teacherId, role: "TEACHER" },
+      c.id,
+      { title: `${marker} SoRascunhoEditado` },
+    );
+    expect(editado.publishedAt).toBeNull();
+  });
 });
