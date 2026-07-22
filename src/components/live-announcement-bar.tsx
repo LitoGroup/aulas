@@ -9,8 +9,7 @@ import { ChromaVideo } from "@/components/chroma-video";
 // 17 de agosto de 2026, 20h (horário de Brasília, UTC-3).
 const EVENTO = new Date("2026-08-17T20:00:00-03:00");
 const DATA_TEXTO = "17 de agosto, 20h";
-const CHAMADA = "Nossa próxima live é dia";
-const DISMISS_KEY = "live-17ago-2026";
+const CHAMADA = "Live exclusiva é dia";
 
 export interface Restante {
   dias: number;
@@ -49,34 +48,18 @@ function Bloco({ valor, rotulo }: { valor: number; rotulo: string }) {
 }
 
 export function LiveAnnouncementBar() {
-  // null = ainda decidindo (evita piscar para quem já dispensou e some no SSR).
-  const [visivel, setVisivel] = useState<boolean | null>(null);
+  // Fixa: não há como dispensar. Só se recolhe sozinha depois do dia 17.
+  // A contagem inicia null para casar SSR e cliente (evita descompasso).
   const [restante, setRestante] = useState<Restante | null>(null);
 
   useEffect(() => {
-    const jaComecou = EVENTO.getTime() - Date.now() <= 0;
-    const dispensado = localStorage.getItem(DISMISS_KEY) === "1";
-    if (jaComecou || dispensado) {
-      setVisivel(false);
-      return;
-    }
-    setVisivel(true);
-    const tick = () => {
-      const r = calcularRestante(Date.now());
-      setRestante(r);
-      if (!r) setVisivel(false); // cruzou a hora do evento com a aba aberta
-    };
+    const tick = () => setRestante(calcularRestante(Date.now()));
     tick();
     const id = setInterval(tick, 1000);
     return () => clearInterval(id);
   }, []);
 
-  function dispensar() {
-    localStorage.setItem(DISMISS_KEY, "1");
-    setVisivel(false);
-  }
-
-  if (!visivel || !restante) return null;
+  if (!restante) return null;
 
   return (
     <aside
@@ -130,18 +113,6 @@ export function LiveAnnouncementBar() {
             </span>
           </div>
         </div>
-
-        {/* dispensar */}
-        <button
-          type="button"
-          onClick={dispensar}
-          aria-label="Dispensar aviso da live"
-          className="ml-1 grid h-8 w-8 shrink-0 place-items-center rounded-lg text-white/50 transition hover:bg-white/10 hover:text-white"
-        >
-          <svg viewBox="0 0 16 16" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.6">
-            <path d="M4 4l8 8M12 4l-8 8" strokeLinecap="round" />
-          </svg>
-        </button>
       </div>
     </aside>
   );
