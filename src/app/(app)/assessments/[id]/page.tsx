@@ -4,7 +4,7 @@ import { requireRole } from "@/server/auth/rbac";
 import {
   getAssessmentForTaking,
   listAttempts,
-  NotEnrolledError,
+  CourseUnavailableError,
 } from "@/server/services/grading";
 import { TakeForm } from "./take-form";
 
@@ -45,7 +45,7 @@ export default async function TakeAssessmentPage({
   try {
     assessment = await getAssessmentForTaking(actor, id);
   } catch (e) {
-    if (e instanceof NotEnrolledError) redirect("/courses");
+    if (e instanceof CourseUnavailableError) redirect("/courses");
     throw e;
   }
   if (!assessment) notFound();

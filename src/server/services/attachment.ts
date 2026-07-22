@@ -1,7 +1,6 @@
 import { randomUUID } from "node:crypto";
 import type { Attachment, Role } from "@prisma/client";
 import { prisma } from "../db";
-import { isEnrolled } from "./enrollment";
 
 export interface Actor {
   id: string;
@@ -64,13 +63,21 @@ export async function getAttachmentForDownload(
       storageKey: true,
       fileName: true,
       mimeType: true,
-      lesson: { select: { module: { select: { course: { select: { id: true, ownerId: true } } } } } },
+      lesson: {
+        select: {
+          module: {
+            select: { course: { select: { ownerId: true, isPublished: true } } },
+          },
+        },
+      },
     },
   });
   if (!att) throw new AttachmentForbiddenError();
 
+  // Todo aluno logado baixa o material de um curso publicado; não há mais
+  // portão de matrícula. Rascunho segue restrito ao dono/admin.
   const course = att.lesson.module.course;
-  const allowed = canEdit(actor, course.ownerId) || (await isEnrolled(actor.id, course.id));
+  const allowed = canEdit(actor, course.ownerId) || course.isPublished;
   if (!allowed) throw new AttachmentForbiddenError();
 
   return { storageKey: att.storageKey, fileName: att.fileName, mimeType: att.mimeType };

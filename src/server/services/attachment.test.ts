@@ -36,6 +36,7 @@ beforeAll(async () => {
     videoRef: "QW9JnB0GX1I",
   });
   lessonId = l.id;
+  await prisma.course.update({ where: { id: courseId }, data: { isPublished: true } });
   await enroll(student.id, courseId);
 });
 
@@ -71,13 +72,31 @@ describe("attachment authorization", () => {
     ).rejects.toBeInstanceOf(AttachmentForbiddenError);
   });
 
-  it("aluno matriculado baixa; nao matriculado e barrado", async () => {
+  it("qualquer aluno logado baixa o material de curso publicado", async () => {
+    // Sem portao de matricula: matriculado e nao matriculado baixam igual.
     const att = await prisma.attachment.findFirst({ where: { lessonId } });
-    const ok = await getAttachmentForDownload(student, att!.id);
-    expect(ok.fileName).toBe("apostila.pdf");
+    expect((await getAttachmentForDownload(student, att!.id)).fileName).toBe("apostila.pdf");
+    expect((await getAttachmentForDownload(outsider, att!.id)).fileName).toBe("apostila.pdf");
+  });
 
-    await expect(
-      getAttachmentForDownload(outsider, att!.id),
-    ).rejects.toBeInstanceOf(AttachmentForbiddenError);
+  it("material de curso em rascunho so o dono baixa", async () => {
+    const draftCourse = await createCourse(teacher.id, { title: `${marker} Rascunho` });
+    const dm = await createModule(teacher, draftCourse.id, { title: "Mod" });
+    const dl = await createLesson(teacher, dm.id, {
+      title: "Aula",
+      contentType: "FILE",
+      videoProvider: null,
+      videoRef: null,
+    });
+    const att = await addAttachment(teacher, dl.id, {
+      fileName: "secreto.pdf",
+      storageKey: buildStorageKey(dl.id, "secreto.pdf"),
+      mimeType: "application/pdf",
+      sizeBytes: 10,
+    });
+    expect((await getAttachmentForDownload(teacher, att.id)).fileName).toBe("secreto.pdf");
+    await expect(getAttachmentForDownload(outsider, att.id)).rejects.toBeInstanceOf(
+      AttachmentForbiddenError,
+    );
   });
 });

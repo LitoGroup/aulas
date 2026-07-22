@@ -1,9 +1,9 @@
 import { prisma } from "../db";
 
-export class NotEnrolledError extends Error {
+export class CourseUnavailableError extends Error {
   constructor() {
-    super("Aluno nao esta matriculado neste curso");
-    this.name = "NotEnrolledError";
+    super("Curso indisponivel");
+    this.name = "CourseUnavailableError";
   }
 }
 
@@ -14,18 +14,27 @@ export interface CourseProgress {
   completedLessonIds: string[];
 }
 
-/** Encontra a matricula (ancora do progresso) a partir da aula. */
+/**
+ * A matricula (ancora do progresso) a partir da aula.
+ *
+ * Nao exige matricula previa: qualquer aluno tem acesso ao conteudo, e a
+ * matricula e criada aqui, de forma invisivel, no primeiro progresso. A trava
+ * de rascunho fica nos vetores de conteudo (ver aula, baixar, prova); marcar
+ * progresso nao revela nada, entao aqui basta ancorar.
+ */
 async function enrollmentForLesson(userId: string, lessonId: string) {
   const lesson = await prisma.lesson.findUnique({
     where: { id: lessonId },
     select: { module: { select: { courseId: true } } },
   });
-  if (!lesson) throw new NotEnrolledError();
-  const enrollment = await prisma.enrollment.findUnique({
+  if (!lesson) throw new CourseUnavailableError();
+
+  const enrollment = await prisma.enrollment.upsert({
     where: { userId_courseId: { userId, courseId: lesson.module.courseId } },
+    update: {},
+    create: { userId, courseId: lesson.module.courseId },
     select: { id: true },
   });
-  if (!enrollment) throw new NotEnrolledError();
   return enrollment.id;
 }
 

@@ -2,7 +2,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireRole } from "@/server/auth/rbac";
 import { getCourseBySlug } from "@/server/services/course";
-import { isEnrolled } from "@/server/services/enrollment";
 import { getCourseProgress } from "@/server/services/progress";
 import { computeLessonLocks } from "@/server/services/lesson-access";
 import { listAssessmentsByCourse } from "@/server/services/assessment";
@@ -11,7 +10,6 @@ import { ProgressBar } from "@/components/ui";
 import { StatusCircle, typeLabel } from "@/components/status-circle";
 import { CourseReviewCard } from "@/components/course-review-card";
 import { getOwnReview } from "@/server/services/review";
-import { EnrollButton } from "../enroll-button";
 
 export default async function CourseDetailPage({
   params,
@@ -24,17 +22,14 @@ export default async function CourseDetailPage({
 
   if (!course || !course.isPublished) notFound();
 
-  const enrolled = await isEnrolled(actor.id, course.id);
-
+  // Sem portão de matrícula: todo aluno logado tem acesso ao curso publicado.
   const ordered = course.modules.flatMap((m) =>
     m.lessons.map((l) => ({ id: l.id, requiresPrevious: l.requiresPrevious })),
   );
-  const progress = enrolled
-    ? await getCourseProgress(actor.id, course.id)
-    : { total: ordered.length, completed: 0, percent: 0, completedLessonIds: [] as string[] };
+  const progress = await getCourseProgress(actor.id, course.id);
   const completedSet = new Set(progress.completedLessonIds);
   const locks = computeLessonLocks(ordered, completedSet);
-  const assessments = enrolled ? await listAssessmentsByCourse(course.id) : [];
+  const assessments = await listAssessmentsByCourse(course.id);
 
   // Proxima aula: primeira nao concluida e desbloqueada (para "Continuar").
   const nextLesson = ordered.find(
@@ -45,7 +40,7 @@ export default async function CourseDetailPage({
     : course.modules[0]?.id;
 
   // Pesquisa de satisfação: só faz sentido para quem terminou o curso.
-  const cursoConcluido = enrolled && progress.total > 0 && progress.percent >= 100;
+  const cursoConcluido = progress.total > 0 && progress.percent >= 100;
   const review = cursoConcluido ? await getOwnReview(actor.id, course.id) : null;
 
   return (
@@ -83,31 +78,25 @@ export default async function CourseDetailPage({
             <p className="mt-2 text-sm text-[color:var(--ink-soft)]">{course.description}</p>
           )}
 
-          {enrolled ? (
-            <div className="mt-5 flex flex-wrap items-center gap-6">
-              <div className="min-w-56 flex-1">
-                <div className="mb-1.5 flex items-center justify-between text-sm">
-                  <span className="font-medium text-[color:var(--ink-soft)]">Seu progresso</span>
-                  <span className="text-[color:var(--muted)]">
-                    {progress.completed}/{progress.total} aulas · {progress.percent}%
-                  </span>
-                </div>
-                <ProgressBar percent={progress.percent} />
+          <div className="mt-5 flex flex-wrap items-center gap-6">
+            <div className="min-w-56 flex-1">
+              <div className="mb-1.5 flex items-center justify-between text-sm">
+                <span className="font-medium text-[color:var(--ink-soft)]">Seu progresso</span>
+                <span className="text-[color:var(--muted)]">
+                  {progress.completed}/{progress.total} aulas · {progress.percent}%
+                </span>
               </div>
-              {nextLesson && (
-                <Link
-                  href={`/learn/${nextLesson.id}`}
-                  className="rounded-xl brand-gradient px-5 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-md)] transition hover:-translate-y-px"
-                >
-                  {progress.completed > 0 ? "Continuar de onde parei" : "Começar o curso"}
-                </Link>
-              )}
+              <ProgressBar percent={progress.percent} />
             </div>
-          ) : (
-            <div className="mt-5">
-              <EnrollButton courseId={course.id} slug={course.slug} />
-            </div>
-          )}
+            {nextLesson && (
+              <Link
+                href={`/learn/${nextLesson.id}`}
+                className="rounded-xl brand-gradient px-5 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-md)] transition hover:-translate-y-px"
+              >
+                {progress.completed > 0 ? "Continuar de onde parei" : "Começar o curso"}
+              </Link>
+            )}
+          </div>
         </div>
       </div>
 
@@ -139,7 +128,7 @@ export default async function CourseDetailPage({
                   </span>
                 </span>
                 <span className="shrink-0 text-xs font-medium text-[color:var(--muted)]">
-                  {enrolled ? `${doneInModule}/${m.lessons.length}` : `${m.lessons.length} aula(s)`}
+                  {doneInModule}/{m.lessons.length}
                 </span>
               </summary>
 
@@ -173,12 +162,12 @@ export default async function CourseDetailPage({
 
                   return (
                     <li key={l.id} className="border-b border-[color:var(--border)] last:border-0">
-                      {enrolled && !isLocked ? (
+                      {!isLocked ? (
                         <Link href={`/learn/${l.id}`} className="block transition hover:bg-[color:var(--canvas)]">
                           {row}
                         </Link>
                       ) : (
-                        <div className={isLocked ? "opacity-70" : ""}>{row}</div>
+                        <div className="opacity-70">{row}</div>
                       )}
                     </li>
                   );
@@ -190,7 +179,7 @@ export default async function CourseDetailPage({
       </div>
 
       {/* Avaliações */}
-      {enrolled && assessments.length > 0 && (
+      {assessments.length > 0 && (
         <div className="space-y-3">
           <h2 className="text-lg font-bold text-[color:var(--ink)]">Avaliações</h2>
           <ul className="divide-y divide-[color:var(--border)] overflow-hidden rounded-2xl border border-[color:var(--border)] bg-[var(--surface)] shadow-[var(--shadow-sm)]">

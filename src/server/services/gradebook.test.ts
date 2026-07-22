@@ -23,6 +23,7 @@ beforeAll(async () => {
   studentId = s.id;
   const c = await createCourse(t.id, { title: `${marker} Curso` });
   courseId = c.id;
+  await prisma.course.update({ where: { id: courseId }, data: { isPublished: true } });
   await enroll(studentId, courseId);
 
   const a = await createAssessment(teacher, courseId, { title: "Prova", passingScore: 70 });

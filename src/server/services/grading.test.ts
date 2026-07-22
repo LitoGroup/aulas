@@ -7,7 +7,7 @@ import { createAssessment, addQuestion } from "./assessment";
 import {
   getAssessmentForTaking,
   submitAttempt,
-  NotEnrolledError,
+  CourseUnavailableError,
 } from "./grading";
 
 const marker = `grad_${Date.now()}`;
@@ -25,6 +25,8 @@ beforeAll(async () => {
   outsider = { id: o.id, role: "STUDENT" };
   const teacher = { id: t.id, role: "TEACHER" as const };
   const c = await createCourse(t.id, { title: `${marker} Curso` });
+  // Curso publicado: e o cenario real de acesso do aluno.
+  await prisma.course.update({ where: { id: c.id }, data: { isPublished: true } });
   await enroll(student.id, c.id);
 
   const a = await createAssessment(teacher, c.id, { title: "Prova", passingScore: 70 });
@@ -70,9 +72,23 @@ describe("grading", () => {
     expect("isCorrect" in anyOption).toBe(false);
   });
 
-  it("barra quem nao esta matriculado", async () => {
-    await expect(getAssessmentForTaking(outsider, assessmentId)).rejects.toBeInstanceOf(
-      NotEnrolledError,
+  it("aluno sem matricula acessa a prova de curso publicado (matricula automatica)", async () => {
+    // Sem portao de matricula: qualquer logado responde a prova de curso
+    // publicado. A tentativa fica ancorada numa matricula criada na hora.
+    const taking = await getAssessmentForTaking(outsider, assessmentId);
+    expect(taking).not.toBeNull();
+  });
+
+  it("curso em rascunho barra quem nao e dono", async () => {
+    const prof = await createUser({ name: "P2", email: `${marker}_p2@e.com`, password: "senha1234" });
+    const rascunho = await createCourse(prof.id, { title: `${marker} Rascunho` });
+    const prova = await createAssessment(
+      { id: prof.id, role: "TEACHER" },
+      rascunho.id,
+      { title: "Secreta", passingScore: 70 },
+    );
+    await expect(getAssessmentForTaking(outsider, prova.id)).rejects.toBeInstanceOf(
+      CourseUnavailableError,
     );
   });
 

@@ -1,10 +1,10 @@
 import type { Role } from "@prisma/client";
 import { prisma } from "../db";
 
-export class NotEnrolledError extends Error {
+export class CourseUnavailableError extends Error {
   constructor() {
-    super("Aluno nao esta matriculado neste curso");
-    this.name = "NotEnrolledError";
+    super("Curso indisponivel");
+    this.name = "CourseUnavailableError";
   }
 }
 
@@ -13,19 +13,28 @@ export interface Actor {
   role: Role;
 }
 
-async function assertEnrolled(actor: Actor, assessmentId: string): Promise<string> {
+/**
+ * Garante o acesso do ator a avaliacao e devolve o courseId.
+ *
+ * Dono/admin sempre acessam. Para o aluno, nao ha portao de matricula: se o
+ * curso esta publicado, a matricula e criada aqui (invisivel) para ancorar a
+ * tentativa. Curso em rascunho continua restrito ao dono.
+ */
+async function ensureEnrolled(actor: Actor, assessmentId: string): Promise<string> {
   const a = await prisma.assessment.findUnique({
     where: { id: assessmentId },
-    select: { courseId: true, course: { select: { ownerId: true } } },
+    select: { courseId: true, course: { select: { ownerId: true, isPublished: true } } },
   });
-  if (!a) throw new NotEnrolledError();
-  // Dono/admin sempre acessam; aluno precisa de matricula.
+  if (!a) throw new CourseUnavailableError();
   if (actor.role === "ADMIN" || a.course.ownerId === actor.id) return a.courseId;
-  const enrollment = await prisma.enrollment.findUnique({
+  if (!a.course.isPublished) throw new CourseUnavailableError();
+
+  await prisma.enrollment.upsert({
     where: { userId_courseId: { userId: actor.id, courseId: a.courseId } },
+    update: {},
+    create: { userId: actor.id, courseId: a.courseId },
     select: { id: true },
   });
-  if (!enrollment) throw new NotEnrolledError();
   return a.courseId;
 }
 
@@ -34,7 +43,7 @@ async function assertEnrolled(actor: Actor, assessmentId: string): Promise<strin
  * selecionado) - evita cola no cliente.
  */
 export async function getAssessmentForTaking(actor: Actor, assessmentId: string) {
-  await assertEnrolled(actor, assessmentId);
+  await ensureEnrolled(actor, assessmentId);
   return prisma.assessment.findUnique({
     where: { id: assessmentId },
     select: {
@@ -66,7 +75,7 @@ export async function submitAttempt(
   assessmentId: string,
   answers: { questionId: string; selectedOptionId: string }[],
 ): Promise<AttemptResult> {
-  await assertEnrolled(actor, assessmentId);
+  await ensureEnrolled(actor, assessmentId);
 
   const assessment = await prisma.assessment.findUnique({
     where: { id: assessmentId },
@@ -77,7 +86,7 @@ export async function submitAttempt(
       },
     },
   });
-  if (!assessment) throw new NotEnrolledError();
+  if (!assessment) throw new CourseUnavailableError();
 
   const total = assessment.questions.length;
   const answerByQuestion = new Map(answers.map((a) => [a.questionId, a.selectedOptionId]));

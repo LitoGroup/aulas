@@ -2,11 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { requireRole } from "@/server/auth/rbac";
-import {
-  submitReview,
-  NotEnrolledError,
-  CourseNotFinishedError,
-} from "@/server/services/review";
+import { submitReview, CourseNotFinishedError } from "@/server/services/review";
 
 export interface ActionState {
   error?: string;
@@ -28,7 +24,6 @@ export async function submitReviewAction(
       comment: formData.get("comment") ? String(formData.get("comment")) : null,
     });
   } catch (e) {
-    if (e instanceof NotEnrolledError) return { error: "Você não está matriculado neste curso" };
     if (e instanceof CourseNotFinishedError) {
       return { error: "A pesquisa abre quando você concluir todas as aulas" };
     }

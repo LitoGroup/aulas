@@ -2,13 +2,6 @@ import { prisma } from "../db";
 import { reviewInputSchema, type ReviewInput } from "@/lib/validation/review";
 import { getCourseProgress } from "./progress";
 
-export class NotEnrolledError extends Error {
-  constructor() {
-    super("Aluno nao esta matriculado neste curso");
-    this.name = "NotEnrolledError";
-  }
-}
-
 export class CourseNotFinishedError extends Error {
   constructor() {
     super("A pesquisa abre ao concluir todas as aulas do curso");
@@ -69,11 +62,18 @@ export async function submitReview(
   courseId: string,
   input: ReviewInput,
 ): Promise<void> {
-  const matricula = await matriculaDe(userId, courseId);
-  if (!matricula) throw new NotEnrolledError();
-
+  // Só responde quem concluiu o curso — e quem concluiu já tem matrícula
+  // (o progresso é ancorado nela). Garante a matrícula por segurança, e a
+  // ausência de progresso vira "curso não concluído", não "não matriculado".
   const progresso = await getCourseProgress(userId, courseId);
   if (progresso.total === 0 || progresso.percent < 100) throw new CourseNotFinishedError();
+
+  const matricula = await prisma.enrollment.upsert({
+    where: { userId_courseId: { userId, courseId } },
+    update: {},
+    create: { userId, courseId },
+    select: { id: true },
+  });
 
   const data = reviewInputSchema.parse(input);
   await prisma.courseReview.upsert({

@@ -4,7 +4,6 @@ import { requireRole } from "@/server/auth/rbac";
 import { getLessonForViewer } from "@/server/services/lesson";
 import { getCourseOutline } from "@/server/services/course";
 import { isInlineViewable, formatarTamanho } from "@/server/services/attachment";
-import { isEnrolled } from "@/server/services/enrollment";
 import { getCourseProgress } from "@/server/services/progress";
 import { computeLessonLocks } from "@/server/services/lesson-access";
 import { VideoEmbed } from "@/components/video-embed";
@@ -27,10 +26,10 @@ export default async function LessonViewerPage({
 
   const course = lesson.module.course;
   const isOwner = course.ownerId === actor.id || actor.role === "ADMIN";
-  // Matrícula e permissão de ver são coisas diferentes: o professor abre a aula
-  // para conferir, mas só quem tem matrícula tem progresso para registrar.
-  const matriculado = await isEnrolled(actor.id, course.id);
-  if (!isOwner && !matriculado) redirect(`/courses/${course.slug}`);
+  // Sem portão de matrícula: todo aluno logado acessa o curso publicado. Só o
+  // rascunho continua restrito ao dono/admin, que conferem sem gerar progresso.
+  if (!isOwner && !course.isPublished) notFound();
+  const podeEstudar = !isOwner;
 
   const [outline, progress] = await Promise.all([
     getCourseOutline(course.id),
@@ -53,7 +52,7 @@ export default async function LessonViewerPage({
   const position = index + 1;
 
   // Vídeo hospedado na plataforma: URL assinada temporária (2h), gerada
-  // somente após os guards de matrícula/cadeado acima.
+  // somente após os guards de publicação/cadeado acima.
   const playbackUrl =
     lesson.contentType === "VIDEO" && lesson.videoProvider === "S3" && lesson.videoRef
       ? await createVideoPlaybackUrl(lesson.videoRef)
@@ -205,7 +204,7 @@ export default async function LessonViewerPage({
 
         {/* Curso terminado: leva à pesquisa, senão o aluno conclui a última
             aula e nunca descobre que ela existe. */}
-        {matriculado && progress.total > 0 && progress.percent >= 100 && (
+        {podeEstudar && progress.total > 0 && progress.percent >= 100 && (
           <Link
             href={`/courses/${course.slug}`}
             className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[color:var(--accent)]/30 bg-[color:var(--accent)]/[0.06] p-5 transition hover:bg-[color:var(--accent)]/10"
@@ -230,7 +229,7 @@ export default async function LessonViewerPage({
             slug={course.slug}
             done={done}
             nextHref={next ? `/learn/${next.id}` : null}
-            podeConcluir={matriculado}
+            podeConcluir={podeEstudar}
           />
           {prev && (
             <Link

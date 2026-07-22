@@ -50,7 +50,7 @@ export default async function DashboardPage() {
         <div className="rounded-3xl border border-dashed border-[color:var(--border)] bg-[var(--surface)] p-10 text-center">
           <h2 className="text-lg font-bold text-[color:var(--ink)]">Bem-vindo(a) à School</h2>
           <p className="mt-1 text-sm text-[color:var(--muted)]">
-            Você ainda não está matriculado em nenhum curso.
+            Você ainda não começou nenhum curso. Explore o catálogo e comece agora.
           </p>
           <Link
             href="/courses"

@@ -11,7 +11,6 @@ import {
   getOwnReview,
   listCourseReviews,
   resumirCursos,
-  NotEnrolledError,
   CourseNotFinishedError,
 } from "./review";
 
@@ -52,9 +51,11 @@ afterAll(async () => {
 });
 
 describe("quem pode responder", () => {
-  it("barra quem nao esta matriculado", async () => {
+  it("sem matricula e sem progresso cai em curso nao concluido, nao em erro de matricula", async () => {
+    // Nao ha mais barreira de matricula: quem nunca estudou simplesmente ainda
+    // nao concluiu o curso.
     await expect(submitReview(deFora, courseId, { rating: 5 })).rejects.toBeInstanceOf(
-      NotEnrolledError,
+      CourseNotFinishedError,
     );
   });
 

@@ -5,11 +5,7 @@ import { createCourse } from "./course";
 import { createModule } from "./module";
 import { createLesson } from "./lesson";
 import { enroll } from "./enrollment";
-import {
-  markLessonComplete,
-  getCourseProgress,
-  NotEnrolledError,
-} from "./progress";
+import { markLessonComplete, getCourseProgress } from "./progress";
 
 const marker = `prog_${Date.now()}`;
 let studentId: string;
@@ -42,10 +38,13 @@ afterAll(async () => {
 });
 
 describe("progress service", () => {
-  it("barra quem nao esta matriculado", async () => {
-    await expect(markLessonComplete(outsiderId, lessonA)).rejects.toBeInstanceOf(
-      NotEnrolledError,
-    );
+  it("aluno sem matricula previa conclui e e matriculado na hora", async () => {
+    // Sem portao de matricula: concluir uma aula matricula o aluno de forma
+    // invisivel, para ancorar o progresso.
+    await markLessonComplete(outsiderId, lessonA);
+    const p = await getCourseProgress(outsiderId, courseId);
+    expect(p.completed).toBe(1);
+    expect(p.completedLessonIds).toContain(lessonA);
   });
 
   it("marca 1 de 2 aulas => 50%", async () => {
