@@ -8,8 +8,8 @@ import { ChromaVideo } from "@/components/chroma-video";
  * ------------------------------------------------------------------ */
 // 17 de agosto de 2026, 20h (horário de Brasília, UTC-3).
 const EVENTO = new Date("2026-08-17T20:00:00-03:00");
-const DATA_TEXTO = "17 de agosto, 20h";
-const CHAMADA = "Live exclusiva é dia";
+const DATA_TEXTO = "17 de agosto, às 20h";
+const CANAL = "Aviões e Músicas";
 
 export interface Restante {
   dias: number;
@@ -64,7 +64,7 @@ export function LiveAnnouncementBar() {
   return (
     <aside
       className="group relative isolate overflow-hidden border-b border-white/10 bg-[#0a1f3c]"
-      aria-label={`Live ${DATA_TEXTO}`}
+      aria-label={`Live ${DATA_TEXTO} no canal ${CANAL}`}
     >
       {/* atmosfera: gradiente da marca + facho verde que respira */}
       <div
@@ -89,11 +89,18 @@ export function LiveAnnouncementBar() {
           Live
         </span>
 
-        {/* chamada + data */}
-        <p className="min-w-0 flex-1 text-sm text-white/85">
-          <span className="hidden sm:inline">{CHAMADA} </span>
-          <strong className="font-semibold text-white">{DATA_TEXTO}</strong>
-          <span className="hidden text-white/55 md:inline"> · não perca.</span>
+        {/* chamada da live */}
+        <p className="min-w-0 flex-1 text-sm leading-snug text-white/85">
+          {/* celular: versão curta para a barra não crescer demais */}
+          <span className="sm:hidden">
+            <strong className="font-semibold text-white">Live {DATA_TEXTO}</strong> · {CANAL}
+          </span>
+          {/* desktop: frase completa */}
+          <span className="hidden sm:inline">
+            Live com condições exclusivas para você no dia{" "}
+            <strong className="font-semibold text-white">{DATA_TEXTO}</strong>, no canal{" "}
+            <strong className="font-semibold text-white">{CANAL}</strong>.
+          </span>
         </p>
 
         {/* contagem regressiva */}
