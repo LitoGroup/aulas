@@ -48,9 +48,9 @@ export default async function AppLayout({ children }: { children: React.ReactNod
         <MobileNav name={name} role={role} />
       </div>
 
-      {/* Assistente: só aparece quando a chave do AI Gateway está configurada.
+      {/* Assistente: só aparece quando a chave da OpenAI está configurada.
           Sem a chave, fica dormente (não quebra em produção). */}
-      {process.env.AI_GATEWAY_API_KEY ? <AssistantWidget /> : null}
+      {process.env.OPENAI_API_KEY ? <AssistantWidget /> : null}
     </div>
   );
 }

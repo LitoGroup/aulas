@@ -1,11 +1,12 @@
 import { streamText, convertToModelMessages, type UIMessage } from "ai";
+import { openai } from "@ai-sdk/openai";
 import { auth } from "@/server/auth/config";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { buildAssistantContext } from "@/server/assistant/context";
 import { buildSystemPrompt } from "@/server/assistant/prompt";
 
-// Modelo econômico via Vercel AI Gateway (string provider/model, trocável).
-const ASSISTANT_MODEL = process.env.ASSISTANT_MODEL ?? "openai/gpt-4o-mini";
+// Modelo econômico da OpenAI (usa a OPENAI_API_KEY do ambiente). Trocável.
+const ASSISTANT_MODEL = process.env.ASSISTANT_MODEL ?? "gpt-4o-mini";
 const LIMITE_DIA = 30; // mensagens por aluno por dia
 const UM_DIA_MS = 86_400_000;
 
@@ -27,7 +28,7 @@ export async function POST(req: Request) {
   }
 
   // Sem a chave, o assistente fica indisponível (não deveria nem aparecer).
-  if (!process.env.AI_GATEWAY_API_KEY) {
+  if (!process.env.OPENAI_API_KEY) {
     return Response.json({ error: "Assistente indisponível no momento." }, { status: 503 });
   }
 
@@ -39,7 +40,7 @@ export async function POST(req: Request) {
   const contexto = await buildAssistantContext({ lessonId });
 
   const result = streamText({
-    model: ASSISTANT_MODEL,
+    model: openai(ASSISTANT_MODEL),
     system: buildSystemPrompt(contexto),
     messages: await convertToModelMessages(messages),
   });
