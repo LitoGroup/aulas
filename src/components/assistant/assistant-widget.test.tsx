@@ -77,4 +77,13 @@ describe("AssistantWidget", () => {
     expect(screen.getByText("Oi")).toBeDefined();
     expect(screen.getByText("Olá! Como ajudo?")).toBeDefined();
   });
+
+  it("higieniza a resposta: remove ** e travessão do texto exibido", () => {
+    mockMessages = [
+      { id: "1", role: "assistant", parts: [{ type: "text", text: "**Curso** dura 8 meses — turma nova" }] },
+    ];
+    render(<AssistantWidget />);
+    fireEvent.click(screen.getByLabelText("Abrir assistente de suporte"));
+    expect(screen.getByText("Curso dura 8 meses - turma nova")).toBeDefined();
+  });
 });

@@ -1,9 +1,11 @@
-import { streamText, convertToModelMessages, type UIMessage } from "ai";
+import { streamText, convertToModelMessages, tool, stepCountIs, type UIMessage } from "ai";
 import { openai } from "@ai-sdk/openai";
+import { z } from "zod";
 import { auth } from "@/server/auth/config";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { buildAssistantContext } from "@/server/assistant/context";
 import { buildSystemPrompt } from "@/server/assistant/prompt";
+import { consultarSite } from "@/server/assistant/site";
 
 // Modelo econômico da OpenAI (usa a OPENAI_API_KEY do ambiente). Trocável.
 const ASSISTANT_MODEL = process.env.ASSISTANT_MODEL ?? "gpt-4o-mini";
@@ -43,6 +45,18 @@ export async function POST(req: Request) {
     model: openai(ASSISTANT_MODEL),
     system: buildSystemPrompt(contexto),
     messages: await convertToModelMessages(messages),
+    tools: {
+      consultarPaginaDoCurso: tool({
+        description:
+          "Busca o conteúdo atual de uma página oficial da Lito Aviation Academy (site ou checkout) para responder com dados reais, como preço, duração, o que inclui e links de pagamento. Passe a URL exata da página do curso que está no contexto.",
+        inputSchema: z.object({
+          url: z.string().describe("URL oficial da página do curso (do contexto)"),
+        }),
+        execute: async ({ url }) => consultarSite(url),
+      }),
+    },
+    // Permite: chamar a ferramenta, receber a página e então responder.
+    stopWhen: stepCountIs(3),
   });
 
   // Erro genérico ao cliente (o widget mostra uma mensagem amigável). O detalhe

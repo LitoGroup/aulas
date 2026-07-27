@@ -2,8 +2,8 @@ import { describe, it, expect } from "vitest";
 import { KNOWLEDGE_BASE } from "./knowledge";
 import { ESCOLA } from "@/lib/contact";
 
-describe("KNOWLEDGE_BASE", () => {
-  it("cita a escola, o contato e o desconto/cupons", () => {
+describe("KNOWLEDGE_BASE (diretório)", () => {
+  it("cita a escola, o contato e os cupons", () => {
     expect(KNOWLEDGE_BASE).toContain("Lito Aviation Academy");
     expect(KNOWLEDGE_BASE).toContain(ESCOLA.telefone);
     expect(KNOWLEDGE_BASE).toContain(ESCOLA.site);
@@ -12,31 +12,21 @@ describe("KNOWLEDGE_BASE", () => {
     expect(KNOWLEDGE_BASE).toContain("AGORAOUNUNCA2");
   });
 
-  it("lista cursos reais da escola", () => {
-    expect(KNOWLEDGE_BASE).toMatch(/Mec[aâ]nico de Aeronaves/i);
-  });
-
-  it("explica como a plataforma funciona (concluir aula, materiais)", () => {
-    expect(KNOWLEDGE_BASE).toMatch(/conclu[íi]da/i);
-    expect(KNOWLEDGE_BASE).toMatch(/baix/i);
-  });
-
-  it("traz duração, formato e preço dos cursos (extraídos do site)", () => {
-    expect(KNOWLEDGE_BASE).toMatch(/8 meses/);
-    expect(KNOWLEDGE_BASE).toMatch(/16 meses/);
-    expect(KNOWLEDGE_BASE).toMatch(/Semipresencial/i);
-    expect(KNOWLEDGE_BASE).toMatch(/R\$ 5\.687/);
-    expect(KNOWLEDGE_BASE).toMatch(/ANAC/);
-  });
-
-  it("inclui links de pagamento (checkout) dos cursos", () => {
-    expect(KNOWLEDGE_BASE).toContain("checkout.litoacademy.com.br");
-    expect(KNOWLEDGE_BASE).toMatch(/Links de pagamento/i);
-  });
-
-  it("cobre também piloto, comissário e pós-graduação", () => {
+  it("lista os cursos com a URL oficial de cada um", () => {
+    expect(KNOWLEDGE_BASE).toMatch(/Mec[aâ]nico de Aeronaves/);
     expect(KNOWLEDGE_BASE).toMatch(/Piloto/);
     expect(KNOWLEDGE_BASE).toMatch(/Comiss[áa]rio/);
-    expect(KNOWLEDGE_BASE).toMatch(/P[óo]s-Gradua/);
+    expect(KNOWLEDGE_BASE).toContain("litoaviationacademy.com.br/formacoes-e-cursos/");
+  });
+
+  it("orienta a consultar a página oficial ao vivo (não guarda preços fixos)", () => {
+    expect(KNOWLEDGE_BASE).toMatch(/consulte a página oficial|ferramenta/i);
+    // A base deixou de embutir preços; eles vêm da consulta ao vivo.
+    expect(KNOWLEDGE_BASE).not.toMatch(/R\$\s?\d/);
+  });
+
+  it("explica como a plataforma funciona", () => {
+    expect(KNOWLEDGE_BASE).toMatch(/conclu[íi]da/i);
+    expect(KNOWLEDGE_BASE).toMatch(/baix/i);
   });
 });

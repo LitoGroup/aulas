@@ -21,4 +21,13 @@ describe("buildSystemPrompt", () => {
   it("proíbe inventar procedimentos técnicos de aviação", () => {
     expect(p).toMatch(/procedimentos t[ée]cnicos/i);
   });
+
+  it("manda usar a ferramenta para dados atuais do curso", () => {
+    expect(p).toMatch(/consultarPaginaDoCurso/);
+  });
+
+  it("define o formato profissional: sem travessão e sem markdown", () => {
+    expect(p).toMatch(/travess[ãa]o/i);
+    expect(p).toMatch(/markdown|asteriscos/i);
+  });
 });

@@ -11,12 +11,19 @@ const SUGESTOES = [
   "Como concluo uma aula?",
 ];
 
-/** Texto renderizável de uma mensagem (só as partes de texto). */
+/**
+ * Texto renderizável de uma mensagem (só as partes de texto), já higienizado:
+ * sem markdown de negrito e sem travessão, como rede de segurança além do
+ * system prompt.
+ */
 function textoDaMensagem(parts: { type: string; text?: string }[]): string {
   return parts
     .filter((p) => p.type === "text")
     .map((p) => p.text ?? "")
-    .join("");
+    .join("")
+    .replace(/\*\*/g, "")
+    .replace(/^\s*\*\s+/gm, "- ")
+    .replace(/[—–]/g, "-");
 }
 
 /**
