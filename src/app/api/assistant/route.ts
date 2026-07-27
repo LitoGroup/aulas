@@ -45,11 +45,9 @@ export async function POST(req: Request) {
     messages: await convertToModelMessages(messages),
   });
 
-  // Por padrão o AI SDK mascara o erro como "An error occurred". Enquanto
-  // ligamos o assistente, devolvemos a mensagem real para diagnosticar
-  // (chave, crédito, modelo). Depois isto pode voltar a ser genérico.
+  // Erro genérico ao cliente (o widget mostra uma mensagem amigável). O detalhe
+  // técnico fica nos logs da função, não é exposto ao aluno.
   return result.toUIMessageStreamResponse({
-    onError: (error) =>
-      error instanceof Error ? error.message : "Erro desconhecido no assistente.",
+    onError: () => "Não foi possível gerar a resposta.",
   });
 }

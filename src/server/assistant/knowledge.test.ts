@@ -28,4 +28,15 @@ describe("KNOWLEDGE_BASE", () => {
     expect(KNOWLEDGE_BASE).toMatch(/R\$ 5\.687/);
     expect(KNOWLEDGE_BASE).toMatch(/ANAC/);
   });
+
+  it("inclui links de pagamento (checkout) dos cursos", () => {
+    expect(KNOWLEDGE_BASE).toContain("checkout.litoacademy.com.br");
+    expect(KNOWLEDGE_BASE).toMatch(/Links de pagamento/i);
+  });
+
+  it("cobre também piloto, comissário e pós-graduação", () => {
+    expect(KNOWLEDGE_BASE).toMatch(/Piloto/);
+    expect(KNOWLEDGE_BASE).toMatch(/Comiss[áa]rio/);
+    expect(KNOWLEDGE_BASE).toMatch(/P[óo]s-Gradua/);
+  });
 });

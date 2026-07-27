@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
+import { ESCOLA } from "@/lib/contact";
 
 const SUGESTOES = [
   "Quais cursos vocês têm?",
@@ -121,8 +122,13 @@ export function AssistantWidget() {
             )}
             {error && (
               <div className="space-y-2">
-                <span className="inline-block max-w-[90%] rounded-2xl bg-[color:var(--danger)]/10 px-3.5 py-2 text-sm text-[color:var(--danger)]">
-                  Não consegui responder agora. {error.message}
+                <span className="inline-block max-w-[90%] rounded-2xl bg-[color:var(--canvas)] px-3.5 py-2 text-sm text-[color:var(--ink-soft)]">
+                  Estou com dificuldade para responder agora. Tente de novo ou fale com a equipe no
+                  WhatsApp{" "}
+                  <a href={ESCOLA.whatsappHref} className="font-semibold text-[color:var(--brand-ink)] underline">
+                    {ESCOLA.telefone}
+                  </a>
+                  .
                 </span>
                 <button
                   type="button"

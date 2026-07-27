@@ -57,11 +57,12 @@ describe("AssistantWidget", () => {
     expect(sendMessage).toHaveBeenCalledWith({ text: "Tem desconto?" });
   });
 
-  it("mostra o erro quando a chamada falha e oferece tentar de novo", () => {
-    mockError = new Error("Falha no gateway XYZ");
+  it("mostra mensagem amigável ao falhar (sem vazar erro técnico) e oferece tentar de novo", () => {
+    mockError = new Error("Falha tecnica XYZ");
     render(<AssistantWidget />);
     fireEvent.click(screen.getByLabelText("Abrir assistente de suporte"));
-    expect(screen.getByText(/Falha no gateway XYZ/)).toBeDefined();
+    expect(screen.getByText(/dificuldade para responder/i)).toBeDefined();
+    expect(screen.queryByText(/Falha tecnica XYZ/)).toBeNull();
     fireEvent.click(screen.getByText("Tentar de novo"));
     expect(regenerate).toHaveBeenCalled();
   });
