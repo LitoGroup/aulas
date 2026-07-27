@@ -20,4 +20,12 @@ describe("KNOWLEDGE_BASE", () => {
     expect(KNOWLEDGE_BASE).toMatch(/conclu[íi]da/i);
     expect(KNOWLEDGE_BASE).toMatch(/baix/i);
   });
+
+  it("traz duração, formato e preço dos cursos (extraídos do site)", () => {
+    expect(KNOWLEDGE_BASE).toMatch(/8 meses/);
+    expect(KNOWLEDGE_BASE).toMatch(/16 meses/);
+    expect(KNOWLEDGE_BASE).toMatch(/Semipresencial/i);
+    expect(KNOWLEDGE_BASE).toMatch(/R\$ 5\.687/);
+    expect(KNOWLEDGE_BASE).toMatch(/ANAC/);
+  });
 });
