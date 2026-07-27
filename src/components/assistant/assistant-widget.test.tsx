@@ -3,11 +3,13 @@ import { describe, it, expect, vi, afterEach, beforeEach } from "vitest";
 import { render, screen, cleanup, fireEvent } from "@testing-library/react";
 
 const sendMessage = vi.fn();
+const regenerate = vi.fn();
 let mockStatus = "ready";
+let mockError: Error | undefined;
 let mockMessages: { id: string; role: string; parts: { type: string; text: string }[] }[] = [];
 
 vi.mock("@ai-sdk/react", () => ({
-  useChat: () => ({ messages: mockMessages, sendMessage, status: mockStatus }),
+  useChat: () => ({ messages: mockMessages, sendMessage, status: mockStatus, error: mockError, regenerate }),
 }));
 vi.mock("ai", () => ({ DefaultChatTransport: class {} }));
 
@@ -15,7 +17,9 @@ import { AssistantWidget } from "./assistant-widget";
 
 beforeEach(() => {
   sendMessage.mockClear();
+  regenerate.mockClear();
   mockStatus = "ready";
+  mockError = undefined;
   mockMessages = [];
 });
 afterEach(cleanup);
@@ -51,6 +55,15 @@ describe("AssistantWidget", () => {
     });
     fireEvent.click(screen.getByLabelText("Enviar"));
     expect(sendMessage).toHaveBeenCalledWith({ text: "Tem desconto?" });
+  });
+
+  it("mostra o erro quando a chamada falha e oferece tentar de novo", () => {
+    mockError = new Error("Falha no gateway XYZ");
+    render(<AssistantWidget />);
+    fireEvent.click(screen.getByLabelText("Abrir assistente de suporte"));
+    expect(screen.getByText(/Falha no gateway XYZ/)).toBeDefined();
+    fireEvent.click(screen.getByText("Tentar de novo"));
+    expect(regenerate).toHaveBeenCalled();
   });
 
   it("renderiza mensagens já trocadas", () => {

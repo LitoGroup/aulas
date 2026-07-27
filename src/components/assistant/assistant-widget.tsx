@@ -26,7 +26,7 @@ export function AssistantWidget() {
   const [aberto, setAberto] = useState(false);
   const [texto, setTexto] = useState("");
   const [transport] = useState(() => new DefaultChatTransport({ api: "/api/assistant" }));
-  const { messages, sendMessage, status } = useChat({ transport });
+  const { messages, sendMessage, status, error, regenerate } = useChat({ transport });
 
   const ocupado = status === "submitted" || status === "streaming";
 
@@ -117,6 +117,20 @@ export function AssistantWidget() {
                 <span className="inline-block rounded-2xl bg-[color:var(--canvas)] px-3.5 py-2 text-sm text-[color:var(--muted)]">
                   digitando...
                 </span>
+              </div>
+            )}
+            {error && (
+              <div className="space-y-2">
+                <span className="inline-block max-w-[90%] rounded-2xl bg-[color:var(--danger)]/10 px-3.5 py-2 text-sm text-[color:var(--danger)]">
+                  Não consegui responder agora. {error.message}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => regenerate()}
+                  className="block rounded-lg border border-[color:var(--border)] px-3 py-1.5 text-xs font-semibold text-[color:var(--ink-soft)] transition hover:bg-[color:var(--canvas)]"
+                >
+                  Tentar de novo
+                </button>
               </div>
             )}
           </div>
