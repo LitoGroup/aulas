@@ -86,4 +86,40 @@ describe("AssistantWidget", () => {
     fireEvent.click(screen.getByLabelText("Abrir assistente de suporte"));
     expect(screen.getByText("Curso dura 8 meses - turma nova")).toBeDefined();
   });
+
+  it("torna clicável um link em markdown [texto](url)", () => {
+    mockMessages = [
+      {
+        id: "1",
+        role: "assistant",
+        parts: [
+          {
+            type: "text",
+            text: "Compre em [Comissário de Bordo](https://litoaviationacademy.com.br/formacoes-e-cursos/comissario-de-bordo-teorico-selva/).",
+          },
+        ],
+      },
+    ];
+    render(<AssistantWidget />);
+    fireEvent.click(screen.getByLabelText("Abrir assistente de suporte"));
+    const link = screen.getByRole("link", { name: "Comissário de Bordo" });
+    expect(link.getAttribute("href")).toBe(
+      "https://litoaviationacademy.com.br/formacoes-e-cursos/comissario-de-bordo-teorico-selva/",
+    );
+    expect(link.getAttribute("target")).toBe("_blank");
+  });
+
+  it("torna clicável uma URL solta, sem levar a pontuação final", () => {
+    mockMessages = [
+      {
+        id: "1",
+        role: "assistant",
+        parts: [{ type: "text", text: "Veja em https://www.litoaviationacademy.com.br/." }],
+      },
+    ];
+    render(<AssistantWidget />);
+    fireEvent.click(screen.getByLabelText("Abrir assistente de suporte"));
+    const link = screen.getByRole("link", { name: "https://www.litoaviationacademy.com.br/" });
+    expect(link.getAttribute("href")).toBe("https://www.litoaviationacademy.com.br/");
+  });
 });

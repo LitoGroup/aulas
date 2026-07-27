@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import { ESCOLA } from "@/lib/contact";
@@ -24,6 +24,58 @@ function textoDaMensagem(parts: { type: string; text?: string }[]): string {
     .replace(/\*\*/g, "")
     .replace(/^\s*\*\s+/gm, "- ")
     .replace(/[—–]/g, "-");
+}
+
+/** Casa um link em markdown [texto](url) OU uma URL http(s) "crua". */
+const LINK_RE = /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)|(https?:\/\/[^\s)]+)/g;
+
+/**
+ * Transforma links (em markdown ou URL solta) em âncoras clicáveis, mantendo o
+ * resto como texto. Devolve os nós para o React renderizar dentro do balão.
+ */
+function comLinks(texto: string): ReactNode[] {
+  const nodes: ReactNode[] = [];
+  let ultimo = 0;
+  let chave = 0;
+  let m: RegExpExecArray | null;
+  LINK_RE.lastIndex = 0;
+  while ((m = LINK_RE.exec(texto)) !== null) {
+    if (m.index > ultimo) nodes.push(texto.slice(ultimo, m.index));
+
+    let rotulo: string;
+    let url: string;
+    let sobra = "";
+    if (m[2]) {
+      // [texto](url)
+      rotulo = m[1];
+      url = m[2];
+    } else {
+      // url crua: tira pontuação final que não faz parte do endereço
+      url = m[3];
+      const pont = url.match(/[.,;:!?]+$/);
+      if (pont) {
+        sobra = pont[0];
+        url = url.slice(0, url.length - sobra.length);
+      }
+      rotulo = url;
+    }
+
+    nodes.push(
+      <a
+        key={`link-${chave++}`}
+        href={url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="font-medium text-[color:var(--accent-ink)] underline underline-offset-2 hover:opacity-80"
+      >
+        {rotulo}
+      </a>,
+    );
+    if (sobra) nodes.push(sobra);
+    ultimo = LINK_RE.lastIndex;
+  }
+  if (ultimo < texto.length) nodes.push(texto.slice(ultimo));
+  return nodes;
 }
 
 /**
@@ -109,13 +161,13 @@ export function AssistantWidget() {
                   className={m.role === "user" ? "flex justify-end" : "flex justify-start"}
                 >
                   <span
-                    className={`inline-block max-w-[85%] whitespace-pre-wrap rounded-2xl px-3.5 py-2 text-sm ${
+                    className={`inline-block max-w-[85%] whitespace-pre-wrap [overflow-wrap:anywhere] rounded-2xl px-3.5 py-2 text-sm ${
                       m.role === "user"
                         ? "bg-[color:var(--navy-fill)] text-white"
                         : "bg-[color:var(--canvas)] text-[color:var(--ink)]"
                     }`}
                   >
-                    {textoDaMensagem(m.parts)}
+                    {comLinks(textoDaMensagem(m.parts))}
                   </span>
                 </div>
               ))

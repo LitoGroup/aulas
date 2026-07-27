@@ -30,4 +30,9 @@ describe("buildSystemPrompt", () => {
     expect(p).toMatch(/travess[ãa]o/i);
     expect(p).toMatch(/markdown|asteriscos/i);
   });
+
+  it("manda compartilhar link como URL completa (não markdown)", () => {
+    expect(p).toMatch(/https:\/\//);
+    expect(p).toMatch(/link/i);
+  });
 });
