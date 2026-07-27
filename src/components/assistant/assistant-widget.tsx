@@ -53,7 +53,7 @@ export function AssistantWidget() {
         onClick={() => setAberto((a) => !a)}
         aria-expanded={aberto}
         aria-label={aberto ? "Fechar assistente" : "Abrir assistente de suporte"}
-        className="fixed bottom-4 right-4 z-40 flex h-14 w-14 items-center justify-center overflow-hidden rounded-full border border-white/15 bg-[#0a1f3c] shadow-[0_12px_30px_-10px_rgba(0,0,0,0.6)] transition hover:-translate-y-0.5 lg:bottom-6 lg:right-6"
+        className="fixed bottom-4 right-4 z-40 flex h-14 w-14 items-center justify-center overflow-hidden rounded-full border border-white/15 bg-[color:var(--accent)] shadow-[0_12px_30px_-10px_rgba(0,0,0,0.6)] transition hover:-translate-y-0.5 lg:bottom-6 lg:right-6"
       >
         {aberto ? (
           <svg viewBox="0 0 20 20" className="h-6 w-6 text-white" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden>
