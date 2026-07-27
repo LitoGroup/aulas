@@ -6,6 +6,7 @@ import { MobileNav } from "@/components/mobile-nav";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { BrandMark } from "@/components/brand-logo";
 import { LiveAnnouncementBar } from "@/components/live-announcement-bar";
+import { AssistantWidget } from "@/components/assistant/assistant-widget";
 import { isTeacherRole } from "@/lib/nav";
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
@@ -46,6 +47,10 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
         <MobileNav name={name} role={role} />
       </div>
+
+      {/* Assistente: só aparece quando a chave do AI Gateway está configurada.
+          Sem a chave, fica dormente (não quebra em produção). */}
+      {process.env.AI_GATEWAY_API_KEY ? <AssistantWidget /> : null}
     </div>
   );
 }
