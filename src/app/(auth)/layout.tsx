@@ -2,6 +2,7 @@ import Link from "next/link";
 import { BrandMark } from "@/components/brand-logo";
 import { ShieldIcon, LockIcon } from "@/components/auth-ui";
 import { InstallAppButton } from "@/components/install-app-button";
+import { SchoolContact } from "@/components/school-contact";
 import { AuthShowcase } from "./showcase";
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
@@ -49,6 +50,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
                 Dados tratados conforme a LGPD
               </li>
             </ul>
+            <SchoolContact variant="inline" />
             <p className="mt-3 text-[11px] text-white/25">
               © {new Date().getFullYear()} Lito School · Lito Aviation Academy
             </p>

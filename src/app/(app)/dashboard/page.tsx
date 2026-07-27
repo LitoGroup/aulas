@@ -6,6 +6,7 @@ import { getCourseProgress } from "@/server/services/progress";
 import { CourseCover } from "@/components/course-cover";
 import { ProgressRing } from "@/components/progress-ring";
 import { studyCta, studyEyebrow } from "@/lib/study-cta";
+import { SchoolContact } from "@/components/school-contact";
 
 export default async function DashboardPage() {
   const user = await requireRole(["STUDENT", "TEACHER", "ADMIN"]);
@@ -136,6 +137,8 @@ export default async function DashboardPage() {
           </Link>
         </section>
       )}
+
+      <SchoolContact />
     </div>
   );
 }
